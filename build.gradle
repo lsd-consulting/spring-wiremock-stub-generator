@@ -1,0 +1,53 @@
+plugins {
+    id 'java-library'
+    id 'signing'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
+    id 'com.palantir.git-version' version '0.12.3'
+    id 'maven-publish'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.21'
+}
+description = "A tool for generating Java based Wiremock stubs from Spring MVC controllers"
+group = 'io.github.lsd-consulting'
+version = "SNAP2"//gitVersion().replaceAll("^v", "")
+logger.lifecycle("Build Version = ${version}")
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+subprojects {
+    group = rootProject.getGroup()
+    version = rootProject.getVersion()
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+//apply from: 'hooks.gradle'
+
+nexusPublishing {
+    repositories {
+        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+}
+
+signing {
+    if (project.findProperty("signingKey")) {
+        // Use in-memory ascii-armored keys
+        def signingKey = findProperty("signingKey")
+        def signingPassword = findProperty("signingPassword")
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications
+    } else {
+        // Use signing properties in ~/.gradle/gradle.properties
+        sign publishing.publications
+    }
+}

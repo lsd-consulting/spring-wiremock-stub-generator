@@ -1,0 +1,61 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm"
+}
+
+apply plugin: 'kotlin-kapt'
+
+sourceSets {
+    main {
+        kotlin {
+            srcDir "${buildDir.absolutePath}/generated-stub-sources/"
+        }
+    }
+}
+
+kapt.includeCompileClasspath = false
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "failed"
+        exceptionFormat "full"
+    }
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            logger.lifecycle("Integration test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")
+            if (result.testCount == 0) {
+                throw new IllegalStateException("No tests were found. Failing the build")
+            }
+        }
+    }
+}
+
+compileKotlin.kotlinOptions.jvmTarget = "17"
+compileTestKotlin.kotlinOptions.jvmTarget = "17"
+
+dependencies {
+    kapt project(":generator")
+    implementation project(':generator')
+
+    implementation project(":generator-integration-test-api")
+
+    compileOnly 'com.github.tomakehurst:wiremock:2.27.2'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.5.6'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+//    annotationProcessor project(":generator")
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.22"
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test:2.5.6') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.jeasy:easy-random-core:4.1.0'
+    testImplementation 'org.mockito:mockito-core:4.5.1'
+    testImplementation 'org.awaitility:awaitility:4.1.1'
+    testImplementation 'com.github.tomakehurst:wiremock:2.27.2'
+    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.32.0'
+}

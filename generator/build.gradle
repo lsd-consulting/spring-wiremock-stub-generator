@@ -1,0 +1,117 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'org.springframework.boot' version '2.5.6' apply false
+//    id 'java-library'
+    id 'maven-publish'
+    id 'jacoco'
+    id "org.jetbrains.kotlin.jvm"
+    id "org.jetbrains.kotlin.plugin.spring" version "1.6.21"
+}
+
+description = "This is an annotation processor for Spring MVC @Controller & @RestController annotation. It generates the Java code of the Wiremock stubs."
+
+compileKotlin.kotlinOptions.jvmTarget = "17"
+compileTestKotlin.kotlinOptions.jvmTarget = "17"
+
+apply plugin: 'io.spring.dependency-management'
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+dependencies {
+    // kotlin
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.6.21'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.21"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-common:1.6.21"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.21"
+
+    implementation "io.pebbletemplates:pebble:3.1.5"
+    implementation 'org.apache.commons:commons-text:1.9'
+
+    implementation 'org.springframework:spring-web:5.3.15'
+    implementation 'org.springframework:spring-context:5.3.15'
+
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    testImplementation 'org.junit.platform:junit-platform-commons:1.8.2'
+    testImplementation 'io.mockk:mockk:1.12.0'
+    testImplementation 'org.mockito:mockito-core:4.3.1'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "failed"
+        exceptionFormat "full"
+    }
+    finalizedBy jacocoTestReport
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            logger.lifecycle("Test results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)")
+            if (result.testCount == 0) {
+                throw new IllegalStateException("No tests were found. Failing the build")
+            }
+        }
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled(true)
+        html.enabled(true)
+        html.destination(project.provider(() -> new File("${project.buildDir}/reports/coverage")))
+    }
+    dependsOn test
+}
+
+java {
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId "${rootProject.name}"
+            from components.java
+
+            pom {
+                name = '${rootProject.name}'
+                url = 'https://github.com/lsd-consulting/java-spring-wiremock-stub-generator'
+                licenses {
+                    license {
+                        name = "The Apache Software License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                        distribution = "repo"
+                    }
+                }
+                developers {
+                    developer {
+                        name = "Lukasz"
+                        email = "lukasz.gryzbon@gmail.com"
+                        organization = 'Integreety Ltd.'
+                        organizationUrl = 'https://www.integreety.co.uk'
+                    }
+                    developer {
+                        name = "Nick"
+                        email = "nicholas.mcdowall@gmail.com"
+                        organization = 'NKM IT Solutions'
+                        organizationUrl = 'https://github.com/nickmcdowall'
+                    }
+                }
+                scm {
+                    url = "https://github.com/lsd-consulting/java-spring-wiremock-stub-generator.git"
+                }
+            }
+        }
+    }
+}

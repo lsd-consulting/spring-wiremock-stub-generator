@@ -1,0 +1,5 @@
+rootProject.name = 'spring-wiremock-stub-generator'
+
+include 'generator'
+include 'generator-integration-test'
+include 'generator-integration-test-api'

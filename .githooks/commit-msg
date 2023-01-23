@@ -1,0 +1,51 @@
+#!/bin/bash
+
+#
+# This hook checks the commit message (header only) to ensure that the expected format is used.
+#
+# Commits with breaking changes should include 'BREAKING CHANGE: <some description>' in the commit body with a description (Note: this is not validated by the hook).
+# 
+ 
+commit_regex='^((build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-zA-Z0-9 /_,.-]+?\))?: .{1,79}\w|Merge .+|(fixup|squash)! .+)$'
+
+error_msg='
+----------------------------------------------------
+ABORTING commit - Expecting a conventional commit message header: 
+    
+      <type>[(optional scope)]: <summary - MAX 80 chars>
+----------------------------------------------------
+Examples:
+1.
+  fix(cache): Fix nasty caching bug (#123)
+2.  
+  feat: Enable awesome feature (#456)
+3. 
+  chore: Cleanup code to reduce maintenance cost
+  <newline>
+  BREAKING CHANGE: Deprecated feature xyz finally removed
+  <newline>
+  [optional footer]
+----------------------------------------------------
+Accepted Types:
+  build     - for changes that affect the build or external dependencies
+  chore     - for general maintenance changes
+  ci        - for changes related to the ci pipeline
+  docs      - for documentation changes
+  feat      - for features [* triggers a MINOR release when pushed]
+  fix       - for fixes [* triggers a PATCH release when pushed]
+  perf      - for performance related changes
+  refactor  - for refactoring
+  revert    - for revert commits
+  style     - for style changes
+  test      - for adding or updating tests
+----------------------------------------------------
+Exceptions:
+  fixup! ... 
+  squash! ...
+  Merge ...
+'
+
+if ! grep -iqE "${commit_regex}" "$1"; then
+    echo "${error_msg}" >&2
+    exit 1
+fi
