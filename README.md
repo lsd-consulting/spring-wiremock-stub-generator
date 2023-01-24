@@ -14,5 +14,3 @@ This is a tool for generating Java Wiremock stubs from Spring @Controller & @Res
 
 TODO:
 - fix Jacoco/Codecov
-- publish the plugin: https://plugins.gradle.org/docs/publish-plugin
-- 
