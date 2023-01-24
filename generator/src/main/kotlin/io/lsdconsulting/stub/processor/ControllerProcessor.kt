@@ -12,7 +12,7 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
 
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 class ControllerProcessor : AbstractProcessor() {
     private lateinit var restControllerAnnotationHandler: RestControllerAnnotationHandler
     private lateinit var messager: Messager
