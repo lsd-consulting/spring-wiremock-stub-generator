@@ -25,7 +25,6 @@ class ControllerProcessor : AbstractProcessor() {
         messager = processingEnv.messager
         restControllerAnnotationHandler = RestControllerAnnotationHandler(elementUtils)
         stubWriter = StubWriter(processingEnv)
-        messager.printMessage(Diagnostic.Kind.NOTE, "----------------------------")
     }
 
     override fun getSupportedAnnotationTypes() = mutableSetOf(
@@ -44,7 +43,6 @@ class ControllerProcessor : AbstractProcessor() {
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
         val controllerModel = ControllerModel()
-        messager.printMessage(Diagnostic.Kind.NOTE, "----------------------------")
 
         for (annotation in annotations) {
             val annotatedElements = roundEnv.getElementsAnnotatedWith(annotation)

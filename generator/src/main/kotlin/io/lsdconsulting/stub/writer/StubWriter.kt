@@ -29,7 +29,7 @@ class StubWriter(processingEnv: ProcessingEnvironment) {
                 "generated/source/kapt/main",
                 "generated-stub-sources"
             )
-            val directory = stubBasePathName.replace("StubBase.tpl", "")
+            val directory = stubBasePathName.replace("StubBase.java", "")
             messager.printMessage(Diagnostic.Kind.NOTE, "Creating directory:$directory")
             Files.createDirectories(Path.of(directory))
             messager.printMessage(Diagnostic.Kind.NOTE, "Creating file:$stubBasePathName")
