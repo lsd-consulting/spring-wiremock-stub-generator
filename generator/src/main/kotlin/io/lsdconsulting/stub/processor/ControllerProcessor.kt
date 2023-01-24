@@ -38,7 +38,7 @@ class ControllerProcessor : AbstractProcessor() {
     )
 
     override fun getSupportedSourceVersion(): SourceVersion {
-        return SourceVersion.RELEASE_17
+        return SourceVersion.RELEASE_11
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
