@@ -43,6 +43,22 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest:2.2'
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier = 'javadoc'
+    from javadoc
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
 test {
     useJUnitPlatform()
     testLogging {
@@ -76,6 +92,30 @@ jacocoTestReport {
 java {
     withSourcesJar()
     withJavadocJar()
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+}
+
+signing {
+    if (project.findProperty("signingKey")) {
+        logger.lifecycle("Signing the artifact")
+        // Use in-memory ascii-armored keys
+        def signingKey = findProperty("signingKey")
+        def signingPassword = findProperty("signingPassword")
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications
+    } else {
+        logger.lifecycle("Not signing the artifact!!!")
+        // Use signing properties in ~/.gradle/gradle.properties
+        sign publishing.publications
+    }
 }
 
 publishing {
