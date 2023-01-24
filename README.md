@@ -10,7 +10,7 @@
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.lsd-consulting/java-spring-wiremock-stub-generator)
 
 ## About
-This is a tool for generating Java Wiremock stubs from Spring @Controller & @RestController annotated classes
+This is a tool for generating Wiremock stubs from Spring @Controller & @RestController annotated classes
 
 TODO:
 - fix Jacoco/Codecov
