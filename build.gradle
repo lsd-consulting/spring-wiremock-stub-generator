@@ -8,12 +8,12 @@ plugins {
 }
 description = "A tool for generating Java based Wiremock stubs from Spring MVC controllers"
 group = 'io.github.lsd-consulting'
-version = "SNAP2"//gitVersion().replaceAll("^v", "")
+version = gitVersion().replaceAll("^v", "") ?: "SNAPSHOT"
 logger.lifecycle("Build Version = ${version}")
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 subprojects {
