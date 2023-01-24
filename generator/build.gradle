@@ -6,6 +6,7 @@ plugins {
     id 'jacoco'
     id "org.jetbrains.kotlin.jvm"
     id "org.jetbrains.kotlin.plugin.spring" version "1.7.0"
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
 }
 
 description = "This is an annotation processor for Spring MVC @Controller & @RestController annotation. It generates the Java code of the Wiremock stubs."
@@ -86,6 +87,7 @@ publishing {
 
             pom {
                 name = '${rootProject.name}'
+                description = rootProject.description
                 url = 'https://github.com/lsd-consulting/java-spring-wiremock-stub-generator'
                 licenses {
                     license {
