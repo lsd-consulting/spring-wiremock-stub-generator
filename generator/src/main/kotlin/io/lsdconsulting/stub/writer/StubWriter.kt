@@ -25,10 +25,9 @@ class StubWriter(processingEnv: ProcessingEnvironment) {
     fun writeStubBaseFile(controllerModel: ControllerModel) {
         try {
             val builderFile = processingEnv.filer.createSourceFile(controllerModel.stubBaseFullyQualifiedName)
-            val stubBasePathName = builderFile.toUri().path.replace(
-                "generated/source/kapt/main",
-                "generated-stub-sources"
-            )
+            val stubBasePathName = builderFile.toUri().path
+                .replace("generated/source/kapt/main", "generated-stub-sources")
+                .replace("generated/sources/annotationProcessor/java/main", "generated-stub-sources")
             val directory = stubBasePathName.replace("StubBase.java", "")
             messager.printMessage(Diagnostic.Kind.NOTE, "Creating directory:$directory")
             Files.createDirectories(Path.of(directory))
@@ -46,16 +45,14 @@ class StubWriter(processingEnv: ProcessingEnvironment) {
         }
     }
 
-
     fun writeStubFile(controllerModel: ControllerModel) {
         try {
             val builderFile = processingEnv.filer.createSourceFile(controllerModel.stubFullyQualifiedName)
             messager.printMessage(Diagnostic.Kind.NOTE, "builderFile:$builderFile")
             messager.printMessage(Diagnostic.Kind.NOTE, "builderFile.toUri().path:${builderFile.toUri().path}")
-            val stubBasePathName = builderFile.toUri().path.replace(
-                "generated/source/kapt/main",
-                "generated-stub-sources"
-            )
+            val stubBasePathName = builderFile.toUri().path
+                .replace("generated/source/kapt/main", "generated-stub-sources")
+                .replace("generated/sources/annotationProcessor/java/main", "generated-stub-sources")
             messager.printMessage(Diagnostic.Kind.NOTE, "stubBasePathName:$stubBasePathName")
             val directory: String = stubBasePathName.replace(controllerModel.stubClassName + ".java", "")
             messager.printMessage(Diagnostic.Kind.NOTE, "Creating directory:$directory")
