@@ -28,7 +28,7 @@ allprojects {
     }
 }
 
-//apply from: 'hooks.gradle'
+apply from: 'hooks.gradle'
 
 nexusPublishing {
     repositories {
