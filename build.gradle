@@ -41,12 +41,14 @@ nexusPublishing {
 
 signing {
     if (project.findProperty("signingKey")) {
+        logger.lifecycle("Signing the artifact")
         // Use in-memory ascii-armored keys
         def signingKey = findProperty("signingKey")
         def signingPassword = findProperty("signingPassword")
         useInMemoryPgpKeys(signingKey, signingPassword)
         sign publishing.publications
     } else {
+        logger.lifecycle("Not signing the artifact!!!")
         // Use signing properties in ~/.gradle/gradle.properties
         sign publishing.publications
     }
