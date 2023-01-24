@@ -9,6 +9,6 @@ class GetRestController {
 
     @GetMapping("/resourceWithNoParams")
     fun resourceWithNoParams(): Greeting {
-        return Greeting.builder().name("name").build()
+        return Greeting(name = "name")
     }
 }

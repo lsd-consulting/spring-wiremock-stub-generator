@@ -1,8 +1,8 @@
 plugins {
-    id 'java-library'
+    id "org.jetbrains.kotlin.jvm"
 }
 
 dependencies {
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-    compileOnly 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'com.fasterxml.jackson.core:jackson-annotations:2.14.1'
+    compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
 }
