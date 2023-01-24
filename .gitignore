@@ -1,7 +1,49 @@
-# Ignore Gradle project-specific cache directory
-.gradle
+### Common Build Deploy ###
+**/manifest-generated.yml
 
-# Ignore Gradle build output directory
-build
+### Build Output Directories (Combined) ###
+build/
+bin/
+classes/
+out/
+target/
+log/
 
-.idea
+### Gradle ###
+.gradle/
+
+### Maven ###
+.mvn/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse ###
+.settings/
+.classpath
+.project
+.metadata
+.springBeans
+
+### Node/NPM ###
+node_modules/
+dist/
+typings/
+coverage/
+jspm_packages/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+
+### OS Specific ###
+.DS_Store
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+### Other ###
+*.swp
