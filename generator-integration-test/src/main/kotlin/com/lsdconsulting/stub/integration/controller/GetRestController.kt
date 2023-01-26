@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController
 class GetRestController {
 
     @GetMapping("/resourceWithNoParams")
-    fun resourceWithNoParams_(): Greeting {
+    fun resourceWithNoParams(): Greeting {
         return Greeting(name = "name")
     }
 
     @GetMapping("/resourceWithParam")
-    fun resourceWithParam_(@RequestParam param: String): Greeting {
+    fun resourceWithParam(@RequestParam param: String): Greeting {
         return Greeting(name = "name")
     }
 
