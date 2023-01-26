@@ -7,11 +7,12 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.lsdconsulting.stub.integration.controller.GetRestControllerStub
 import com.lsdconsulting.stub.integration.model.Greeting
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomUtils
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
 import org.junit.jupiter.api.*
-import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
+import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate
 
@@ -24,6 +25,7 @@ class GetRestControllerIT {
     private val param1 = randomAlphabetic(10)
     private val param2 = randomAlphabetic(10)
     private val customResponseBody = randomAlphabetic(10)
+    private val httpStatus = HttpStatus.valueOf(RandomUtils.nextInt(500, 511))
 
     @BeforeEach
     fun setup() {
@@ -117,9 +119,9 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithNoParamAndCustomResponse() {
-        underTest.getResourceWithNoParams(INTERNAL_SERVER_ERROR.value(), customResponseBody)
+        underTest.getResourceWithNoParams(httpStatus.value(), customResponseBody)
         val ex = assertThrows<HttpServerErrorException> { restTemplate.getForEntity("http://localhost:8080/getController/resourceWithNoParams", Greeting::class.java) }
-        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
         underTest.verifyGetResourceWithNoParams(1)
@@ -127,14 +129,14 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithRequestParamAndCustomResponse() {
-        underTest.getResourceWithParam(INTERNAL_SERVER_ERROR.value(), customResponseBody, param)
+        underTest.getResourceWithParam(httpStatus.value(), customResponseBody, param)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam?param=$param",
                 Greeting::class.java
             )
         }
-        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
         underTest.verifyGetResourceWithParam(1, param)
@@ -142,14 +144,14 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithMultipleRequestParamsAndCustomResponse() {
-        underTest.getResourceWithMultipleParams(INTERNAL_SERVER_ERROR.value(), customResponseBody, param1, param2)
+        underTest.getResourceWithMultipleParams(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithMultipleParams?param1=$param1&param2=$param2",
                 Greeting::class.java
             )
         }
-        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
         underTest.verifyGetResourceWithMultipleParams(1, param1, param2)
@@ -157,14 +159,14 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithPathVariableAndCustomResponse() {
-        underTest.getResourceWithPathVariable(INTERNAL_SERVER_ERROR.value(), customResponseBody, param)
+        underTest.getResourceWithPathVariable(httpStatus.value(), customResponseBody, param)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param",
                 Greeting::class.java
             )
         }
-        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
         underTest.verifyGetResourceWithPathVariable(1, param)
@@ -172,14 +174,14 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithMultiplePathVariablesAndCustomResponse() {
-        underTest.getResourceWithMultiplePathVariables(INTERNAL_SERVER_ERROR.value(), customResponseBody, param1, param2)
+        underTest.getResourceWithMultiplePathVariables(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param1/$param2",
                 Greeting::class.java
             )
         }
-        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
         underTest.verifyGetResourceWithMultiplePathVariables(1, param1, param2)
@@ -187,14 +189,14 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithPathVariableAndRequestParamAndCustomResponse() {
-        underTest.getResourceWithPathVariableAndRequestParam(INTERNAL_SERVER_ERROR.value(), customResponseBody, param2, param1)
+        underTest.getResourceWithPathVariableAndRequestParam(httpStatus.value(), customResponseBody, param2, param1)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param1?param2=$param2",
                 Greeting::class.java
             )
         }
-        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
         underTest.verifyGetResourceWithPathVariableAndRequestParam(1, param2, param1)
@@ -202,11 +204,11 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithNoSubresourceAndCustomResponse() {
-        underTest.getResourceWithNoSubresource(INTERNAL_SERVER_ERROR.value(), customResponseBody)
+        underTest.getResourceWithNoSubresource(httpStatus.value(), customResponseBody)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity("http://localhost:8080/getController", Greeting::class.java)
         }
-        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
         underTest.verifyGetResourceWithNoSubresource(1)
