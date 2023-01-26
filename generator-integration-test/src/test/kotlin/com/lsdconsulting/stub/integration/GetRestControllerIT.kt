@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.web.client.RestTemplate
 
-class RestControllerIT {
+class GetRestControllerIT {
     private val restTemplate = RestTemplate()
     private val underTest = GetRestControllerStub(ObjectMapper())
 
