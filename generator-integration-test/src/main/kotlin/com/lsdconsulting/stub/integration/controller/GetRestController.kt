@@ -38,4 +38,7 @@ class GetRestController {
         @RequestParam param2: String
     ) =
         Greeting(name = randomAlphabetic(10))
+
+    @GetMapping
+    fun resourceWithNoSubresource() = Greeting(name = randomAlphabetic(10))
 }

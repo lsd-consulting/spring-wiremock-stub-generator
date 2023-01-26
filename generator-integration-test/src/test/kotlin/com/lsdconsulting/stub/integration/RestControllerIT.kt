@@ -99,6 +99,16 @@ class RestControllerIT {
         underTest.verifyGetResourceWithPathVariableAndRequestParam(1, param2, param1)
     }
 
+    @Test
+    fun shouldHandleGetMappingWithNoSubresource() {
+        underTest.getResourceWithNoSubresource(Greeting(name = name))
+        val response =
+            restTemplate.getForEntity("http://localhost:8080/getController", Greeting::class.java)
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithNoSubresource(1)
+    }
+
     companion object {
         private lateinit var wireMockServer: WireMockServer
 
