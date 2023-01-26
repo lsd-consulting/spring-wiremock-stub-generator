@@ -35,7 +35,8 @@ class ControllerProcessor : AbstractProcessor() {
         PostMapping::class.java.canonicalName,
         ResponseBody::class.java.canonicalName,
         RequestBody::class.java.canonicalName,
-        RequestParam::class.java.canonicalName
+        RequestParam::class.java.canonicalName,
+        PathVariable::class.java.canonicalName
     )
 
     override fun getSupportedSourceVersion(): SourceVersion {
@@ -70,22 +71,24 @@ class ControllerProcessor : AbstractProcessor() {
                     messager.printMessage(NOTE, "Processing GetMapping annotation")
                     val path: Array<String> = element.getAnnotation(GetMapping::class.java).path
                     val value: Array<String> = element.getAnnotation(GetMapping::class.java).value
-                    val elementName = element.simpleName.toString()
-                    messager.printMessage(NOTE, "elementName = $elementName")
+                    val methodModelKey = element.toString()
+                    messager.printMessage(NOTE, "methodModelKey = $methodModelKey")
+                    val methodName = element.simpleName.toString()
+                    messager.printMessage(NOTE, "methodName = $methodName")
                     if (path.isNotEmpty()) {
-                        controllerModel.getMethodModel(elementName).subResource = path[0]
+                        controllerModel.getMethodModel(methodModelKey).subResource = path[0]
                     } else if (value.isNotEmpty()) {
-                        controllerModel.getMethodModel(elementName).subResource = value[0]
+                        controllerModel.getMethodModel(methodModelKey).subResource = value[0]
                     }
-                    controllerModel.getMethodModel(element.simpleName.toString()).methodName =
-                        capitalize(element.simpleName.toString())
+                    controllerModel.getMethodModel(methodModelKey).methodName =
+                        capitalize(methodName)
 
-                    controllerModel.getMethodModel(element.simpleName.toString()).responseType =
+                    controllerModel.getMethodModel(methodModelKey).responseType =
                         element.asType().toString().replace(Regex("\\(.*\\)"), "")
                 } else if (element.getAnnotation(RequestParam::class.java) != null) {
                     messager.printMessage(NOTE, "Processing RequestParam annotation")
 
-                    val methodName = element.enclosingElement.simpleName.toString()
+                    val methodName = element.enclosingElement.toString()
                     messager.printMessage(NOTE, "methodName = $methodName")
 
                     val argumentName = element.simpleName.toString()
@@ -94,10 +97,11 @@ class ControllerProcessor : AbstractProcessor() {
                     messager.printMessage(NOTE, "argumentType = $argumentType")
 
                     controllerModel.getMethodModel(methodName).getArgumentModel(argumentName).type = argumentType
+                    controllerModel.getMethodModel(methodName).getArgumentModel(argumentName).name = argumentName
                 } else {
                     messager.printMessage(NOTE, "Unknown annotation")
                 }
-                messager.printMessage(NOTE, "controllerModel:${objectWriter.writeValueAsString(controllerModel)}")
+//                messager.printMessage(NOTE, "controllerModel:${objectWriter.writeValueAsString(controllerModel)}")
                 messager.printMessage(NOTE, "Elements end -------------------------")
             }
             messager.printMessage(NOTE, "Annotations end ++++++++++++++++++++++++++")

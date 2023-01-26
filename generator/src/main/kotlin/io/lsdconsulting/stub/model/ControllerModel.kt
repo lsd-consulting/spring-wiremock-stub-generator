@@ -29,5 +29,6 @@ data class MethodModel(
 }
 
 data class ArgumentModel(
+    var name: String? = null,
     var type: String? = null
 )
