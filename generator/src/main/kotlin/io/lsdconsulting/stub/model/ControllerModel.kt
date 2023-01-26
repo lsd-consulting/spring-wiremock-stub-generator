@@ -21,10 +21,13 @@ data class MethodModel(
     var methodName: String? = null,
     var responseType: String? = null,
     var subResource: String? = null,
-    val annotatedArguments: MutableMap<String, ArgumentModel> = mutableMapOf()
+    var urlHasPathVariable: Boolean = false,
+    val annotatedArguments: MutableMap<String, ArgumentModel> = mutableMapOf(),
+    val pathVariables: MutableMap<String, ArgumentModel> = mutableMapOf()
 
 ) {
     fun getArgumentModel(name: String): ArgumentModel = annotatedArguments.getOrPut(name) {ArgumentModel()}
+    fun getPathVariableModel(name: String): ArgumentModel = pathVariables.getOrPut(name) {ArgumentModel()}
 
 }
 

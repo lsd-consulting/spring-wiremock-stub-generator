@@ -98,13 +98,35 @@ class ControllerProcessor : AbstractProcessor() {
 
                     controllerModel.getMethodModel(methodName).getArgumentModel(argumentName).type = argumentType
                     controllerModel.getMethodModel(methodName).getArgumentModel(argumentName).name = argumentName
+                } else if (element.getAnnotation(PathVariable::class.java) != null) {
+                    messager.printMessage(NOTE, "Processing PathVariable annotation")
+
+                    val methodName = element.enclosingElement.toString()
+                    messager.printMessage(NOTE, "methodName = $methodName")
+
+                    val argumentName = element.simpleName.toString()
+                    val argumentType = element.asType().toString()
+                    messager.printMessage(NOTE, "argumentName = $argumentName")
+                    messager.printMessage(NOTE, "argumentType = $argumentType")
+
+                    controllerModel.getMethodModel(methodName).urlHasPathVariable = true
+                    controllerModel.getMethodModel(methodName).getPathVariableModel(argumentName).type = argumentType
+                    controllerModel.getMethodModel(methodName).getPathVariableModel(argumentName).name = argumentName
                 } else {
                     messager.printMessage(NOTE, "Unknown annotation")
                 }
-//                messager.printMessage(NOTE, "controllerModel:${objectWriter.writeValueAsString(controllerModel)}")
                 messager.printMessage(NOTE, "Elements end -------------------------")
             }
             messager.printMessage(NOTE, "Annotations end ++++++++++++++++++++++++++")
+        }
+
+        // Post-processing
+        controllerModel.annotatedMethods.values.forEach{ annotatedMethod ->
+            if (annotatedMethod.urlHasPathVariable) {
+                annotatedMethod.pathVariables.values.forEach{ pathVariable ->
+                    annotatedMethod.subResource = annotatedMethod.subResource?.replace("{${pathVariable.name}}", "%s")
+                }
+            }
         }
 
         messager.printMessage(NOTE, "")
@@ -114,7 +136,6 @@ class ControllerProcessor : AbstractProcessor() {
         messager.printMessage(NOTE, "Writing files for model:${objectWriter.writeValueAsString(controllerModel)}")
 
         if (annotations.isNotEmpty()) {
-//            messager.printMessage(NOTE, "Writing files for model:${objectWriter.writeValueAsString(controllerModel)}")
             stubWriter.writeStubFile(controllerModel)
             stubWriter.writeStubBaseFile(controllerModel)
         }

@@ -31,7 +31,7 @@ class RestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithParam() {
+    fun shouldHandleGetMappingWithRequestParam() {
         val name = RandomStringUtils.randomAlphabetic(10)
         underTest.getResourceWithParam_(Greeting(name = name), "test")
         val response =
@@ -39,6 +39,17 @@ class RestControllerIT {
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyGetResourceWithParam_("test")
+    }
+
+    @Test
+    fun shouldHandleGetMappingWithPathVariable() {
+        val name = RandomStringUtils.randomAlphabetic(10)
+        underTest.getResourceWithPathVariable(Greeting(name = name), "test")
+        val response =
+            restTemplate.getForEntity("http://localhost:8080/getController/resourceWithParam/test", Greeting::class.java)
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithPathVariable("test")
     }
 
     companion object {
