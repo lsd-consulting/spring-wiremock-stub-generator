@@ -27,62 +27,85 @@ class RestControllerIT {
             restTemplate.getForEntity("http://localhost:8080/getController/resourceWithNoParams", Greeting::class.java)
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithNoParams(1,)
+        underTest.verifyGetResourceWithNoParams(1)
     }
 
     @Test
     fun shouldHandleGetMappingWithRequestParam() {
         val name = randomAlphabetic(10)
-        underTest.getResourceWithParam(Greeting(name = name), "test")
+        val param = randomAlphabetic(10)
+        underTest.getResourceWithParam(Greeting(name = name), param)
         val response =
-            restTemplate.getForEntity("http://localhost:8080/getController/resourceWithParam?param=test", Greeting::class.java)
+            restTemplate.getForEntity(
+                "http://localhost:8080/getController/resourceWithParam?param=$param",
+                Greeting::class.java
+            )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithParam(1,"test")
+        underTest.verifyGetResourceWithParam(1, param)
     }
 
     @Test
     fun shouldHandleGetMappingWithMultipleRequestParams() {
         val name = randomAlphabetic(10)
-        underTest.getResourceWithMultipleParams(Greeting(name = name), "test1", "test2")
-            val response =
-                restTemplate.getForEntity("http://localhost:8080/getController/resourceWithMultipleParams?param1=test1&param2=test2", Greeting::class.java)
+        val param1 = randomAlphabetic(10)
+        val param2 = randomAlphabetic(10)
+        underTest.getResourceWithMultipleParams(Greeting(name = name), param1, param2)
+        val response =
+            restTemplate.getForEntity(
+                "http://localhost:8080/getController/resourceWithMultipleParams?param1=$param1&param2=$param2",
+                Greeting::class.java
+            )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithMultipleParams(1,"test1", "test2")
+        underTest.verifyGetResourceWithMultipleParams(1, param1, param2)
     }
 
     @Test
     fun shouldHandleGetMappingWithPathVariable() {
         val name = randomAlphabetic(10)
-        underTest.getResourceWithPathVariable(Greeting(name = name), "test")
+        val param = randomAlphabetic(10)
+        underTest.getResourceWithPathVariable(Greeting(name = name), param)
         val response =
-            restTemplate.getForEntity("http://localhost:8080/getController/resourceWithParam/test", Greeting::class.java)
+            restTemplate.getForEntity(
+                "http://localhost:8080/getController/resourceWithParam/$param",
+                Greeting::class.java
+            )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithPathVariable(1,"test")
+        underTest.verifyGetResourceWithPathVariable(1, param)
     }
 
     @Test
     fun shouldHandleGetMappingWithMultiplePathVariables() {
         val name = randomAlphabetic(10)
-        underTest.getResourceWithMultiplePathVariables(Greeting(name = name), "test1", "test2")
+        val param1 = randomAlphabetic(10)
+        val param2 = randomAlphabetic(10)
+        underTest.getResourceWithMultiplePathVariables(Greeting(name = name), param1, param2)
         val response =
-            restTemplate.getForEntity("http://localhost:8080/getController/resourceWithParam/test1/test2", Greeting::class.java)
+            restTemplate.getForEntity(
+                "http://localhost:8080/getController/resourceWithParam/$param1/$param2",
+                Greeting::class.java
+            )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithMultiplePathVariables(1,"test1", "test2")
+        underTest.verifyGetResourceWithMultiplePathVariables(1, param1, param2)
     }
 
     @Test
     fun shouldHandleGetMappingWithPathVariableAndRequestParam() {
         val name = randomAlphabetic(10)
-        underTest.getResourceWithPathVariableAndRequestParam(Greeting(name = name), "test2", "test1")
+        val param1 = randomAlphabetic(10)
+        val param2 = randomAlphabetic(10)
+        underTest.getResourceWithPathVariableAndRequestParam(Greeting(name = name), param2, param1)
         val response =
-            restTemplate.getForEntity("http://localhost:8080/getController/resourceWithParam/test1?param2=test2", Greeting::class.java)
+            restTemplate.getForEntity(
+                "http://localhost:8080/getController/resourceWithParam/$param1?param2=$param2",
+                Greeting::class.java
+            )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithPathVariableAndRequestParam(1,"test2", "test1")
+        underTest.verifyGetResourceWithPathVariableAndRequestParam(1, param2, param1)
     }
 
     companion object {

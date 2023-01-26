@@ -1,6 +1,7 @@
 package com.lsdconsulting.stub.integration.controller
 
 import com.lsdconsulting.stub.integration.model.Greeting
+import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
@@ -10,32 +11,31 @@ import org.springframework.web.bind.annotation.RestController
 class GetRestController {
 
     @GetMapping("/resourceWithNoParams")
-    fun resourceWithNoParams(): Greeting {
-        return Greeting(name = "name")
-    }
+    fun resourceWithNoParams() = Greeting(name = randomAlphabetic(10))
 
     @GetMapping("/resourceWithParam")
-    fun resourceWithParam(@RequestParam param: String): Greeting {
-        return Greeting(name = "name")
-    }
+    fun resourceWithParam(@Suppress("UNUSED_PARAMETER") @RequestParam param: String) =
+        Greeting(name = randomAlphabetic(10))
 
+    @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithMultipleParams")
-    fun resourceWithMultipleParams(@RequestParam param1: String, @RequestParam param2: String): Greeting {
-        return Greeting(name = "name")
-    }
+    fun resourceWithMultipleParams(@RequestParam param1: String, @RequestParam param2: String) =
+        Greeting(name = randomAlphabetic(10))
 
     @GetMapping("/resourceWithParam/{param}")
-    fun resourceWithPathVariable(@PathVariable param: String): Greeting {
-        return Greeting(name = "name")
-    }
+    fun resourceWithPathVariable(@Suppress("UNUSED_PARAMETER") @PathVariable param: String) =
+        Greeting(name = randomAlphabetic(10))
 
+    @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithParam/{param1}/{param2}")
-    fun resourceWithMultiplePathVariables(@PathVariable param1: String, @PathVariable param2: String): Greeting {
-        return Greeting(name = "name")
-    }
+    fun resourceWithMultiplePathVariables(@PathVariable param1: String, @PathVariable param2: String) =
+        Greeting(name = randomAlphabetic(10))
 
+    @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithParam/{param1}")
-    fun resourceWithPathVariableAndRequestParam(@PathVariable param1: String, @RequestParam param2: String): Greeting {
-        return Greeting(name = "name")
-    }
+    fun resourceWithPathVariableAndRequestParam(
+        @Suppress("UNUSED_PARAMETER") @PathVariable param1: String,
+        @RequestParam param2: String
+    ) =
+        Greeting(name = randomAlphabetic(10))
 }
