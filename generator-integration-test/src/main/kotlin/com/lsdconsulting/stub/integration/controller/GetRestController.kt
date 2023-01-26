@@ -35,7 +35,7 @@ class GetRestController {
     }
 
     @GetMapping("/resourceWithParam/{param1}")
-    fun resourceWithPathVariableAndQueryParam(@PathVariable param1: String, @RequestParam param2: String): Greeting {
+    fun resourceWithPathVariableAndRequestParam(@PathVariable param1: String, @RequestParam param2: String): Greeting {
         return Greeting(name = "name")
     }
 }

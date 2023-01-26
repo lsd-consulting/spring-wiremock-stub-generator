@@ -75,14 +75,14 @@ class RestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithPathVariableAndQueryParam() {
+    fun shouldHandleGetMappingWithPathVariableAndRequestParam() {
         val name = randomAlphabetic(10)
-        underTest.getResourceWithPathVariableAndQueryParam(Greeting(name = name), "test2", "test1")
+        underTest.getResourceWithPathVariableAndRequestParam(Greeting(name = name), "test2", "test1")
         val response =
             restTemplate.getForEntity("http://localhost:8080/getController/resourceWithParam/test1?param2=test2", Greeting::class.java)
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithPathVariableAndQueryParam(1,"test2", "test1")
+        underTest.verifyGetResourceWithPathVariableAndRequestParam(1,"test2", "test1")
     }
 
     companion object {
