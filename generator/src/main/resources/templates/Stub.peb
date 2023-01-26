@@ -24,31 +24,31 @@ public class {{model.stubClassName}} extends StubBase {
 
     private static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
 
-    public void get{{entry.value.methodName}}({{entry.value.responseType}} response{% for entry2 in entry.value.annotatedArguments %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.key}}{% endfor %}) {
+    public void get{{entry.value.methodName}}({{entry.value.responseType}} response{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.key}}{% endfor %}) {
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
         stub(OK, buildBody(response), get(urlPathEqualTo(url))
-                {% for entry2 in entry.value.annotatedArguments %}
+                {% for entry2 in entry.value.requestParameters %}
                  .withQueryParam("{{entry2.key}}", equalTo({{entry2.key}}))
                 {% endfor %}
         );
     }
 
-    public void get{{entry.value.methodName}}(int status, String errorResponse{% for entry2 in entry.value.annotatedArguments %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}) {
+    public void get{{entry.value.methodName}}(int status, String errorResponse{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}) {
         stub(status, errorResponse, get(urlPathEqualTo({{entry.value.methodName.toUpperCase()}}_URL))
-                {% for entry2 in entry.value.annotatedArguments %}
+                {% for entry2 in entry.value.requestParameters %}
                  .withQueryParam("{{entry2.key}}", equalTo({{entry2.key}}))
                 {% endfor %}
         );
     }
 
-    public void verifyGet{{entry.value.methodName}}({% for entry2 in entry.value.annotatedArguments %} {{entry2.value.type}} {{entry2.key}} {% endfor %}{% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.key}}{% endfor %}) {
-        verifyGet{{entry.value.methodName}}(ONCE {% for entry2 in entry.value.annotatedArguments %}, {{entry2.key}}{% endfor %}{% for entry2 in entry.value.pathVariables %},{{entry2.key}}{% endfor %});
+    public void verifyGet{{entry.value.methodName}}({% for entry2 in entry.value.requestParameters %} {{entry2.value.type}} {{entry2.key}} {% endfor %}{% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.key}}{% endfor %}) {
+        verifyGet{{entry.value.methodName}}(ONCE {% for entry2 in entry.value.requestParameters %}, {{entry2.key}}{% endfor %}{% for entry2 in entry.value.pathVariables %},{{entry2.key}}{% endfor %});
     }
 
-    public void verifyGet{{entry.value.methodName}}(final int times {% for entry2 in entry.value.annotatedArguments %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.key}}{% endfor %}) {
+    public void verifyGet{{entry.value.methodName}}(final int times {% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.key}}{% endfor %}) {
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
         verify(times, getRequestedFor(urlPathEqualTo(format(url)))
-                {% for entry2 in entry.value.annotatedArguments %}
+                {% for entry2 in entry.value.requestParameters %}
                  .withQueryParam("{{entry2.key}}", equalTo({{entry2.key}}))
                 {% endfor %}
         );
