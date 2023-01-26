@@ -76,14 +76,14 @@ class ControllerProcessor : AbstractProcessor() {
                     val methodName = element.simpleName.toString()
                     messager.printMessage(NOTE, "methodName = $methodName")
                     if (path.isNotEmpty()) {
-                        controllerModel.getMethodModel(methodModelKey).subResource = path[0]
+                        controllerModel.getResourceModel(methodModelKey).subResource = path[0]
                     } else if (value.isNotEmpty()) {
-                        controllerModel.getMethodModel(methodModelKey).subResource = value[0]
+                        controllerModel.getResourceModel(methodModelKey).subResource = value[0]
                     }
-                    controllerModel.getMethodModel(methodModelKey).methodName =
+                    controllerModel.getResourceModel(methodModelKey).methodName =
                         capitalize(methodName)
 
-                    controllerModel.getMethodModel(methodModelKey).responseType =
+                    controllerModel.getResourceModel(methodModelKey).responseType =
                         element.asType().toString().replace(Regex("\\(.*\\)"), "")
                 } else if (element.getAnnotation(RequestParam::class.java) != null) {
                     messager.printMessage(NOTE, "Processing RequestParam annotation")
@@ -96,8 +96,8 @@ class ControllerProcessor : AbstractProcessor() {
                     messager.printMessage(NOTE, "argumentName = $argumentName")
                     messager.printMessage(NOTE, "argumentType = $argumentType")
 
-                    controllerModel.getMethodModel(methodName).getArgumentModel(argumentName).type = argumentType
-                    controllerModel.getMethodModel(methodName).getArgumentModel(argumentName).name = argumentName
+                    controllerModel.getResourceModel(methodName).getArgumentModel(argumentName).type = argumentType
+                    controllerModel.getResourceModel(methodName).getArgumentModel(argumentName).name = argumentName
                 } else if (element.getAnnotation(PathVariable::class.java) != null) {
                     messager.printMessage(NOTE, "Processing PathVariable annotation")
 
@@ -109,9 +109,9 @@ class ControllerProcessor : AbstractProcessor() {
                     messager.printMessage(NOTE, "argumentName = $argumentName")
                     messager.printMessage(NOTE, "argumentType = $argumentType")
 
-                    controllerModel.getMethodModel(methodName).urlHasPathVariable = true
-                    controllerModel.getMethodModel(methodName).getPathVariableModel(argumentName).type = argumentType
-                    controllerModel.getMethodModel(methodName).getPathVariableModel(argumentName).name = argumentName
+                    controllerModel.getResourceModel(methodName).urlHasPathVariable = true
+                    controllerModel.getResourceModel(methodName).getPathVariableModel(argumentName).type = argumentType
+                    controllerModel.getResourceModel(methodName).getPathVariableModel(argumentName).name = argumentName
                 } else {
                     messager.printMessage(NOTE, "Unknown annotation")
                 }
@@ -121,7 +121,7 @@ class ControllerProcessor : AbstractProcessor() {
         }
 
         // Post-processing
-        controllerModel.annotatedMethods.values.forEach{ annotatedMethod ->
+        controllerModel.resources.values.forEach{ annotatedMethod ->
             if (annotatedMethod.urlHasPathVariable) {
                 annotatedMethod.pathVariables.values.forEach{ pathVariable ->
                     annotatedMethod.subResource = annotatedMethod.subResource?.replace("{${pathVariable.name}}", "%s")
