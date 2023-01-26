@@ -10,9 +10,9 @@ import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
+import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
+import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate
 
 class GetRestControllerIT {
@@ -23,6 +23,12 @@ class GetRestControllerIT {
     private val param = randomAlphabetic(10)
     private val param1 = randomAlphabetic(10)
     private val param2 = randomAlphabetic(10)
+    private val customResponseBody = randomAlphabetic(10)
+
+    @BeforeEach
+    fun setup() {
+        WireMock.reset()
+    }
 
     @Test
     fun shouldHandleGetMappingWithNoParam() {
@@ -106,6 +112,103 @@ class GetRestControllerIT {
             restTemplate.getForEntity("http://localhost:8080/getController", Greeting::class.java)
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithNoSubresource(1)
+    }
+
+    @Test
+    fun shouldHandleGetMappingWithNoParamAndCustomResponse() {
+        underTest.getResourceWithNoParams(INTERNAL_SERVER_ERROR.value(), customResponseBody)
+        val ex = assertThrows<HttpServerErrorException> { restTemplate.getForEntity("http://localhost:8080/getController/resourceWithNoParams", Greeting::class.java) }
+        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.responseBodyAsString, notNullValue())
+        assertThat(ex.responseBodyAsString, `is`(customResponseBody))
+        underTest.verifyGetResourceWithNoParams(1)
+    }
+
+    @Test
+    fun shouldHandleGetMappingWithRequestParamAndCustomResponse() {
+        underTest.getResourceWithParam(INTERNAL_SERVER_ERROR.value(), customResponseBody, param)
+        val ex = assertThrows<HttpServerErrorException> {
+            restTemplate.getForEntity(
+                "http://localhost:8080/getController/resourceWithParam?param=$param",
+                Greeting::class.java
+            )
+        }
+        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.responseBodyAsString, notNullValue())
+        assertThat(ex.responseBodyAsString, `is`(customResponseBody))
+        underTest.verifyGetResourceWithParam(1, param)
+    }
+
+    @Test
+    fun shouldHandleGetMappingWithMultipleRequestParamsAndCustomResponse() {
+        underTest.getResourceWithMultipleParams(INTERNAL_SERVER_ERROR.value(), customResponseBody, param1, param2)
+        val ex = assertThrows<HttpServerErrorException> {
+            restTemplate.getForEntity(
+                "http://localhost:8080/getController/resourceWithMultipleParams?param1=$param1&param2=$param2",
+                Greeting::class.java
+            )
+        }
+        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.responseBodyAsString, notNullValue())
+        assertThat(ex.responseBodyAsString, `is`(customResponseBody))
+        underTest.verifyGetResourceWithMultipleParams(1, param1, param2)
+    }
+
+    @Test
+    fun shouldHandleGetMappingWithPathVariableAndCustomResponse() {
+        underTest.getResourceWithPathVariable(INTERNAL_SERVER_ERROR.value(), customResponseBody, param)
+        val ex = assertThrows<HttpServerErrorException> {
+            restTemplate.getForEntity(
+                "http://localhost:8080/getController/resourceWithParam/$param",
+                Greeting::class.java
+            )
+        }
+        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.responseBodyAsString, notNullValue())
+        assertThat(ex.responseBodyAsString, `is`(customResponseBody))
+        underTest.verifyGetResourceWithPathVariable(1, param)
+    }
+
+    @Test
+    fun shouldHandleGetMappingWithMultiplePathVariablesAndCustomResponse() {
+        underTest.getResourceWithMultiplePathVariables(INTERNAL_SERVER_ERROR.value(), customResponseBody, param1, param2)
+        val ex = assertThrows<HttpServerErrorException> {
+            restTemplate.getForEntity(
+                "http://localhost:8080/getController/resourceWithParam/$param1/$param2",
+                Greeting::class.java
+            )
+        }
+        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.responseBodyAsString, notNullValue())
+        assertThat(ex.responseBodyAsString, `is`(customResponseBody))
+        underTest.verifyGetResourceWithMultiplePathVariables(1, param1, param2)
+    }
+
+    @Test
+    fun shouldHandleGetMappingWithPathVariableAndRequestParamAndCustomResponse() {
+        underTest.getResourceWithPathVariableAndRequestParam(INTERNAL_SERVER_ERROR.value(), customResponseBody, param2, param1)
+        val ex = assertThrows<HttpServerErrorException> {
+            restTemplate.getForEntity(
+                "http://localhost:8080/getController/resourceWithParam/$param1?param2=$param2",
+                Greeting::class.java
+            )
+        }
+        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.responseBodyAsString, notNullValue())
+        assertThat(ex.responseBodyAsString, `is`(customResponseBody))
+        underTest.verifyGetResourceWithPathVariableAndRequestParam(1, param2, param1)
+    }
+
+    @Test
+    fun shouldHandleGetMappingWithNoSubresourceAndCustomResponse() {
+        underTest.getResourceWithNoSubresource(INTERNAL_SERVER_ERROR.value(), customResponseBody)
+        val ex = assertThrows<HttpServerErrorException> {
+            restTemplate.getForEntity("http://localhost:8080/getController", Greeting::class.java)
+        }
+        assertThat(ex.statusCode, `is`(INTERNAL_SERVER_ERROR))
+        assertThat(ex.responseBodyAsString, notNullValue())
+        assertThat(ex.responseBodyAsString, `is`(customResponseBody))
         underTest.verifyGetResourceWithNoSubresource(1)
     }
 

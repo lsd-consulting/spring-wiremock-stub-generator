@@ -33,8 +33,9 @@ public class {{model.stubClassName}} extends StubBase {
         );
     }
 
-    public void get{{entry.value.methodName}}(int status, String errorResponse{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}) {
-        stub(status, errorResponse, get(urlPathEqualTo({{entry.value.methodName.toUpperCase()}}_URL))
+    public void get{{entry.value.methodName}}(int status, String errorResponse{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.key}}{% endfor %}) {
+        String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
+        stub(status, errorResponse, get(urlPathEqualTo(url))
                 {% for entry2 in entry.value.requestParameters %}
                  .withQueryParam("{{entry2.key}}", equalTo({{entry2.key}}))
                 {% endfor %}
