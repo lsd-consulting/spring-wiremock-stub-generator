@@ -8,12 +8,12 @@ import java.nio.file.Files
 import java.nio.file.Path
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
-import javax.tools.Diagnostic
+import javax.tools.Diagnostic.Kind.NOTE
 
 class StubWriter(processingEnv: ProcessingEnvironment) {
     private val engine: PebbleEngine = PebbleEngine.Builder().build()
-    private val stubTemplate = engine.getTemplate("templates/Stub.tpl")
-    private val stubBaseTemplate = engine.getTemplate("templates/StubBase.tpl")
+    private val stubTemplate = engine.getTemplate("templates/Stub.peb")
+    private val stubBaseTemplate = engine.getTemplate("templates/StubBase.peb")
     private val processingEnv: ProcessingEnvironment
     private var messager: Messager
 
@@ -29,9 +29,9 @@ class StubWriter(processingEnv: ProcessingEnvironment) {
                 .replace("generated/source/kapt/main", "generated-stub-sources")
                 .replace("generated/sources/annotationProcessor/java/main", "generated-stub-sources")
             val directory = stubBasePathName.replace("StubBase.java", "")
-            messager.printMessage(Diagnostic.Kind.NOTE, "Creating directory:$directory")
+            messager.printMessage(NOTE, "Creating directory:$directory")
             Files.createDirectories(Path.of(directory))
-            messager.printMessage(Diagnostic.Kind.NOTE, "Creating file:$stubBasePathName")
+            messager.printMessage(NOTE, "Creating file:$stubBasePathName")
             val path = Files.createFile(Path.of(stubBasePathName))
             PrintWriter(builderFile.openWriter()).use { writer ->
                 stubBaseTemplate.evaluate(writer, mapOf("packageName" to controllerModel.packageName))
@@ -48,16 +48,16 @@ class StubWriter(processingEnv: ProcessingEnvironment) {
     fun writeStubFile(controllerModel: ControllerModel) {
         try {
             val builderFile = processingEnv.filer.createSourceFile(controllerModel.stubFullyQualifiedName)
-            messager.printMessage(Diagnostic.Kind.NOTE, "builderFile:$builderFile")
-            messager.printMessage(Diagnostic.Kind.NOTE, "builderFile.toUri().path:${builderFile.toUri().path}")
+            messager.printMessage(NOTE, "builderFile:$builderFile")
+            messager.printMessage(NOTE, "builderFile.toUri().path:${builderFile.toUri().path}")
             val stubBasePathName = builderFile.toUri().path
                 .replace("generated/source/kapt/main", "generated-stub-sources")
                 .replace("generated/sources/annotationProcessor/java/main", "generated-stub-sources")
-            messager.printMessage(Diagnostic.Kind.NOTE, "stubBasePathName:$stubBasePathName")
+            messager.printMessage(NOTE, "stubBasePathName:$stubBasePathName")
             val directory: String = stubBasePathName.replace(controllerModel.stubClassName + ".java", "")
-            messager.printMessage(Diagnostic.Kind.NOTE, "Creating directory:$directory")
+            messager.printMessage(NOTE, "Creating directory:$directory")
             Files.createDirectories(Path.of(directory))
-            messager.printMessage(Diagnostic.Kind.NOTE, "Creating file:$stubBasePathName")
+            messager.printMessage(NOTE, "Creating file:$stubBasePathName")
             val path = Files.createFile(Path.of(stubBasePathName))
             PrintWriter(builderFile.openWriter()).use { writer ->
                 stubTemplate.evaluate(writer, mapOf("model" to controllerModel))

@@ -1,5 +1,6 @@
 package io.lsdconsulting.stub.processor
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.lsdconsulting.stub.handler.RestControllerAnnotationHandler
 import io.lsdconsulting.stub.model.ControllerModel
 import io.lsdconsulting.stub.writer.StubWriter
@@ -10,7 +11,7 @@ import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
-import javax.tools.Diagnostic
+import javax.tools.Diagnostic.Kind.NOTE
 
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
 class ControllerProcessor : AbstractProcessor() {
@@ -42,34 +43,74 @@ class ControllerProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
+        val objectWriter = ObjectMapper().writerWithDefaultPrettyPrinter()
+
         val controllerModel = ControllerModel()
 
+        messager.printMessage(NOTE, "annotations = $annotations")
+
         for (annotation in annotations) {
+            messager.printMessage(NOTE, ">>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            messager.printMessage(NOTE, "Processing annotation = $annotation")
             val annotatedElements = roundEnv.getElementsAnnotatedWith(annotation)
+            messager.printMessage(NOTE, "annotatedElements = $annotatedElements")
             annotatedElements.forEach { element: Element ->
+                messager.printMessage(NOTE, "##############################")
+                messager.printMessage(NOTE, "Processing element = $element")
+                messager.printMessage(NOTE, "enclosingElement = ${element.enclosingElement}")
+                messager.printMessage(
+                    NOTE,
+                    "enclosingElement.simpleName = ${element.enclosingElement.simpleName}"
+                )
+                messager.printMessage(NOTE, "enclosedElements = ${element.enclosedElements}")
                 if (element.getAnnotation(RestController::class.java) != null) {
-                    messager.printMessage(Diagnostic.Kind.NOTE, "Processing RestController annotation")
+                    messager.printMessage(NOTE, "Processing RestController annotation")
                     restControllerAnnotationHandler.handle(element, controllerModel)
                 } else if (element.getAnnotation(GetMapping::class.java) != null) {
-                    messager.printMessage(Diagnostic.Kind.NOTE, "Processing GetMapping annotation")
+                    messager.printMessage(NOTE, "Processing GetMapping annotation")
                     val path: Array<String> = element.getAnnotation(GetMapping::class.java).path
                     val value: Array<String> = element.getAnnotation(GetMapping::class.java).value
+                    val elementName = element.simpleName.toString()
+                    messager.printMessage(NOTE, "elementName = $elementName")
                     if (path.isNotEmpty()) {
-                        controllerModel.subResource = path[0]
+                        controllerModel.getMethodModel(elementName).subResource = path[0]
                     } else if (value.isNotEmpty()) {
-                        controllerModel.subResource = value[0]
+                        controllerModel.getMethodModel(elementName).subResource = value[0]
                     }
-                    controllerModel.methodName = capitalize(element.simpleName.toString())
+                    controllerModel.getMethodModel(element.simpleName.toString()).methodName =
+                        capitalize(element.simpleName.toString())
 
-                    controllerModel.responseType = element.asType().toString().replace("()", "")
+                    controllerModel.getMethodModel(element.simpleName.toString()).responseType =
+                        element.asType().toString().replace(Regex("\\(.*\\)"), "")
+                } else if (element.getAnnotation(RequestParam::class.java) != null) {
+                    messager.printMessage(NOTE, "Processing RequestParam annotation")
+
+                    val methodName = element.enclosingElement.simpleName.toString()
+                    messager.printMessage(NOTE, "methodName = $methodName")
+
+                    val argumentName = element.simpleName.toString()
+                    val argumentType = element.asType().toString()
+                    messager.printMessage(NOTE, "argumentName = $argumentName")
+                    messager.printMessage(NOTE, "argumentType = $argumentType")
+
+                    controllerModel.getMethodModel(methodName).getArgumentModel(argumentName).type = argumentType
                 } else {
-                    messager.printMessage(Diagnostic.Kind.NOTE, "Unknown annotation")
+                    messager.printMessage(NOTE, "Unknown annotation")
                 }
+                messager.printMessage(NOTE, "controllerModel:${objectWriter.writeValueAsString(controllerModel)}")
+                messager.printMessage(NOTE, "Elements end -------------------------")
             }
+            messager.printMessage(NOTE, "Annotations end ++++++++++++++++++++++++++")
         }
 
+        messager.printMessage(NOTE, "")
+        messager.printMessage(NOTE, "")
+        messager.printMessage(NOTE, "")
+        messager.printMessage(NOTE, "")
+        messager.printMessage(NOTE, "Writing files for model:${objectWriter.writeValueAsString(controllerModel)}")
+
         if (annotations.isNotEmpty()) {
-            messager.printMessage(Diagnostic.Kind.NOTE, "Writing files for model:$controllerModel")
+//            messager.printMessage(NOTE, "Writing files for model:${objectWriter.writeValueAsString(controllerModel)}")
             stubWriter.writeStubFile(controllerModel)
             stubWriter.writeStubBaseFile(controllerModel)
         }

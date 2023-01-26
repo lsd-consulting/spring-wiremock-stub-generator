@@ -4,13 +4,13 @@ plugins {
 
 apply plugin: 'kotlin-kapt'
 
-sourceSets {
-    main {
-        kotlin {
-            srcDir "${buildDir.absolutePath}/generated-stub-sources/"
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        kotlin {
+//            srcDir "${buildDir.absolutePath}/generated-stub-sources/"
+//        }
+//    }
+//}
 
 kapt.includeCompileClasspath = false
 

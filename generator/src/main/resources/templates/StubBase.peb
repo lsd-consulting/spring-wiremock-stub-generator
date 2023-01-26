@@ -20,7 +20,7 @@ class StubBase {
         stub(status, response, get(urlEqualTo(requestUrl)));
     }
 
-    private void stub(final int status, final String response, final MappingBuilder mappingBuilder) {
+    void stub(final int status, final String response, final MappingBuilder mappingBuilder) {
         stubFor(mappingBuilder
                 .willReturn(
                         aResponse()

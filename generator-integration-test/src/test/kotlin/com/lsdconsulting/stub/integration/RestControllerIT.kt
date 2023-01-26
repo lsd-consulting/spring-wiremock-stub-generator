@@ -20,14 +20,25 @@ class RestControllerIT {
     private val underTest = GetRestControllerStub(ObjectMapper())
 
     @Test
-    fun shouldHandleGetMapping() {
+    fun shouldHandleGetMappingWithNoParam() {
         val name = RandomStringUtils.randomAlphabetic(10)
-        underTest.getResourceWithNoParams(Greeting(name = name))
+        underTest.getResourceWithNoParams_(Greeting(name = name))
         val response =
             restTemplate.getForEntity("http://localhost:8080/getController/resourceWithNoParams", Greeting::class.java)
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithNoParams()
+        underTest.verifyGetResourceWithNoParams_()
+    }
+
+    @Test
+    fun shouldHandleGetMappingWithParam() {
+        val name = RandomStringUtils.randomAlphabetic(10)
+        underTest.getResourceWithParam_(Greeting(name = name), "test")
+        val response =
+            restTemplate.getForEntity("http://localhost:8080/getController/resourceWithParam?param=test", Greeting::class.java)
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithParam_("test")
     }
 
     companion object {

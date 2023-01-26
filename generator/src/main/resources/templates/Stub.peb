@@ -1,0 +1,57 @@
+package {{model.packageName}};
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static java.lang.String.format;
+import java.net.URLEncoder;
+import java.util.List;
+import javax.annotation.processing.Generated;
+
+@Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
+public class {# @pebvariable name="model" type="io.lsdconsulting.stub.model.ControllerModel" #}{{model.stubClassName}} extends StubBase {
+
+    private static final int OK = 200;
+    public static final int ONCE = 1;
+
+    private ObjectMapper objectMapper;
+
+    public {{model.stubClassName}}(ObjectMapper objectMapper) {
+        super(objectMapper);
+        this.objectMapper = objectMapper;
+    }
+
+    {% for entry in model.annotatedMethods %}
+
+    private static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
+
+    public void get{{entry.value.methodName}}({{entry.value.responseType}} response{% for entry2 in entry.value.annotatedArguments %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}) {
+        stub(OK, buildBody(response), get(urlPathEqualTo({{entry.value.methodName.toUpperCase()}}_URL))
+                {% for entry2 in entry.value.annotatedArguments %}
+                 .withQueryParam("{{entry2.key}}", equalTo({{entry2.key}}))
+                {% endfor %}
+        );
+    }
+
+    public void get{{entry.value.methodName}}(int status, String errorResponse{% for entry2 in entry.value.annotatedArguments %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}) {
+        stub(status, errorResponse, get(urlPathEqualTo({{entry.value.methodName.toUpperCase()}}_URL))
+                {% for entry2 in entry.value.annotatedArguments %}
+                 .withQueryParam("{{entry2.key}}", equalTo({{entry2.key}}))
+                {% endfor %}
+        );
+    }
+
+    public void verifyGet{{entry.value.methodName}}({% for entry2 in entry.value.annotatedArguments %} {{entry2.value.type}} {{entry2.key}} {% endfor %}) {
+        verifyGet{{entry.value.methodName}}(ONCE {% for entry2 in entry.value.annotatedArguments %}, {{entry2.key}} {% endfor %});
+    }
+
+    public void verifyGet{{entry.value.methodName}}(final int times {% for entry2 in entry.value.annotatedArguments %}, {{entry2.value.type}} {{entry2.key}} {% endfor %}) {
+        verify(times, getRequestedFor(urlPathEqualTo(format({{entry.value.methodName.toUpperCase()}}_URL)))
+                {% for entry2 in entry.value.annotatedArguments %}
+                 .withQueryParam("{{entry2.key}}", equalTo({{entry2.key}}))
+                {% endfor %}
+        );
+    }
+
+    {% endfor %}
+
+}
