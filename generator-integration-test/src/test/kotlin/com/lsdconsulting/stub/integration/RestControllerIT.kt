@@ -19,9 +19,13 @@ class RestControllerIT {
     private val restTemplate = RestTemplate()
     private val underTest = GetRestControllerStub(ObjectMapper())
 
+    private val name = randomAlphabetic(10)
+    private val param = randomAlphabetic(10)
+    private val param1 = randomAlphabetic(10)
+    private val param2 = randomAlphabetic(10)
+
     @Test
     fun shouldHandleGetMappingWithNoParam() {
-        val name = randomAlphabetic(10)
         underTest.getResourceWithNoParams(Greeting(name = name))
         val response =
             restTemplate.getForEntity("http://localhost:8080/getController/resourceWithNoParams", Greeting::class.java)
@@ -32,8 +36,6 @@ class RestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithRequestParam() {
-        val name = randomAlphabetic(10)
-        val param = randomAlphabetic(10)
         underTest.getResourceWithParam(Greeting(name = name), param)
         val response =
             restTemplate.getForEntity(
@@ -47,9 +49,6 @@ class RestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithMultipleRequestParams() {
-        val name = randomAlphabetic(10)
-        val param1 = randomAlphabetic(10)
-        val param2 = randomAlphabetic(10)
         underTest.getResourceWithMultipleParams(Greeting(name = name), param1, param2)
         val response =
             restTemplate.getForEntity(
@@ -63,8 +62,6 @@ class RestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithPathVariable() {
-        val name = randomAlphabetic(10)
-        val param = randomAlphabetic(10)
         underTest.getResourceWithPathVariable(Greeting(name = name), param)
         val response =
             restTemplate.getForEntity(
@@ -78,9 +75,6 @@ class RestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithMultiplePathVariables() {
-        val name = randomAlphabetic(10)
-        val param1 = randomAlphabetic(10)
-        val param2 = randomAlphabetic(10)
         underTest.getResourceWithMultiplePathVariables(Greeting(name = name), param1, param2)
         val response =
             restTemplate.getForEntity(
@@ -94,9 +88,6 @@ class RestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithPathVariableAndRequestParam() {
-        val name = randomAlphabetic(10)
-        val param1 = randomAlphabetic(10)
-        val param2 = randomAlphabetic(10)
         underTest.getResourceWithPathVariableAndRequestParam(Greeting(name = name), param2, param1)
         val response =
             restTemplate.getForEntity(
