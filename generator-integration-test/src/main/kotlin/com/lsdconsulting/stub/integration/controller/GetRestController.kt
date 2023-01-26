@@ -39,6 +39,16 @@ class GetRestController {
     ) =
         Greeting(name = randomAlphabetic(10))
 
+    @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/resourceWithParam/{param1}/{param2}")
+    fun resourceWithMultiplePathVariablesAndRequestParams(
+        @Suppress("UNUSED_PARAMETER") @PathVariable param1: String,
+        @PathVariable param2: String,
+        @RequestParam param3: String,
+        @RequestParam param4: String
+    ) =
+        Greeting(name = randomAlphabetic(10))
+
     @GetMapping
     fun resourceWithNoSubresource() = Greeting(name = randomAlphabetic(10))
 }

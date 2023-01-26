@@ -24,7 +24,7 @@ public class {{model.stubClassName}} extends StubBase {
 
     private static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
 
-    public void get{{entry.value.methodName}}({{entry.value.responseType}} response{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.value.name}} {% endfor %}{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}) {
+    public void get{{entry.value.methodName}}({{entry.value.responseType}} response{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}) {
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
         stub(OK, buildBody(response), get(urlPathEqualTo(url))
                 {% for entry2 in entry.value.requestParameters %}
@@ -33,20 +33,20 @@ public class {{model.stubClassName}} extends StubBase {
         );
     }
 
-    public void get{{entry.value.methodName}}(int status, String errorResponse{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.value.name}} {% endfor %}{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}) {
+    public void get{{entry.value.methodName}}(int httpStatus, String errorResponse{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}) {
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
-        stub(status, errorResponse, get(urlPathEqualTo(url))
+        stub(httpStatus, errorResponse, get(urlPathEqualTo(url))
                 {% for entry2 in entry.value.requestParameters %}
                  .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
                 {% endfor %}
         );
     }
 
-//    public void verifyGet{{entry.value.methodName}}({% for entry2 in entry.value.requestParameters %} {{entry2.value.type}} {{entry2.value.name}} {% endfor %}{% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% endfor %}) {
-//        verifyGet{{entry.value.methodName}}(ONCE {% for entry2 in entry.value.requestParameters %}, {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.pathVariables %},{{entry2.value.name}}{% endfor %});
-//    }
+    public void verifyGet{{entry.value.methodName}}({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}{% for entry2 in entry.value.requestParameters %}{{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}) {
+        verifyGet{{entry.value.methodName}}(ONCE{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.name}}{% endfor %});
+    }
 
-    public void verifyGet{{entry.value.methodName}}(final int times {% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.value.name}} {% endfor %}{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}) {
+    public void verifyGet{{entry.value.methodName}}(final int times{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}) {
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
         verify(times, getRequestedFor(urlPathEqualTo(format(url)))
                 {% for entry2 in entry.value.requestParameters %}
@@ -54,7 +54,6 @@ public class {{model.stubClassName}} extends StubBase {
                 {% endfor %}
         );
     }
-
     {% endfor %}
 
 }
