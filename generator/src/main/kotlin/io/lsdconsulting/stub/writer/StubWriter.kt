@@ -1,7 +1,7 @@
 package io.lsdconsulting.stub.writer
 
-import com.mitchellbosecke.pebble.PebbleEngine
 import io.lsdconsulting.stub.model.ControllerModel
+import io.pebbletemplates.pebble.PebbleEngine
 import java.io.IOException
 import java.io.PrintWriter
 import java.nio.file.Files
