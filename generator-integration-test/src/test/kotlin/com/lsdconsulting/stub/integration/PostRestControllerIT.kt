@@ -39,16 +39,31 @@ class PostRestControllerIT {
     }
 
     @Test
-    fun shouldHandlePostMappingWithNoParam() {
-        underTest.postResourceWithNoParams(GreetingResponse(name = name))
+    fun shouldHandlePostMappingWithNoBody() {
+        underTest.postResourceWithNoBody(GreetingResponse(name = name))
+        val response =
+            restTemplate.postForEntity(
+                "http://localhost:8080/postController/resourceWithNoBody",
+                HttpEntity(""),
+                GreetingResponse::class.java
+            )
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyPostResourceWithNoBody(1)
+        underTest.verifyPostResourceWithNoBody()
+    }
+
+    @Test
+    fun shouldHandlePostMappingWithBody() {
+        underTest.postResourceWithBody(GreetingResponse(name = name))
         val greetingRequest = GreetingRequest(name = name)
         val request  = HttpEntity(greetingRequest)
         val response =
-            restTemplate.postForEntity("http://localhost:8080/postController/resourceWithNoParams", request, GreetingResponse::class.java)
+            restTemplate.postForEntity("http://localhost:8080/postController/resourceWithBody", request, GreetingResponse::class.java)
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyPostResourceWithNoParams(1)
-        underTest.verifyPostResourceWithNoParams()
+        underTest.verifyPostResourceWithBody(1, greetingRequest)
+        underTest.verifyPostResourceWithBody(greetingRequest)
     }
 
     companion object {

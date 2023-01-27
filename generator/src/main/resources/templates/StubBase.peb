@@ -16,13 +16,13 @@ class StubBase {
         this.objectMapper = objectMapper;
     }
 
-    void buildGet(final String requestUrl, final int status, final String response) {
-        stub(status, response, get(urlEqualTo(requestUrl)));
-    }
+{#    void buildGet(final String requestUrl, final int status, final String response) {#}
+{#        stub(status, response, get(urlEqualTo(requestUrl)));#}
+{#    }#}
 
-    void buildPost(final String requestUrl, final int status, final String response) {
-        stub(status, response, post(urlEqualTo(requestUrl)));
-    }
+{#    void buildPost(final String requestUrl, final int status, final String response) {#}
+{#        stub(status, response, post(urlEqualTo(requestUrl)));#}
+{#    }#}
 
     void stub(final int status, final String response, final MappingBuilder mappingBuilder) {
         stubFor(mappingBuilder

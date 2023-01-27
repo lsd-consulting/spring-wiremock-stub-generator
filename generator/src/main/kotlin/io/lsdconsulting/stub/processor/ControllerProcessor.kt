@@ -2,6 +2,7 @@ package io.lsdconsulting.stub.processor
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.lsdconsulting.stub.handler.RestControllerAnnotationHandler
+import io.lsdconsulting.stub.model.ArgumentModel
 import io.lsdconsulting.stub.model.Model
 import io.lsdconsulting.stub.writer.StubWriter
 import org.apache.commons.lang3.StringUtils.capitalize
@@ -144,6 +145,22 @@ class ControllerProcessor : AbstractProcessor() {
                     controllerModel.getResourceModel(methodName).urlHasPathVariable = true
                     controllerModel.getResourceModel(methodName).getPathVariableModel(argumentName).type = argumentType
                     controllerModel.getResourceModel(methodName).getPathVariableModel(argumentName).name = argumentName
+                } else if (element.getAnnotation(RequestBody::class.java) != null) {
+                    messager.printMessage(NOTE, "Processing RequestBody annotation")
+
+                    val methodName = element.enclosingElement.toString()
+                    messager.printMessage(NOTE, "methodName = $methodName")
+
+                    val argumentName = element.simpleName.toString()
+                    val argumentType = element.asType().toString()
+                    messager.printMessage(NOTE, "argumentName = $argumentName")
+                    messager.printMessage(NOTE, "argumentType = $argumentType")
+
+                    messager.printMessage(NOTE, "Finding controller model: ${element.enclosingElement.enclosingElement}")
+                    val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
+                    controllerModel.getResourceModel(methodName).urlHasPathVariable = true
+                    val requestBody = ArgumentModel(type = argumentType, name = argumentName)
+                    controllerModel.getResourceModel(methodName).requestBody = requestBody
                 } else {
                     messager.printMessage(NOTE, "Unknown annotation")
                 }
