@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
-import com.lsdconsulting.stub.integration.controller.post.PostRestControllerStub
+import com.lsdconsulting.stub.integration.controller.post.AdvancedPostRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingRequest
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
@@ -18,9 +18,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpEntity
 import org.springframework.web.client.RestTemplate
 
-class PostRestControllerIT {
+class AdvancedPostRestControllerIT {
     private val restTemplate = RestTemplate()
-    private val underTest = PostRestControllerStub(ObjectMapper())
+    private val underTest = AdvancedPostRestControllerStub(ObjectMapper())
 
     private val name = randomAlphabetic(10)
     private val param = randomAlphabetic(10)
@@ -28,21 +28,6 @@ class PostRestControllerIT {
     @BeforeEach
     fun setup() {
         WireMock.reset()
-    }
-
-    @Test
-    fun `should handle post mapping with no body`() {
-        underTest.postResourceWithNoBody(GreetingResponse(name = name))
-        val response =
-            restTemplate.postForEntity(
-                "http://localhost:8080/postController/resourceWithNoBody",
-                HttpEntity(""),
-                GreetingResponse::class.java
-            )
-        assertThat(response.body, notNullValue())
-        assertThat(response.body?.name, `is`(name))
-        underTest.verifyPostResourceWithNoBody(1)
-        underTest.verifyPostResourceWithNoBody()
     }
 
     @Test
