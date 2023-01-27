@@ -2,6 +2,7 @@ package com.lsdconsulting.stub.integration
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.client.VerificationException
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.lsdconsulting.stub.integration.controller.post.SimplePostRestControllerStub
@@ -10,10 +11,7 @@ import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.springframework.http.HttpEntity
 import org.springframework.web.client.RestTemplate
 
@@ -30,6 +28,7 @@ class SimplePostRestControllerIT {
 
     @Test
     fun `should handle post mapping with no body`() {
+        underTest.verifyPostResourceWithNoBodyNoInteraction()
         underTest.postResourceWithNoBody(GreetingResponse(name = name))
         val response =
             restTemplate.postForEntity(
@@ -41,6 +40,7 @@ class SimplePostRestControllerIT {
         assertThat(response.body?.name, `is`(name))
         underTest.verifyPostResourceWithNoBody(1)
         underTest.verifyPostResourceWithNoBody()
+        assertThrows<VerificationException> { underTest.verifyPostResourceWithNoBodyNoInteraction() }
     }
 
     companion object {

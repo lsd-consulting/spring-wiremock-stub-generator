@@ -13,7 +13,8 @@ public class {{model.stubClassName}} {
     private static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
     private static final String CONTENT_TYPE_HEADER_VALUE = "application/json; charset=utf-8";
     private static final int OK = 200;
-    public static final int ONCE = 1;
+    private static final int ONCE = 1;
+    private static final int NEVER = 0;
 
     private ObjectMapper objectMapper;
 
@@ -50,6 +51,18 @@ public class {{model.stubClassName}} {
     public void verify{{entry.value.getHttpMethodName() | title}}{{entry.value.methodName}}(final int times{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% if entry.value.requestBody is not empty%}, {{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
         verify(times, {{entry.value.getHttpMethodName()}}RequestedFor(urlPathEqualTo(format(url)))
+                {% for entry2 in entry.value.requestParameters %}
+                 .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
+                {% endfor %}
+                {% if entry.value.requestBody is not empty%}
+                .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
+                {% endif %}
+        );
+    }
+
+    public void verify{{entry.value.getHttpMethodName() | title}}{{entry.value.methodName}}NoInteraction({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}{% for entry2 in entry.value.requestParameters %}{{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (((entry.value.requestParameters is not empty) or (entry.value.pathVariables  is not empty)) and entry.value.requestBody is not empty)%}, {% endif %}{% if entry.value.requestBody is not empty%}{{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
+        String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
+        verify(NEVER, {{entry.value.getHttpMethodName()}}RequestedFor(urlPathEqualTo(format(url)))
                 {% for entry2 in entry.value.requestParameters %}
                  .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
                 {% endfor %}
