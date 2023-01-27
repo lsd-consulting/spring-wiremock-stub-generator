@@ -1,4 +1,4 @@
-package com.lsdconsulting.stub.integration
+package com.lsdconsulting.stub.integration.post
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.WireMockServer
