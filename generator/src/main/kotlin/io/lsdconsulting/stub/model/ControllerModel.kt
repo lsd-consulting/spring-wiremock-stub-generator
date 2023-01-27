@@ -32,8 +32,6 @@ data class ResourceModel(
 ) {
     fun getArgumentModel(name: String): ArgumentModel = requestParameters.getOrPut(name) {ArgumentModel()}
     fun getPathVariableModel(name: String): ArgumentModel = pathVariables.getOrPut(name) {ArgumentModel()}
-    @Suppress("UNUSED")
-    fun getHttpMethodName() = httpMethod?.name?.lowercase()
 }
 
 data class ArgumentModel(
