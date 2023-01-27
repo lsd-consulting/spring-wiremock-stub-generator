@@ -1,5 +1,13 @@
 package io.lsdconsulting.stub.model
 
+import org.springframework.http.HttpMethod
+
+data class Model(
+    val controllers: MutableMap<String, ControllerModel> = mutableMapOf()
+) {
+    fun getControllerModel(name: String): ControllerModel = controllers.getOrPut(name) {ControllerModel()}
+}
+
 data class ControllerModel(
     var packageName: String? = null,
 
@@ -16,6 +24,7 @@ data class ControllerModel(
 }
 
 data class ResourceModel(
+    var httpMethod: HttpMethod? = null,
     var methodName: String? = null,
     var responseType: String? = null,
     var subResource: String? = null,
@@ -25,6 +34,7 @@ data class ResourceModel(
 ) {
     fun getArgumentModel(name: String): ArgumentModel = requestParameters.getOrPut(name) {ArgumentModel()}
     fun getPathVariableModel(name: String): ArgumentModel = pathVariables.getOrPut(name) {ArgumentModel()}
+    fun getHttpMethodName() = httpMethod?.name?.lowercase()
 }
 
 data class ArgumentModel(

@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.lsdconsulting.stub.integration.controller.GetRestControllerStub
-import com.lsdconsulting.stub.integration.model.Greeting
+import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.apache.commons.lang3.RandomUtils
 import org.hamcrest.MatcherAssert.assertThat
@@ -36,9 +36,9 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithNoParam() {
-        underTest.getResourceWithNoParams(Greeting(name = name))
+        underTest.getResourceWithNoParams(GreetingResponse(name = name))
         val response =
-            restTemplate.getForEntity("http://localhost:8080/getController/resourceWithNoParams", Greeting::class.java)
+            restTemplate.getForEntity("http://localhost:8080/getController/resourceWithNoParams", GreetingResponse::class.java)
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyGetResourceWithNoParams(1)
@@ -47,11 +47,11 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithRequestParam() {
-        underTest.getResourceWithParam(Greeting(name = name), param)
+        underTest.getResourceWithParam(GreetingResponse(name = name), param)
         val response =
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam?param=$param",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
@@ -61,11 +61,11 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithMultipleRequestParams() {
-        underTest.getResourceWithMultipleParams(Greeting(name = name), param1, param2)
+        underTest.getResourceWithMultipleParams(GreetingResponse(name = name), param1, param2)
         val response =
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithMultipleParams?param1=$param1&param2=$param2",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
@@ -75,11 +75,11 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithPathVariable() {
-        underTest.getResourceWithPathVariable(Greeting(name = name), param)
+        underTest.getResourceWithPathVariable(GreetingResponse(name = name), param)
         val response =
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
@@ -89,11 +89,11 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithMultiplePathVariables() {
-        underTest.getResourceWithMultiplePathVariables(Greeting(name = name), param1, param2)
+        underTest.getResourceWithMultiplePathVariables(GreetingResponse(name = name), param1, param2)
         val response =
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param1/$param2",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
@@ -103,11 +103,11 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithPathVariableAndRequestParam() {
-        underTest.getResourceWithPathVariableAndRequestParam(Greeting(name = name), param1, param2)
+        underTest.getResourceWithPathVariableAndRequestParam(GreetingResponse(name = name), param1, param2)
         val response =
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param1?param2=$param2",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
@@ -117,11 +117,11 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithMultiplePathVariablesAndRequestParams() {
-        underTest.getResourceWithMultiplePathVariablesAndRequestParams(Greeting(name = name), param1, param2, param3, param4)
+        underTest.getResourceWithMultiplePathVariablesAndRequestParams(GreetingResponse(name = name), param1, param2, param3, param4)
         val response =
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param1/$param2?param3=$param3&param4=$param4",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
@@ -131,9 +131,9 @@ class GetRestControllerIT {
 
     @Test
     fun shouldHandleGetMappingWithNoSubresource() {
-        underTest.getResourceWithNoSubresource(Greeting(name = name))
+        underTest.getResourceWithNoSubresource(GreetingResponse(name = name))
         val response =
-            restTemplate.getForEntity("http://localhost:8080/getController", Greeting::class.java)
+            restTemplate.getForEntity("http://localhost:8080/getController", GreetingResponse::class.java)
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyGetResourceWithNoSubresource(1)
@@ -146,7 +146,7 @@ class GetRestControllerIT {
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithNoParams",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         }
         assertThat(ex.statusCode, `is`(httpStatus))
@@ -162,7 +162,7 @@ class GetRestControllerIT {
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam?param=$param",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         }
         assertThat(ex.statusCode, `is`(httpStatus))
@@ -178,7 +178,7 @@ class GetRestControllerIT {
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithMultipleParams?param1=$param1&param2=$param2",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         }
         assertThat(ex.statusCode, `is`(httpStatus))
@@ -194,7 +194,7 @@ class GetRestControllerIT {
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         }
         assertThat(ex.statusCode, `is`(httpStatus))
@@ -210,7 +210,7 @@ class GetRestControllerIT {
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param1/$param2",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         }
         assertThat(ex.statusCode, `is`(httpStatus))
@@ -226,7 +226,7 @@ class GetRestControllerIT {
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param1?param2=$param2",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         }
         assertThat(ex.statusCode, `is`(httpStatus))
@@ -240,7 +240,7 @@ class GetRestControllerIT {
     fun shouldHandleGetMappingWithNoSubresourceAndCustomResponse() {
         underTest.getResourceWithNoSubresource(httpStatus.value(), customResponseBody)
         val ex = assertThrows<HttpServerErrorException> {
-            restTemplate.getForEntity("http://localhost:8080/getController", Greeting::class.java)
+            restTemplate.getForEntity("http://localhost:8080/getController", GreetingResponse::class.java)
         }
         assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
@@ -255,7 +255,7 @@ class GetRestControllerIT {
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "http://localhost:8080/getController/resourceWithParam/$param1/$param2?param3=$param3&param4=$param4",
-                Greeting::class.java
+                GreetingResponse::class.java
             )
         }
         assertThat(ex.statusCode, `is`(httpStatus))
