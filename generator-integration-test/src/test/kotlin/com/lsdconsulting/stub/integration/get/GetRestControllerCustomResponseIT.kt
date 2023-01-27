@@ -1,44 +1,26 @@
 package com.lsdconsulting.stub.integration.get
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import com.lsdconsulting.stub.integration.BaseRestControllerIT
+import com.lsdconsulting.stub.integration.GET_CONTROLLER_URL
 import com.lsdconsulting.stub.integration.controller.get.GetRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingResponse
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
-import org.apache.commons.lang3.RandomUtils
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
-import org.junit.jupiter.api.*
-import org.springframework.http.HttpStatus
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.web.client.HttpServerErrorException
-import org.springframework.web.client.RestTemplate
 
-class GetRestControllerCustomResponseIT {
-    private val restTemplate = RestTemplate()
+class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
     private val underTest = GetRestControllerStub(ObjectMapper())
-
-    private val param = randomAlphabetic(10)
-    private val param1 = randomAlphabetic(10)
-    private val param2 = randomAlphabetic(10)
-    private val param3 = randomAlphabetic(10)
-    private val param4 = randomAlphabetic(10)
-    private val customResponseBody = randomAlphabetic(10)
-    private val httpStatus = HttpStatus.valueOf(RandomUtils.nextInt(500, 511))
-
-    @BeforeEach
-    fun setup() {
-        WireMock.reset()
-    }
 
     @Test
     fun `should handle get mapping with no param and custom response`() {
         underTest.getResourceWithNoParams(httpStatus.value(), customResponseBody)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
-                "http://localhost:8080/getController/resourceWithNoParams",
+                "$GET_CONTROLLER_URL/resourceWithNoParams",
                 GreetingResponse::class.java
             )
         }
@@ -54,7 +36,7 @@ class GetRestControllerCustomResponseIT {
         underTest.getResourceWithParam(httpStatus.value(), customResponseBody, param)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
-                "http://localhost:8080/getController/resourceWithParam?param=$param",
+                "$GET_CONTROLLER_URL/resourceWithParam?param=$param",
                 GreetingResponse::class.java
             )
         }
@@ -70,7 +52,7 @@ class GetRestControllerCustomResponseIT {
         underTest.getResourceWithMultipleParams(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
-                "http://localhost:8080/getController/resourceWithMultipleParams?param1=$param1&param2=$param2",
+                "$GET_CONTROLLER_URL/resourceWithMultipleParams?param1=$param1&param2=$param2",
                 GreetingResponse::class.java
             )
         }
@@ -86,7 +68,7 @@ class GetRestControllerCustomResponseIT {
         underTest.getResourceWithPathVariable(httpStatus.value(), customResponseBody, param)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
-                "http://localhost:8080/getController/resourceWithParam/$param",
+                "$GET_CONTROLLER_URL/resourceWithParam/$param",
                 GreetingResponse::class.java
             )
         }
@@ -102,7 +84,7 @@ class GetRestControllerCustomResponseIT {
         underTest.getResourceWithMultiplePathVariables(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
-                "http://localhost:8080/getController/resourceWithParam/$param1/$param2",
+                "$GET_CONTROLLER_URL/resourceWithParam/$param1/$param2",
                 GreetingResponse::class.java
             )
         }
@@ -118,7 +100,7 @@ class GetRestControllerCustomResponseIT {
         underTest.getResourceWithPathVariableAndRequestParam(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
-                "http://localhost:8080/getController/resourceWithParam/$param1?param2=$param2",
+                "$GET_CONTROLLER_URL/resourceWithParam/$param1?param2=$param2",
                 GreetingResponse::class.java
             )
         }
@@ -134,7 +116,7 @@ class GetRestControllerCustomResponseIT {
         underTest.getResourceWithNoSubresource(httpStatus.value(), customResponseBody)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
-                "http://localhost:8080/getController",
+                GET_CONTROLLER_URL,
                 GreetingResponse::class.java
             )
         }
@@ -157,7 +139,7 @@ class GetRestControllerCustomResponseIT {
         )
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
-                "http://localhost:8080/getController/resourceWithParam/$param1/$param2?param3=$param3&param4=$param4",
+                "$GET_CONTROLLER_URL/resourceWithParam/$param1/$param2?param3=$param3&param4=$param4",
                 GreetingResponse::class.java
             )
         }
@@ -166,23 +148,5 @@ class GetRestControllerCustomResponseIT {
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
         underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParams(1, param1, param2, param3, param4)
         underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParams(param1, param2, param3, param4)
-    }
-
-    companion object {
-        private lateinit var wireMockServer: WireMockServer
-
-        @JvmStatic
-        @BeforeAll
-        internal fun setupAll() {
-            wireMockServer = WireMockServer(WireMockConfiguration.options().port(8080))
-            wireMockServer.start()
-            WireMock.reset()
-        }
-
-        @JvmStatic
-        @AfterAll
-        internal fun tearDownAll() {
-            wireMockServer.stop()
-        }
     }
 }
