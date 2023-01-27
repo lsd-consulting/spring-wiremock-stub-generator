@@ -31,7 +31,7 @@ class PostRestControllerIT {
     }
 
     @Test
-    fun shouldHandlePostMappingWithNoBody() {
+    fun `should handle post mapping with no body`() {
         underTest.postResourceWithNoBody(GreetingResponse(name = name))
         val response =
             restTemplate.postForEntity(
@@ -46,7 +46,7 @@ class PostRestControllerIT {
     }
 
     @Test
-    fun shouldHandlePostMappingWithBody() {
+    fun `should handle post mapping with body`() {
         underTest.postResourceWithBody(GreetingResponse(name = name))
         val greetingRequest = GreetingRequest(name = name)
         val request = HttpEntity(greetingRequest)
@@ -63,7 +63,7 @@ class PostRestControllerIT {
     }
 
     @Test
-    fun shouldHandlePostMappingWithBodyAndPathVariable() {
+    fun `should handle post mapping with body and path variable`() {
         underTest.postResourceWithBodyAndPathVariable(GreetingResponse(name = name), param)
         val greetingRequest = GreetingRequest(name = name)
         val request = HttpEntity(greetingRequest)

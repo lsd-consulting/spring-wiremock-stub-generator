@@ -35,7 +35,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithNoParam() {
+    fun `should Handle Get Mapping With No Param`() {
         underTest.getResourceWithNoParams(GreetingResponse(name = name))
         val response =
             restTemplate.getForEntity("http://localhost:8080/getController/resourceWithNoParams", GreetingResponse::class.java)
@@ -46,7 +46,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithRequestParam() {
+    fun `should Handle Get Mapping With Request Param`() {
         underTest.getResourceWithParam(GreetingResponse(name = name), param)
         val response =
             restTemplate.getForEntity(
@@ -60,7 +60,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithMultipleRequestParams() {
+    fun `should Handle Get Mapping With Multiple Request Params`() {
         underTest.getResourceWithMultipleParams(GreetingResponse(name = name), param1, param2)
         val response =
             restTemplate.getForEntity(
@@ -74,7 +74,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithPathVariable() {
+    fun `should Handle Get Mapping With Path Variable`() {
         underTest.getResourceWithPathVariable(GreetingResponse(name = name), param)
         val response =
             restTemplate.getForEntity(
@@ -88,7 +88,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithMultiplePathVariables() {
+    fun `should Handle Get Mapping With Multiple Path Variables`() {
         underTest.getResourceWithMultiplePathVariables(GreetingResponse(name = name), param1, param2)
         val response =
             restTemplate.getForEntity(
@@ -102,7 +102,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithPathVariableAndRequestParam() {
+    fun `should handle get mapping with path variable and request param`() {
         underTest.getResourceWithPathVariableAndRequestParam(GreetingResponse(name = name), param1, param2)
         val response =
             restTemplate.getForEntity(
@@ -116,7 +116,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithMultiplePathVariablesAndRequestParams() {
+    fun `should handle get mapping with multiple path variables and request params`() {
         underTest.getResourceWithMultiplePathVariablesAndRequestParams(GreetingResponse(name = name), param1, param2, param3, param4)
         val response =
             restTemplate.getForEntity(
@@ -130,7 +130,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithNoSubresource() {
+    fun `should handle get mapping with no subresource`() {
         underTest.getResourceWithNoSubresource(GreetingResponse(name = name))
         val response =
             restTemplate.getForEntity("http://localhost:8080/getController", GreetingResponse::class.java)
@@ -141,7 +141,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithNoParamAndCustomResponse() {
+    fun `should handle get mapping with no param and custom response`() {
         underTest.getResourceWithNoParams(httpStatus.value(), customResponseBody)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
@@ -157,7 +157,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithRequestParamAndCustomResponse() {
+    fun `should handle get mapping with request param and custom response`() {
         underTest.getResourceWithParam(httpStatus.value(), customResponseBody, param)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
@@ -173,7 +173,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithMultipleRequestParamsAndCustomResponse() {
+    fun `should handle get mapping with multiple request params and custom response`() {
         underTest.getResourceWithMultipleParams(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
@@ -189,7 +189,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithPathVariableAndCustomResponse() {
+    fun `should handle get mapping with path variable and custom response`() {
         underTest.getResourceWithPathVariable(httpStatus.value(), customResponseBody, param)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
@@ -205,7 +205,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithMultiplePathVariablesAndCustomResponse() {
+    fun `should handle get mapping with multiple path variables and custom response`() {
         underTest.getResourceWithMultiplePathVariables(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
@@ -221,7 +221,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithPathVariableAndRequestParamAndCustomResponse() {
+    fun `should handle get mapping with path variable and request param and custom response`() {
         underTest.getResourceWithPathVariableAndRequestParam(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
@@ -237,7 +237,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithNoSubresourceAndCustomResponse() {
+    fun `should handle get mapping with no subresource and custom response`() {
         underTest.getResourceWithNoSubresource(httpStatus.value(), customResponseBody)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity("http://localhost:8080/getController", GreetingResponse::class.java)
@@ -250,7 +250,7 @@ class GetRestControllerIT {
     }
 
     @Test
-    fun shouldHandleGetMappingWithMultiplePathVariablesAndRequestParamsAndCustomResponse() {
+    fun `should handle get mapping with multiple path variables and request params and custom response`() {
         underTest.getResourceWithMultiplePathVariablesAndRequestParams(httpStatus.value(), customResponseBody, param1, param2, param3, param4)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
