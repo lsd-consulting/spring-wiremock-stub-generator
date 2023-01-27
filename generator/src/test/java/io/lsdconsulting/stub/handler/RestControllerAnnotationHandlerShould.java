@@ -64,7 +64,6 @@ class RestControllerAnnotationHandlerShould {
         assertThat(model.getRootResource(), is(rootPath));
         assertThat(model.getStubClassName(), is(annotatedClassName + "Stub"));
         assertThat(model.getPackageName(), is(packageNameString));
-        assertThat(model.getStubBaseFullyQualifiedName(), is(packageNameString + ".StubBase"));
         assertThat(model.getStubFullyQualifiedName(), is(packageNameString + "." + annotatedClassName + "Stub"));
     }
 }

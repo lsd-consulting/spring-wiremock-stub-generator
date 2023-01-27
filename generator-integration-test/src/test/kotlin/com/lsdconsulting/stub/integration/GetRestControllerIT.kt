@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
-import com.lsdconsulting.stub.integration.controller.GetRestControllerStub
+import com.lsdconsulting.stub.integration.controller.get.GetRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.apache.commons.lang3.RandomUtils

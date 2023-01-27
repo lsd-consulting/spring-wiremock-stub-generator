@@ -1,20 +1,23 @@
 package {# @pebvariable name="model" type="io.lsdconsulting.stub.model.ControllerModel" #}{{model.packageName}};
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import static java.lang.String.format;
 import javax.annotation.processing.Generated;
 
-@Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
-public class {{model.stubClassName}} extends StubBase {
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
+@Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
+public class {{model.stubClassName}} {
+
+    private static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
+    private static final String CONTENT_TYPE_HEADER_VALUE = "application/json; charset=utf-8";
     private static final int OK = 200;
     public static final int ONCE = 1;
 
     private ObjectMapper objectMapper;
 
     public {{model.stubClassName}}(ObjectMapper objectMapper) {
-        super(objectMapper);
         this.objectMapper = objectMapper;
     }
 
@@ -57,4 +60,22 @@ public class {{model.stubClassName}} extends StubBase {
     }
     {% endfor %}
 
+    void stub(final int status, final String response, final MappingBuilder mappingBuilder) {
+        stubFor(mappingBuilder
+                .willReturn(
+                        aResponse()
+                                .withStatus(status)
+                                .withBody(response)
+                                .withHeader(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
+                )
+        );
+    }
+
+    String buildBody(final Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

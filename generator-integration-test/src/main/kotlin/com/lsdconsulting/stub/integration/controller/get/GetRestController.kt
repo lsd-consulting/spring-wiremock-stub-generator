@@ -1,4 +1,4 @@
-package com.lsdconsulting.stub.integration.controller
+package com.lsdconsulting.stub.integration.controller.get
 
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic

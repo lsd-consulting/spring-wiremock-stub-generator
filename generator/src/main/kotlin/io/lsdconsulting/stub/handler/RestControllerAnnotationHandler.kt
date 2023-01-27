@@ -13,6 +13,5 @@ class RestControllerAnnotationHandler(
         controllerModel.stubClassName = element.simpleName.toString() + "Stub"
         controllerModel.packageName = elementUtils.getPackageOf(element).qualifiedName.toString()
         controllerModel.stubFullyQualifiedName = controllerModel.packageName + "." + controllerModel.stubClassName
-        controllerModel.stubBaseFullyQualifiedName = controllerModel.packageName + ".StubBase"
     }
 }

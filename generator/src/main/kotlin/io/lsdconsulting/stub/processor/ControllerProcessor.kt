@@ -188,7 +188,6 @@ class ControllerProcessor : AbstractProcessor() {
 
         if (annotations.isNotEmpty()) {
             stubWriter.writeStubFile(model)
-            stubWriter.writeStubBaseFile(model)
         }
 
         return true

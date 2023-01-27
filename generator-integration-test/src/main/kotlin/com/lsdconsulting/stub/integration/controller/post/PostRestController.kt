@@ -1,4 +1,4 @@
-package com.lsdconsulting.stub.integration.controller
+package com.lsdconsulting.stub.integration.controller.post
 
 import com.lsdconsulting.stub.integration.model.GreetingRequest
 import com.lsdconsulting.stub.integration.model.GreetingResponse
