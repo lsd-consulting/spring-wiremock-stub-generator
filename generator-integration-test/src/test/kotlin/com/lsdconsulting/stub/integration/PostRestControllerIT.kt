@@ -57,13 +57,34 @@ class PostRestControllerIT {
     fun shouldHandlePostMappingWithBody() {
         underTest.postResourceWithBody(GreetingResponse(name = name))
         val greetingRequest = GreetingRequest(name = name)
-        val request  = HttpEntity(greetingRequest)
+        val request = HttpEntity(greetingRequest)
         val response =
-            restTemplate.postForEntity("http://localhost:8080/postController/resourceWithBody", request, GreetingResponse::class.java)
+            restTemplate.postForEntity(
+                "http://localhost:8080/postController/resourceWithBody",
+                request,
+                GreetingResponse::class.java
+            )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyPostResourceWithBody(1, greetingRequest)
         underTest.verifyPostResourceWithBody(greetingRequest)
+    }
+
+    @Test
+    fun shouldHandlePostMappingWithBodyAndPathVariable() {
+        underTest.postResourceWithBodyAndPathVariable(GreetingResponse(name = name), param)
+        val greetingRequest = GreetingRequest(name = name)
+        val request = HttpEntity(greetingRequest)
+        val response =
+            restTemplate.postForEntity(
+                "http://localhost:8080/postController/resourceWithBody/$param",
+                request,
+                GreetingResponse::class.java
+            )
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyPostResourceWithBodyAndPathVariable(1, param, greetingRequest)
+        underTest.verifyPostResourceWithBodyAndPathVariable(param, greetingRequest)
     }
 
     companion object {
