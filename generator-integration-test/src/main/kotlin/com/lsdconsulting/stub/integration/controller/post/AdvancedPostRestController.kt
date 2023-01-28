@@ -22,4 +22,11 @@ class AdvancedPostRestController {
         @Suppress("UNUSED_PARAMETER") @RequestBody greetingRequest: GreetingRequest,
         @Suppress("UNUSED_PARAMETER") @PathVariable param: String
     ) = GreetingResponse(name = randomAlphabetic(10))
+
+    @PostMapping("/resourceWithBodyAndMultiplePathVariables/{param1}/{param2}")
+    fun resourceWithBodyAndMultiplePathVariables(
+        @Suppress("UNUSED_PARAMETER") @RequestBody greetingRequest: GreetingRequest,
+        @Suppress("UNUSED_PARAMETER") @PathVariable param1: String,
+        @Suppress("UNUSED_PARAMETER") @PathVariable param2: String
+    ) = GreetingResponse(name = randomAlphabetic(10))
 }

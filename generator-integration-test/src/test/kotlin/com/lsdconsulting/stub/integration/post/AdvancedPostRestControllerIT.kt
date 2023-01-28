@@ -47,10 +47,26 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyPostResourceWithBodyAndPathVariable(param, greetingRequest)
         underTest.verifyPostResourceWithBodyNoInteraction(greetingRequest)
         assertThrows<VerificationException> {
-            underTest.verifyPostResourceWithBodyAndPathVariableNoInteraction(
-                param,
-                greetingRequest
-            )
+            underTest.verifyPostResourceWithBodyAndPathVariableNoInteraction(param, greetingRequest)
+        }
+    }
+
+    @Test
+    fun `should handle post mapping with body and multiple path variable`() {
+        underTest.verifyPostResourceWithBodyAndMultiplePathVariablesNoInteraction(param1, param2, greetingRequest)
+        underTest.postResourceWithBodyAndMultiplePathVariables(GreetingResponse(name = name), param1, param2)
+        val request = HttpEntity(greetingRequest)
+        val response = restTemplate.postForEntity(
+            "$POST_CONTROLLER_URL/resourceWithBodyAndMultiplePathVariables/$param1/$param2",
+            request,
+            GreetingResponse::class.java
+        )
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyPostResourceWithBodyAndMultiplePathVariables(1, param1, param2, greetingRequest)
+        underTest.verifyPostResourceWithBodyAndMultiplePathVariables(param1, param2, greetingRequest)
+        assertThrows<VerificationException> {
+            underTest.verifyPostResourceWithBodyAndMultiplePathVariablesNoInteraction(param1, param2, greetingRequest)
         }
     }
 }
