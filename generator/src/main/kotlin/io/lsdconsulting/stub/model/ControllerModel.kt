@@ -24,6 +24,7 @@ data class ResourceModel(
     var httpMethod: HttpMethod? = null,
     var methodName: String? = null,
     var responseType: String? = null,
+    var responseStatus: Int? = null,
     var subResource: String? = null,
     var urlHasPathVariable: Boolean = false,
     val requestParameters: MutableMap<String, ArgumentModel> = mutableMapOf(),

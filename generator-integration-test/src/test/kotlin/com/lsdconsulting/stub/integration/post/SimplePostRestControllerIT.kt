@@ -12,6 +12,8 @@ import org.hamcrest.Matchers.notNullValue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpStatus.CREATED
+import org.springframework.http.HttpStatus.OK
 
 class SimplePostRestControllerIT : BaseRestControllerIT() {
     private val underTest = SimplePostRestControllerStub(ObjectMapper())
@@ -29,6 +31,24 @@ class SimplePostRestControllerIT : BaseRestControllerIT() {
         assertThat(response.body?.name, `is`(name))
         underTest.verifyPostResourceWithNoBody(1)
         underTest.verifyPostResourceWithNoBody()
+        assertThat(response.statusCode, `is`(OK))
         assertThrows<VerificationException> { underTest.verifyPostResourceWithNoBodyNoInteraction() }
+    }
+
+    @Test
+    fun `should handle post mapping with no body but with response status`() {
+        underTest.verifyPostResourceWithNoBodyButWithResponseStatusNoInteraction()
+        underTest.postResourceWithNoBodyButWithResponseStatus(GreetingResponse(name = name))
+        val response = restTemplate.postForEntity(
+            "$POST_CONTROLLER_URL/resourceWithNoBodyButWithResponseStatus",
+            HttpEntity(""),
+            GreetingResponse::class.java
+        )
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThat(response.statusCode, `is`(CREATED))
+        underTest.verifyPostResourceWithNoBodyButWithResponseStatus(1)
+        underTest.verifyPostResourceWithNoBodyButWithResponseStatus()
+        assertThrows<VerificationException> { underTest.verifyPostResourceWithNoBodyButWithResponseStatusNoInteraction() }
     }
 }
