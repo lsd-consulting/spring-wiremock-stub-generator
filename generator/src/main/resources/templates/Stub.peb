@@ -27,18 +27,15 @@ public class {{model.stubClassName}} {
     private static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
 
     public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}(
-        {% if entry.value.responseType is not empty%}{{entry.value.responseType}} response
-            {% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}
-            {% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}
-        {% else %}
-            {% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}
-                {% if not loop.last %}, {% endif %}
-            {% endfor %}
-            {% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}
-            {% for entry2 in entry.value.requestParameters %}{{entry2.value.type}} {{entry2.value.name}}
-                {% if not loop.last %}, {% endif %}
-            {% endfor %}
-        {% endif %}
+        {% if entry.value.responseType is not empty%}{{entry.value.responseType}} response{% endif %}
+        {% if entry.value.responseType is not empty and (entry.value.requestParameters is not empty or entry.value.pathVariables  is not empty)%}, {% endif %}
+        {% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}
+            {% if not loop.last %}, {% endif %}
+        {% endfor %}
+        {% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}
+        {% for entry2 in entry.value.requestParameters %}{{entry2.value.type}} {{entry2.value.name}}
+            {% if not loop.last %}, {% endif %}
+        {% endfor %}
         ) {
 
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
