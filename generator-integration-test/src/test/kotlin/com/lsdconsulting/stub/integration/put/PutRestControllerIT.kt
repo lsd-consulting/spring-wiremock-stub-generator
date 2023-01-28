@@ -5,9 +5,15 @@ import com.github.tomakehurst.wiremock.client.VerificationException
 import com.lsdconsulting.stub.integration.BaseRestControllerIT
 import com.lsdconsulting.stub.integration.PUT_CONTROLLER_URL
 import com.lsdconsulting.stub.integration.controller.put.PutRestControllerStub
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.nullValue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpEntity
+import org.springframework.http.HttpMethod.PUT
+import org.springframework.http.HttpStatus.NO_CONTENT
+import org.springframework.http.HttpStatus.OK
 import org.springframework.util.LinkedMultiValueMap
 
 class PutRestControllerIT : BaseRestControllerIT() {
@@ -28,7 +34,10 @@ class PutRestControllerIT : BaseRestControllerIT() {
         underTest.verifyPutResourceWithRequestBodyNoInteraction(greetingRequest)
         underTest.putResourceWithRequestBody()
         val request = HttpEntity(greetingRequest)
-        restTemplate.put("$PUT_CONTROLLER_URL/resourceWithRequestBody", request)
+        val responseEntity =
+            restTemplate.exchange("$PUT_CONTROLLER_URL/resourceWithRequestBody", PUT, request, Unit::class.java)
+        assertThat(responseEntity.body, `is`(nullValue()))
+        assertThat(responseEntity.statusCode, `is`(OK))
         underTest.verifyPutResourceWithRequestBody(1, greetingRequest)
         underTest.verifyPutResourceWithRequestBody(greetingRequest)
         assertThrows<VerificationException> { underTest.verifyPutResourceWithRequestBodyNoInteraction(greetingRequest) }
@@ -39,9 +48,18 @@ class PutRestControllerIT : BaseRestControllerIT() {
         underTest.verifyPutResourceWithRequestBodyAndPathVariableNoInteraction(param, greetingRequest)
         underTest.putResourceWithRequestBodyAndPathVariable(param)
         val request = HttpEntity(greetingRequest)
-        restTemplate.put("$PUT_CONTROLLER_URL/resourceWithRequestBodyAndPathVariable/$param", request)
+        val responseEntity = restTemplate.exchange(
+            "$PUT_CONTROLLER_URL/resourceWithRequestBodyAndPathVariable/$param", PUT, request, Unit::class.java
+        )
+        assertThat(responseEntity.body, `is`(nullValue()))
+        assertThat(responseEntity.statusCode, `is`(NO_CONTENT))
         underTest.verifyPutResourceWithRequestBodyAndPathVariable(1, param, greetingRequest)
         underTest.verifyPutResourceWithRequestBodyAndPathVariable(param, greetingRequest)
-        assertThrows<VerificationException> { underTest.verifyPutResourceWithRequestBodyAndPathVariableNoInteraction(param, greetingRequest) }
+        assertThrows<VerificationException> {
+            underTest.verifyPutResourceWithRequestBodyAndPathVariableNoInteraction(
+                param,
+                greetingRequest
+            )
+        }
     }
 }

@@ -166,7 +166,15 @@ class ControllerProcessor : AbstractProcessor() {
                     }
                     if (element.getAnnotation(ResponseStatus::class.java) != null) {
                         messager.printMessage(NOTE, "Processing ResponseStatus annotation")
-                        val value: HttpStatus = element.getAnnotation(ResponseStatus::class.java).value
+                        messager.printMessage(
+                            NOTE,
+                            "value = ${element.getAnnotation(ResponseStatus::class.java).value}"
+                        )
+                        messager.printMessage(NOTE, "code = ${element.getAnnotation(ResponseStatus::class.java).code}")
+                        val responseStatusAnnotation = element.getAnnotation(ResponseStatus::class.java)
+                        val value: HttpStatus =
+                            if (responseStatusAnnotation.code != HttpStatus.INTERNAL_SERVER_ERROR) responseStatusAnnotation.code
+                            else responseStatusAnnotation.value
                         messager.printMessage(NOTE, "ResponseStatus value=$value")
                         val methodModelKey = element.toString()
                         val controllerModel = model.getControllerModel(element.enclosingElement.toString())
