@@ -36,6 +36,7 @@ class ControllerProcessor : AbstractProcessor() {
         GetMapping::class.java.canonicalName,
         PostMapping::class.java.canonicalName,
         PutMapping::class.java.canonicalName,
+        DeleteMapping::class.java.canonicalName,
         ResponseBody::class.java.canonicalName,
         RequestBody::class.java.canonicalName,
         RequestParam::class.java.canonicalName,
@@ -136,6 +137,24 @@ class ControllerProcessor : AbstractProcessor() {
                             controllerModel.getResourceModel(methodModelKey).subResource = value[0]
                         }
                         controllerModel.getResourceModel(methodModelKey).httpMethod = PUT
+                        controllerModel.getResourceModel(methodModelKey).methodName =
+                            capitalize(methodName)
+                    } else if (element.getAnnotation(DeleteMapping::class.java) != null) {
+                        messager.printMessage(NOTE, "Processing DeleteMapping annotation")
+                        val path: Array<String> = element.getAnnotation(DeleteMapping::class.java).path
+                        val value: Array<String> = element.getAnnotation(DeleteMapping::class.java).value
+                        val methodModelKey = element.toString()
+                        messager.printMessage(NOTE, "methodModelKey = $methodModelKey")
+                        val methodName = element.simpleName.toString()
+                        messager.printMessage(NOTE, "methodName = $methodName")
+                        messager.printMessage(NOTE, "Finding controller model: ${element.enclosingElement}")
+                        val controllerModel = model.getControllerModel(element.enclosingElement.toString())
+                        if (path.isNotEmpty()) {
+                            controllerModel.getResourceModel(methodModelKey).subResource = path[0]
+                        } else if (value.isNotEmpty()) {
+                            controllerModel.getResourceModel(methodModelKey).subResource = value[0]
+                        }
+                        controllerModel.getResourceModel(methodModelKey).httpMethod = DELETE
                         controllerModel.getResourceModel(methodModelKey).methodName =
                             capitalize(methodName)
                     } else if (element.getAnnotation(RequestParam::class.java) != null) {

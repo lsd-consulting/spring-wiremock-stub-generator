@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate
 const val GET_CONTROLLER_URL = "http://localhost:8080/getController"
 const val POST_CONTROLLER_URL = "http://localhost:8080/postController"
 const val PUT_CONTROLLER_URL = "http://localhost:8080/putController"
+const val DELETE_CONTROLLER_URL = "http://localhost:8080/deleteController"
 
 open class BaseRestControllerIT {
     val restTemplate = RestTemplate()
