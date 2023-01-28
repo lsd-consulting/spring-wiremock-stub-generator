@@ -7,7 +7,6 @@ import com.lsdconsulting.stub.integration.model.GreetingRequest
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.apache.commons.lang3.RandomUtils
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.http.HttpStatus
@@ -15,6 +14,7 @@ import org.springframework.web.client.RestTemplate
 
 const val GET_CONTROLLER_URL = "http://localhost:8080/getController"
 const val POST_CONTROLLER_URL = "http://localhost:8080/postController"
+const val PUT_CONTROLLER_URL = "http://localhost:8080/putController"
 
 open class BaseRestControllerIT {
     val restTemplate = RestTemplate()
@@ -37,20 +37,14 @@ open class BaseRestControllerIT {
     }
 
     companion object {
-        private lateinit var wireMockServer: WireMockServer
+        private var wireMockServer: WireMockServer = WireMockServer(WireMockConfiguration.options().port(8080))
 
         @JvmStatic
         @BeforeAll
         internal fun setupAll() {
-            wireMockServer = WireMockServer(WireMockConfiguration.options().port(8080))
-            wireMockServer.start()
-            WireMock.reset()
-        }
-
-        @JvmStatic
-        @AfterAll
-        internal fun tearDownAll() {
-            wireMockServer.stop()
+            if (!wireMockServer.isRunning) {
+                wireMockServer.start()
+            }
         }
     }
 }

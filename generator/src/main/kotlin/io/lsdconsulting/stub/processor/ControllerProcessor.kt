@@ -7,8 +7,7 @@ import io.lsdconsulting.stub.model.ArgumentModel
 import io.lsdconsulting.stub.model.Model
 import io.lsdconsulting.stub.writer.StubWriter
 import org.apache.commons.lang3.StringUtils.capitalize
-import org.springframework.http.HttpMethod.GET
-import org.springframework.http.HttpMethod.POST
+import org.springframework.http.HttpMethod.*
 import org.springframework.web.bind.annotation.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -36,6 +35,7 @@ class ControllerProcessor : AbstractProcessor() {
         RestController::class.java.canonicalName,
         GetMapping::class.java.canonicalName,
         PostMapping::class.java.canonicalName,
+        PutMapping::class.java.canonicalName,
         ResponseBody::class.java.canonicalName,
         RequestBody::class.java.canonicalName,
         RequestParam::class.java.canonicalName,
@@ -120,6 +120,24 @@ class ControllerProcessor : AbstractProcessor() {
 
                         controllerModel.getResourceModel(methodModelKey).responseType =
                             element.asType().toString().replace(Regex("\\(.*\\)"), "")
+                    } else if (element.getAnnotation(PutMapping::class.java) != null) {
+                        messager.printMessage(NOTE, "Processing PutMapping annotation")
+                        val path: Array<String> = element.getAnnotation(PutMapping::class.java).path
+                        val value: Array<String> = element.getAnnotation(PutMapping::class.java).value
+                        val methodModelKey = element.toString()
+                        messager.printMessage(NOTE, "methodModelKey = $methodModelKey")
+                        val methodName = element.simpleName.toString()
+                        messager.printMessage(NOTE, "methodName = $methodName")
+                        messager.printMessage(NOTE, "Finding controller model: ${element.enclosingElement}")
+                        val controllerModel = model.getControllerModel(element.enclosingElement.toString())
+                        if (path.isNotEmpty()) {
+                            controllerModel.getResourceModel(methodModelKey).subResource = path[0]
+                        } else if (value.isNotEmpty()) {
+                            controllerModel.getResourceModel(methodModelKey).subResource = value[0]
+                        }
+                        controllerModel.getResourceModel(methodModelKey).httpMethod = PUT
+                        controllerModel.getResourceModel(methodModelKey).methodName =
+                            capitalize(methodName)
                     } else if (element.getAnnotation(RequestParam::class.java) != null) {
                         messager.printMessage(NOTE, "Processing RequestParam annotation")
 
