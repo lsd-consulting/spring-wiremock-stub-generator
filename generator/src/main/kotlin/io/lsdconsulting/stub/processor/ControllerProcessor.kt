@@ -162,7 +162,7 @@ class ControllerProcessor : AbstractProcessor() {
                 }
         }
 
-        postProcessor.process(model)
+        postProcessor.update(model)
 
         if (model.controllers.isNotEmpty()) {
             stubWriter.writeStubFile(model)
