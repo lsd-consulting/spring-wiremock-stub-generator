@@ -12,6 +12,8 @@
 ## About
 This is a tool for generating Wiremock stubs from Spring @Controller & @RestController annotated classes
 
+![WireMock stub generation diagram](https://github.com/lsd-consulting/spring-wiremock-stub-generator/blob/main/docs/diagram.png?raw=true)
+
 ## Applicability
 The WireMock generator has the following constraints and limitations:
 - the request and response classes are shared between the producer and the consumers of the API
