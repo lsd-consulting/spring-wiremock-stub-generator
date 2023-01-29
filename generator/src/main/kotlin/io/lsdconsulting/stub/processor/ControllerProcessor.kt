@@ -1,6 +1,5 @@
 package io.lsdconsulting.stub.processor
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.lsdconsulting.stub.annotation.GenerateWireMockStub
 import io.lsdconsulting.stub.handler.RestControllerAnnotationHandler
 import io.lsdconsulting.stub.model.ArgumentModel
@@ -52,25 +51,18 @@ class ControllerProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        val objectWriter = ObjectMapper().writerWithDefaultPrettyPrinter()
+        messager.printMessage(NOTE, "Generating WireMock stubs")
 
         val model = Model()
-
-        messager.printMessage(NOTE, "annotations = $annotations")
 
         annotations.forEach { messager.printMessage(NOTE, "it.asType = ${it.asType()}") }
 
         val stubAnnotations = annotations.filter { it.asType().toString() == GenerateWireMockStub::class.qualifiedName }
-        messager.printMessage(NOTE, "stubAnnotations = $stubAnnotations")
 
         val annotatedClasses = stubAnnotations.flatMap { roundEnv.getElementsAnnotatedWith(it) }
-        messager.printMessage(NOTE, "annotatedClasses == $annotatedClasses")
 
         for (annotation in annotations) {
-            messager.printMessage(NOTE, ">>>>>>>>>>>>>>>>>>>>>>>>>>>")
-            messager.printMessage(NOTE, "Processing annotation = $annotation")
             val annotatedElements = roundEnv.getElementsAnnotatedWith(annotation)
-            messager.printMessage(NOTE, "annotatedElements = $annotatedElements")
             annotatedElements
                 .filter {
                     annotatedClasses.contains(it) || annotatedClasses.contains(it.enclosingElement) || annotatedClasses.contains(
@@ -79,20 +71,15 @@ class ControllerProcessor : AbstractProcessor() {
                 }
                 .forEach { element: Element ->
                     if (element.getAnnotation(RestController::class.java) != null) {
-                        messager.printMessage(NOTE, "Processing RestController annotation")
-                        messager.printMessage(NOTE, "Finding controller model: ${element}")
+                        messager.printMessage(NOTE, "Processing ${element.simpleName} controller")
                         val controllerModel = model.getControllerModel(element.toString())
                         restControllerAnnotationHandler.handle(element, controllerModel)
                     }
                     if (element.getAnnotation(GetMapping::class.java) != null) {
-                        messager.printMessage(NOTE, "Processing GetMapping annotation")
                         val path: Array<String> = element.getAnnotation(GetMapping::class.java).path
                         val value: Array<String> = element.getAnnotation(GetMapping::class.java).value
                         val methodModelKey = element.toString()
-                        messager.printMessage(NOTE, "methodModelKey = $methodModelKey")
                         val methodName = element.simpleName.toString()
-                        messager.printMessage(NOTE, "methodName = $methodName")
-                        messager.printMessage(NOTE, "Finding controller model: ${element.enclosingElement}")
                         val controllerModel = model.getControllerModel(element.enclosingElement.toString())
                         if (path.isNotEmpty()) {
                             controllerModel.getResourceModel(methodModelKey).subResource = path[0]
@@ -100,21 +87,15 @@ class ControllerProcessor : AbstractProcessor() {
                             controllerModel.getResourceModel(methodModelKey).subResource = value[0]
                         }
                         controllerModel.getResourceModel(methodModelKey).httpMethod = GET
-                        controllerModel.getResourceModel(methodModelKey).methodName =
-                            capitalize(methodName)
-
+                        controllerModel.getResourceModel(methodModelKey).methodName = capitalize(methodName)
                         controllerModel.getResourceModel(methodModelKey).responseType =
                             element.asType().toString().replace(Regex("\\(.*\\)"), "")
                     }
                     if (element.getAnnotation(PostMapping::class.java) != null) {
-                        messager.printMessage(NOTE, "Processing PostMapping annotation")
                         val path: Array<String> = element.getAnnotation(PostMapping::class.java).path
                         val value: Array<String> = element.getAnnotation(PostMapping::class.java).value
                         val methodModelKey = element.toString()
-                        messager.printMessage(NOTE, "methodModelKey = $methodModelKey")
                         val methodName = element.simpleName.toString()
-                        messager.printMessage(NOTE, "methodName = $methodName")
-                        messager.printMessage(NOTE, "Finding controller model: ${element.enclosingElement}")
                         val controllerModel = model.getControllerModel(element.enclosingElement.toString())
                         if (path.isNotEmpty()) {
                             controllerModel.getResourceModel(methodModelKey).subResource = path[0]
@@ -122,21 +103,16 @@ class ControllerProcessor : AbstractProcessor() {
                             controllerModel.getResourceModel(methodModelKey).subResource = value[0]
                         }
                         controllerModel.getResourceModel(methodModelKey).httpMethod = POST
-                        controllerModel.getResourceModel(methodModelKey).methodName =
-                            capitalize(methodName)
+                        controllerModel.getResourceModel(methodModelKey).methodName = capitalize(methodName)
 
                         controllerModel.getResourceModel(methodModelKey).responseType =
                             element.asType().toString().replace(Regex("\\(.*\\)"), "")
                     }
                     if (element.getAnnotation(PutMapping::class.java) != null) {
-                        messager.printMessage(NOTE, "Processing PutMapping annotation")
                         val path: Array<String> = element.getAnnotation(PutMapping::class.java).path
                         val value: Array<String> = element.getAnnotation(PutMapping::class.java).value
                         val methodModelKey = element.toString()
-                        messager.printMessage(NOTE, "methodModelKey = $methodModelKey")
                         val methodName = element.simpleName.toString()
-                        messager.printMessage(NOTE, "methodName = $methodName")
-                        messager.printMessage(NOTE, "Finding controller model: ${element.enclosingElement}")
                         val controllerModel = model.getControllerModel(element.enclosingElement.toString())
                         if (path.isNotEmpty()) {
                             controllerModel.getResourceModel(methodModelKey).subResource = path[0]
@@ -144,18 +120,13 @@ class ControllerProcessor : AbstractProcessor() {
                             controllerModel.getResourceModel(methodModelKey).subResource = value[0]
                         }
                         controllerModel.getResourceModel(methodModelKey).httpMethod = PUT
-                        controllerModel.getResourceModel(methodModelKey).methodName =
-                            capitalize(methodName)
+                        controllerModel.getResourceModel(methodModelKey).methodName = capitalize(methodName)
                     }
                     if (element.getAnnotation(DeleteMapping::class.java) != null) {
-                        messager.printMessage(NOTE, "Processing DeleteMapping annotation")
                         val path: Array<String> = element.getAnnotation(DeleteMapping::class.java).path
                         val value: Array<String> = element.getAnnotation(DeleteMapping::class.java).value
                         val methodModelKey = element.toString()
-                        messager.printMessage(NOTE, "methodModelKey = $methodModelKey")
                         val methodName = element.simpleName.toString()
-                        messager.printMessage(NOTE, "methodName = $methodName")
-                        messager.printMessage(NOTE, "Finding controller model: ${element.enclosingElement}")
                         val controllerModel = model.getControllerModel(element.enclosingElement.toString())
                         if (path.isNotEmpty()) {
                             controllerModel.getResourceModel(methodModelKey).subResource = path[0]
@@ -163,14 +134,11 @@ class ControllerProcessor : AbstractProcessor() {
                             controllerModel.getResourceModel(methodModelKey).subResource = value[0]
                         }
                         controllerModel.getResourceModel(methodModelKey).httpMethod = DELETE
-                        controllerModel.getResourceModel(methodModelKey).methodName =
-                            capitalize(methodName)
+                        controllerModel.getResourceModel(methodModelKey).methodName = capitalize(methodName)
                     }
                     if (element.getAnnotation(RequestMapping::class.java) != null) {
-                        messager.printMessage(NOTE, "Processing RequestMapping annotation")
                         val path: Array<String> = element.getAnnotation(RequestMapping::class.java).path
                         val value: Array<String> = element.getAnnotation(RequestMapping::class.java).value
-                        messager.printMessage(NOTE, "Finding controller model: $element")
                         val controllerModel = model.getControllerModel(element.toString())
                         if (path.isNotEmpty()) {
                             controllerModel.rootResource = path[0]
@@ -179,16 +147,10 @@ class ControllerProcessor : AbstractProcessor() {
                         }
                     }
                     if (element.getAnnotation(ResponseStatus::class.java) != null) {
-                        messager.printMessage(NOTE, "Processing ResponseStatus annotation")
-                        messager.printMessage(NOTE, "value = ${element.getAnnotation(ResponseStatus::class.java).value}")
-                        messager.printMessage(NOTE, "code = ${element.getAnnotation(ResponseStatus::class.java).code}")
-                        messager.printMessage(NOTE, "asType = ${element.asType()}")
-                        messager.printMessage(NOTE, "kind = ${element.kind}")
                         val responseStatusAnnotation = element.getAnnotation(ResponseStatus::class.java)
                         val value: HttpStatus =
                             if (responseStatusAnnotation.code != HttpStatus.INTERNAL_SERVER_ERROR) responseStatusAnnotation.code
                             else responseStatusAnnotation.value
-                        messager.printMessage(NOTE, "ResponseStatus value=$value")
                         if (element.kind == ElementKind.CLASS) {
                             val controllerModel = model.getControllerModel(element.toString())
                             controllerModel.responseStatus = value.value()
@@ -199,40 +161,20 @@ class ControllerProcessor : AbstractProcessor() {
                         }
                     }
                     if (element.getAnnotation(RequestParam::class.java) != null) {
-                        messager.printMessage(NOTE, "Processing RequestParam annotation")
-
                         val methodName = element.enclosingElement.toString()
-                        messager.printMessage(NOTE, "methodName = $methodName")
 
                         val argumentName = element.simpleName.toString()
                         val argumentType = element.asType().toString()
-                        messager.printMessage(NOTE, "argumentName = $argumentName")
-                        messager.printMessage(NOTE, "argumentType = $argumentType")
-
-                        messager.printMessage(
-                            NOTE,
-                            "Finding controller model: ${element.enclosingElement.enclosingElement}"
-                        )
                         val controllerModel =
                             model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).getArgumentModel(argumentName).type = argumentType
                         controllerModel.getResourceModel(methodName).getArgumentModel(argumentName).name = argumentName
                     }
                     if (element.getAnnotation(PathVariable::class.java) != null) {
-                        messager.printMessage(NOTE, "Processing PathVariable annotation")
-
                         val methodName = element.enclosingElement.toString()
-                        messager.printMessage(NOTE, "methodName = $methodName")
 
                         val argumentName = element.simpleName.toString()
                         val argumentType = element.asType().toString()
-                        messager.printMessage(NOTE, "argumentName = $argumentName")
-                        messager.printMessage(NOTE, "argumentType = $argumentType")
-
-                        messager.printMessage(
-                            NOTE,
-                            "Finding controller model: ${element.enclosingElement.enclosingElement}"
-                        )
                         val controllerModel =
                             model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).urlHasPathVariable = true
@@ -242,32 +184,17 @@ class ControllerProcessor : AbstractProcessor() {
                             argumentName
                     }
                     if (element.getAnnotation(RequestBody::class.java) != null) {
-                        messager.printMessage(NOTE, "Processing RequestBody annotation")
-
                         val methodName = element.enclosingElement.toString()
-                        messager.printMessage(NOTE, "methodName = $methodName")
 
                         val argumentName = element.simpleName.toString()
                         val argumentType = element.asType().toString()
-                        messager.printMessage(NOTE, "argumentName = $argumentName")
-                        messager.printMessage(NOTE, "argumentType = $argumentType")
-
-                        messager.printMessage(
-                            NOTE,
-                            "Finding controller model: ${element.enclosingElement.enclosingElement}"
-                        )
                         val controllerModel =
                             model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).urlHasPathVariable = true
                         val requestBody = ArgumentModel(type = argumentType, name = argumentName)
                         controllerModel.getResourceModel(methodName).requestBody = requestBody
                     }
-//                    else {
-//                        messager.printMessage(NOTE, "Unknown annotation")
-//                    }
-                    messager.printMessage(NOTE, "Elements end -------------------------")
                 }
-            messager.printMessage(NOTE, "Annotations end ++++++++++++++++++++++++++")
         }
 
         // Post-processing
@@ -285,16 +212,11 @@ class ControllerProcessor : AbstractProcessor() {
             }
         }
 
-
-        messager.printMessage(NOTE, "")
-        messager.printMessage(NOTE, "")
-        messager.printMessage(NOTE, "")
-        messager.printMessage(NOTE, "")
-        messager.printMessage(NOTE, "Writing files for model:${objectWriter.writeValueAsString(model)}")
-
         if (annotations.isNotEmpty()) {
             stubWriter.writeStubFile(model)
         }
+
+        messager.printMessage(NOTE, "Finished generating WireMock stubs")
 
         return true
     }

@@ -9,7 +9,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.spring" version "1.7.0"
 }
 
-description = "This is an annotation processor for Spring MVC @Controller & @RestController annotation. It generates the Java code of the Wiremock stubs."
+description = "This is an annotation processor for Spring MVC @RestController annotation. It generates the Java code of the Wiremock stubs."
 
 compileKotlin.kotlinOptions.jvmTarget = "17"
 compileTestKotlin.kotlinOptions.jvmTarget = "17"
@@ -42,19 +42,15 @@ dependencies {
     testImplementation 'io.mockk:mockk-jvm:1.13.3'
     testImplementation 'org.mockito:mockito-core:4.3.1'
     testImplementation 'org.hamcrest:hamcrest:2.2'
-
-    // TODO remove after testing finished
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
-
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier = 'sources'
+    archiveClassifier('sources')
     from sourceSets.main.allSource
 }
 
 task javadocJar(type: Jar) {
-    archiveClassifier = 'javadoc'
+    archiveClassifier('javadoc')
     from javadoc
 }
 
