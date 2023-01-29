@@ -19,6 +19,7 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
     @Test
     fun `should handle post mapping with body`() {
         underTest.verifyPostResourceWithBodyNoInteraction(greetingRequest)
+        underTest.verifyPostResourceWithBodyNoInteractionWithUrl()
         underTest.postResourceWithBody(greetingResponse)
         val request = HttpEntity(greetingRequest)
         val response =
@@ -29,11 +30,13 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyPostResourceWithBody(greetingRequest)
         underTest.verifyPostResourceWithBodyAndPathVariableNoInteraction(param, greetingRequest)
         assertThrows<VerificationException> { underTest.verifyPostResourceWithBodyNoInteraction(greetingRequest) }
+        assertThrows<VerificationException> { underTest.verifyPostResourceWithBodyNoInteractionWithUrl() }
     }
 
     @Test
     fun `should handle post mapping with body and path variable`() {
         underTest.verifyPostResourceWithBodyAndPathVariableNoInteraction(param, greetingRequest)
+        underTest.verifyPostResourceWithBodyAndPathVariableNoInteractionWithUrl(param)
         underTest.postResourceWithBodyAndPathVariable(GreetingResponse(name = name), param)
         val request = HttpEntity(greetingRequest)
         val response = restTemplate.postForEntity(
@@ -49,11 +52,15 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
         assertThrows<VerificationException> {
             underTest.verifyPostResourceWithBodyAndPathVariableNoInteraction(param, greetingRequest)
         }
+        assertThrows<VerificationException> {
+            underTest.verifyPostResourceWithBodyAndPathVariableNoInteractionWithUrl(param)
+        }
     }
 
     @Test
     fun `should handle post mapping with body and multiple path variable`() {
         underTest.verifyPostResourceWithBodyAndMultiplePathVariablesNoInteraction(param1, param2, greetingRequest)
+        underTest.verifyPostResourceWithBodyAndMultiplePathVariablesNoInteractionWithUrl(param1, param2)
         underTest.postResourceWithBodyAndMultiplePathVariables(GreetingResponse(name = name), param1, param2)
         val request = HttpEntity(greetingRequest)
         val response = restTemplate.postForEntity(
@@ -67,6 +74,9 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyPostResourceWithBodyAndMultiplePathVariables(param1, param2, greetingRequest)
         assertThrows<VerificationException> {
             underTest.verifyPostResourceWithBodyAndMultiplePathVariablesNoInteraction(param1, param2, greetingRequest)
+        }
+        assertThrows<VerificationException> {
+            underTest.verifyPostResourceWithBodyAndMultiplePathVariablesNoInteractionWithUrl(param1, param2)
         }
     }
 }

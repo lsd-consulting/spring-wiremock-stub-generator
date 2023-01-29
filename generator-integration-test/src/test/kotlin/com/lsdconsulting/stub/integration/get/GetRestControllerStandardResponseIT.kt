@@ -124,6 +124,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
             param3,
             param4
         )
+        underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParamsNoInteractionWithUrl(param1, param2)
         underTest.getResourceWithMultiplePathVariablesAndRequestParams(
             greetingResponse,
             param1,
@@ -146,6 +147,9 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
                 param3,
                 param4
             )
+        }
+        assertThrows<VerificationException> {
+            underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParamsNoInteractionWithUrl(param1, param2)
         }
     }
 
