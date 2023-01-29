@@ -34,6 +34,8 @@ or these for a Kotlin project:
 
 The above will set up the annotation processor which will analyse the source code and generate the Java WireMock stubs.
 
+![Generated Java WireMock stub](https://github.com/lsd-consulting/spring-wiremock-stub-generator/blob/master/docs/generated_stub.png?raw=true)
+
 To compile the subs add the following:
 
 ```groovy
@@ -46,6 +48,9 @@ task compileStubs(type: JavaCompile) {
     compileJava.finalizedBy(compileStubs)
 }
 ```
+
+The result would be a class file(s) like this:
+![Compiled Java WireMock stub](https://github.com/lsd-consulting/spring-wiremock-stub-generator/blob/master/docs/compiled_wiremock_stub.png?raw=true)
 
 And to build a JAR file with the stubs:
 
@@ -62,6 +67,8 @@ task stubsJar(type: Jar) {
     project.artifacts(artifactHandler -> artifactHandler.add("archives", stubsJar))
 }
 ```
+
+![WireMock stub jar](https://github.com/lsd-consulting/spring-wiremock-stub-generator/blob/master/docs/wiremock_stub_jar.png?raw=true)
 
 The JAR file can then be published as an artifact:
 
@@ -87,5 +94,5 @@ https://github.com/lsd-consulting/spring-wiremock-stub-generator-example
 ## TODO:
 - add support for path arrays in mappings (currently we use only the first value in the array)
 - add support for @RequestMapping on methods
-- add a diagram and screenshots to README
+- add a diagram to README
 - fix Jacoco/Codecov
