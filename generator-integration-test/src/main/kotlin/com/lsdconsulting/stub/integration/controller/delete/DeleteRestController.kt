@@ -11,18 +11,21 @@ import org.springframework.web.bind.annotation.*
 @RestController("/deleteController")
 class DeleteRestController {
 
+    @Suppress("UNUSED_PARAMETER")
     @DeleteMapping("/resourceWithNoBody")
     fun resourceWithNoBody() = GreetingResponse(name = randomAlphabetic(10))
 
+    @Suppress("UNUSED_PARAMETER")
     @DeleteMapping("/resourceWithRequestBody")
-    fun resourceWithRequestBody(@Suppress("UNUSED_PARAMETER") @RequestBody greetingRequest: GreetingRequest) {
+    fun resourceWithRequestBody(@RequestBody greetingRequest: GreetingRequest) {
     }
 
+    @Suppress("UNUSED_PARAMETER")
     @ResponseStatus(NO_CONTENT)
     @DeleteMapping("/resourceWithRequestBodyAndPathVariable/{param}")
     fun resourceWithRequestBodyAndPathVariable(
-        @Suppress("UNUSED_PARAMETER") @RequestBody greetingRequest: GreetingRequest,
-        @Suppress("UNUSED_PARAMETER") @PathVariable param: String
+        @RequestBody greetingRequest: GreetingRequest,
+        @PathVariable param: String
     ) {
     }
 }

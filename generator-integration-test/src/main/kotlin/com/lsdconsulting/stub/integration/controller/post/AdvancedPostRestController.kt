@@ -13,20 +13,23 @@ import org.springframework.web.bind.annotation.RestController
 @RestController("/postController")
 class AdvancedPostRestController {
 
+    @Suppress("UNUSED_PARAMETER")
     @PostMapping("/resourceWithBody")
-    fun resourceWithBody(@Suppress("UNUSED_PARAMETER") @RequestBody greetingRequest: GreetingRequest) =
+    fun resourceWithBody(@RequestBody greetingRequest: GreetingRequest) =
         GreetingResponse(name = randomAlphabetic(10))
 
+    @Suppress("UNUSED_PARAMETER")
     @PostMapping("/resourceWithBody/{param}")
     fun resourceWithBodyAndPathVariable(
-        @Suppress("UNUSED_PARAMETER") @RequestBody greetingRequest: GreetingRequest,
-        @Suppress("UNUSED_PARAMETER") @PathVariable param: String
+        @RequestBody greetingRequest: GreetingRequest,
+        @PathVariable param: String
     ) = GreetingResponse(name = randomAlphabetic(10))
 
+    @Suppress("UNUSED_PARAMETER")
     @PostMapping("/resourceWithBodyAndMultiplePathVariables/{param1}/{param2}")
     fun resourceWithBodyAndMultiplePathVariables(
-        @Suppress("UNUSED_PARAMETER") @RequestBody greetingRequest: GreetingRequest,
-        @Suppress("UNUSED_PARAMETER") @PathVariable param1: String,
-        @Suppress("UNUSED_PARAMETER") @PathVariable param2: String
+        @RequestBody greetingRequest: GreetingRequest,
+        @PathVariable param1: String,
+        @PathVariable param2: String
     ) = GreetingResponse(name = randomAlphabetic(10))
 }
