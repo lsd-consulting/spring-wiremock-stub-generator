@@ -34,7 +34,7 @@ or these for a Kotlin project:
 
 The above will set up the annotation processor which will analyse the source code and generate the Java WireMock stubs.
 
-![Generated Java WireMock stub](https://github.com/lsd-consulting/spring-wiremock-stub-generator/blob/main/docs/generated_stub.png?raw=true)
+![Generated Java WireMock stub](https://github.com/lsd-consulting/spring-wiremock-stub-generator/blob/main/docs/generated_wiremock_stub.png?raw=true)
 
 To compile the subs add the following:
 
