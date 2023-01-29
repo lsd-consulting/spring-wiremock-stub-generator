@@ -10,8 +10,6 @@ data class Model(
 
 data class ControllerModel(
     var packageName: String? = null,
-
-    // Stub
     var stubFullyQualifiedName: String? = null,
     var stubClassName: String? = null,
     var rootResource: String? = null,
@@ -32,7 +30,7 @@ data class ResourceModel(
     val pathVariables: MutableMap<String, ArgumentModel> = mutableMapOf(),
     var requestBody: ArgumentModel? = null
 ) {
-    fun getArgumentModel(name: String): ArgumentModel = requestParameters.getOrPut(name) {ArgumentModel()}
+    fun getRequestParamModel(name: String): ArgumentModel = requestParameters.getOrPut(name) {ArgumentModel()}
     fun getPathVariableModel(name: String): ArgumentModel = pathVariables.getOrPut(name) {ArgumentModel()}
 }
 
