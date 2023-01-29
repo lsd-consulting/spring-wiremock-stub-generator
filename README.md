@@ -96,5 +96,4 @@ https://github.com/lsd-consulting/spring-wiremock-stub-generator-example
 ## TODO:
 - add support for path arrays in mappings (currently we use only the first value in the array)
 - add support for @RequestMapping on methods
-- add a diagram to README
 - fix Jacoco/Codecov
