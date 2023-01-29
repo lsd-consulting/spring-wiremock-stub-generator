@@ -17,13 +17,13 @@ class MethodMappingAnnotationHandler {
         val methodModelKey = element.toString()
         val methodName = element.simpleName.toString()
         val controllerModel = model.getControllerModel(element.enclosingElement.toString())
-        controllerModel.getResourceModel(methodModelKey).subResource = subresource(path, value)
+        controllerModel.getResourceModel(methodModelKey).subResource = subResource(path, value)
         controllerModel.getResourceModel(methodModelKey).httpMethod = httpMethod
         controllerModel.getResourceModel(methodModelKey).methodName = capitalize(methodName)
         controllerModel.getResourceModel(methodModelKey).responseType = responseType
     }
 
-    private fun subresource(path: Array<String>, value: Array<String>) =
+    private fun subResource(path: Array<String>, value: Array<String>) =
         if (path.isNotEmpty()) {
             path[0]
         } else if (value.isNotEmpty()) {

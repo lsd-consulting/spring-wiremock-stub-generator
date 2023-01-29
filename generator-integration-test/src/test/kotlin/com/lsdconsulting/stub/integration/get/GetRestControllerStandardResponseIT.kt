@@ -154,13 +154,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should handle get mapping with no subresource`() {
-        underTest.verifyGetResourceWithNoSubresourceNoInteraction()
-        underTest.getResourceWithNoSubresource(greetingResponse)
+    fun `should handle get mapping with no subResource`() {
+        underTest.verifyGetResourceWithNoSubResourceNoInteraction()
+        underTest.getResourceWithNoSubResource(greetingResponse)
         val response = restTemplate.getForEntity(GET_CONTROLLER_URL, GreetingResponse::class.java)
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithNoSubresource(1)
-        underTest.verifyGetResourceWithNoSubresource()
+        underTest.verifyGetResourceWithNoSubResource(1)
+        underTest.verifyGetResourceWithNoSubResource()
     }
 }

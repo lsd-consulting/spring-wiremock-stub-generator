@@ -112,8 +112,8 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should handle get mapping with no subresource and custom response`() {
-        underTest.getResourceWithNoSubresource(httpStatus.value(), customResponseBody)
+    fun `should handle get mapping with no subResource and custom response`() {
+        underTest.getResourceWithNoSubResource(httpStatus.value(), customResponseBody)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 GET_CONTROLLER_URL,
@@ -123,8 +123,8 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
-        underTest.verifyGetResourceWithNoSubresource(1)
-        underTest.verifyGetResourceWithNoSubresource()
+        underTest.verifyGetResourceWithNoSubResource(1)
+        underTest.verifyGetResourceWithNoSubResource()
     }
 
     @Test

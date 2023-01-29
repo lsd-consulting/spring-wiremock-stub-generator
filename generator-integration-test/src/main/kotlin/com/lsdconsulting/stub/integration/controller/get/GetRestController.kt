@@ -52,5 +52,5 @@ class GetRestController {
         GreetingResponse(name = randomAlphabetic(10))
 
     @GetMapping
-    fun resourceWithNoSubresource() = GreetingResponse(name = randomAlphabetic(10))
+    fun resourceWithNoSubResource() = GreetingResponse(name = randomAlphabetic(10))
 }
