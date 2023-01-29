@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod.PUT
+import org.springframework.http.HttpStatus.ACCEPTED
 import org.springframework.http.HttpStatus.NO_CONTENT
-import org.springframework.http.HttpStatus.OK
 import org.springframework.util.LinkedMultiValueMap
 
 class PutRestControllerIT : BaseRestControllerIT() {
@@ -23,7 +23,8 @@ class PutRestControllerIT : BaseRestControllerIT() {
     fun `should handle put mapping with no body`() {
         underTest.verifyPutResourceWithNoBodyNoInteraction()
         underTest.putResourceWithNoBody()
-        restTemplate.put("$PUT_CONTROLLER_URL/resourceWithNoBody", HttpEntity<String>(LinkedMultiValueMap()))
+        val responseEntity = restTemplate.exchange("$PUT_CONTROLLER_URL/resourceWithNoBody", PUT, HttpEntity<String>(LinkedMultiValueMap()), Unit::class.java)
+        assertThat(responseEntity.statusCode, `is`(ACCEPTED))
         underTest.verifyPutResourceWithNoBody(1)
         underTest.verifyPutResourceWithNoBody()
         assertThrows<VerificationException> { underTest.verifyPutResourceWithNoBodyNoInteraction() }
@@ -34,10 +35,9 @@ class PutRestControllerIT : BaseRestControllerIT() {
         underTest.verifyPutResourceWithRequestBodyNoInteraction(greetingRequest)
         underTest.putResourceWithRequestBody()
         val request = HttpEntity(greetingRequest)
-        val responseEntity =
-            restTemplate.exchange("$PUT_CONTROLLER_URL/resourceWithRequestBody", PUT, request, Unit::class.java)
+        val responseEntity = restTemplate.exchange("$PUT_CONTROLLER_URL/resourceWithRequestBody", PUT, request, Unit::class.java)
         assertThat(responseEntity.body, `is`(nullValue()))
-        assertThat(responseEntity.statusCode, `is`(OK))
+        assertThat(responseEntity.statusCode, `is`(NO_CONTENT))
         underTest.verifyPutResourceWithRequestBody(1, greetingRequest)
         underTest.verifyPutResourceWithRequestBody(greetingRequest)
         assertThrows<VerificationException> { underTest.verifyPutResourceWithRequestBodyNoInteraction(greetingRequest) }

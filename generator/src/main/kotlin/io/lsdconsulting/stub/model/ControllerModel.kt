@@ -15,6 +15,7 @@ data class ControllerModel(
     var stubFullyQualifiedName: String? = null,
     var stubClassName: String? = null,
     var rootResource: String? = null,
+    var responseStatus: Int? = null,
     val resources: MutableMap<String, ResourceModel> = mutableMapOf()
 ) {
     fun getResourceModel(name: String): ResourceModel = resources.getOrPut(name) {ResourceModel()}

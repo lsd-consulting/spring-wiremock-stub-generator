@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic.Kind.NOTE
 
@@ -179,19 +180,23 @@ class ControllerProcessor : AbstractProcessor() {
                     }
                     if (element.getAnnotation(ResponseStatus::class.java) != null) {
                         messager.printMessage(NOTE, "Processing ResponseStatus annotation")
-                        messager.printMessage(
-                            NOTE,
-                            "value = ${element.getAnnotation(ResponseStatus::class.java).value}"
-                        )
+                        messager.printMessage(NOTE, "value = ${element.getAnnotation(ResponseStatus::class.java).value}")
                         messager.printMessage(NOTE, "code = ${element.getAnnotation(ResponseStatus::class.java).code}")
+                        messager.printMessage(NOTE, "asType = ${element.asType()}")
+                        messager.printMessage(NOTE, "kind = ${element.kind}")
                         val responseStatusAnnotation = element.getAnnotation(ResponseStatus::class.java)
                         val value: HttpStatus =
                             if (responseStatusAnnotation.code != HttpStatus.INTERNAL_SERVER_ERROR) responseStatusAnnotation.code
                             else responseStatusAnnotation.value
                         messager.printMessage(NOTE, "ResponseStatus value=$value")
-                        val methodModelKey = element.toString()
-                        val controllerModel = model.getControllerModel(element.enclosingElement.toString())
-                        controllerModel.getResourceModel(methodModelKey).responseStatus = value.value()
+                        if (element.kind == ElementKind.CLASS) {
+                            val controllerModel = model.getControllerModel(element.toString())
+                            controllerModel.responseStatus = value.value()
+                        } else {
+                            val methodModelKey = element.toString()
+                            val controllerModel = model.getControllerModel(element.enclosingElement.toString())
+                            controllerModel.getResourceModel(methodModelKey).responseStatus = value.value()
+                        }
                     }
                     if (element.getAnnotation(RequestParam::class.java) != null) {
                         messager.printMessage(NOTE, "Processing RequestParam annotation")
@@ -267,6 +272,9 @@ class ControllerProcessor : AbstractProcessor() {
 
         // Post-processing
         model.controllers.values.forEach { controllerModel ->
+            if (controllerModel.responseStatus != null) {
+                controllerModel.resources.values.forEach { if (it.responseStatus == null) it.responseStatus = controllerModel.responseStatus }
+            }
             controllerModel.resources.values.forEach { annotatedMethod ->
                 if (annotatedMethod.urlHasPathVariable) {
                     annotatedMethod.pathVariables.values.forEach { pathVariable ->
@@ -276,6 +284,7 @@ class ControllerProcessor : AbstractProcessor() {
                 }
             }
         }
+
 
         messager.printMessage(NOTE, "")
         messager.printMessage(NOTE, "")
