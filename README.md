@@ -13,4 +13,6 @@
 This is a tool for generating Wiremock stubs from Spring @Controller & @RestController annotated classes
 
 TODO:
+- add support for path arrays in mappings (currently we use only the first value in the array)
+- add support for @RequestMapping on methods
 - fix Jacoco/Codecov

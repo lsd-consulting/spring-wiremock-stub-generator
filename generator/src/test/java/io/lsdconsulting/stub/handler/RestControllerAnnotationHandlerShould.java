@@ -27,7 +27,7 @@ class RestControllerAnnotationHandlerShould {
 
     private final RestControllerAnnotationHandler underTest = new RestControllerAnnotationHandler(elementUtils);
 
-    private final String rootPath = RandomStringUtils.randomAlphabetic(10);
+    private final String controllerBeanName = RandomStringUtils.randomAlphabetic(10);
     private final String annotatedClassName = RandomStringUtils.randomAlphabetic(10);
     private final String packageNameString = RandomStringUtils.randomAlphabetic(10);
     private final String stubPackageName = RandomStringUtils.randomAlphabetic(10);
@@ -49,7 +49,7 @@ class RestControllerAnnotationHandlerShould {
             @NotNull
             @Override
             public String value() {
-                return rootPath;
+                return controllerBeanName;
             }
         });
         given(element.getSimpleName()).willReturn(className);
@@ -58,10 +58,8 @@ class RestControllerAnnotationHandlerShould {
         given(packageElement.getQualifiedName()).willReturn(packageName);
         given(packageName.toString()).willReturn(packageNameString);
 
-
         underTest.handle(element, model);
 
-        assertThat(model.getRootResource(), is(rootPath));
         assertThat(model.getStubClassName(), is(annotatedClassName + "Stub"));
         assertThat(model.getPackageName(), is(packageNameString));
         assertThat(model.getStubFullyQualifiedName(), is(packageNameString + "." + annotatedClassName + "Stub"));

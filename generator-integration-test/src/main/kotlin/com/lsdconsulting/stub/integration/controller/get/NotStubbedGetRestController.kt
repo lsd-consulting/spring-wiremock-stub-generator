@@ -2,12 +2,10 @@ package com.lsdconsulting.stub.integration.controller.get
 
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
-@RestController("/notStubbedGetController")
+@RestController
+@RequestMapping("/notStubbedGetController")
 class NotStubbedGetRestController {
 
     @Suppress("UNUSED_PARAMETER")

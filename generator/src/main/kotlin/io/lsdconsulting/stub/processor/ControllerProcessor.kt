@@ -38,6 +38,7 @@ class ControllerProcessor : AbstractProcessor() {
         PostMapping::class.java.canonicalName,
         PutMapping::class.java.canonicalName,
         DeleteMapping::class.java.canonicalName,
+        RequestMapping::class.java.canonicalName,
         ResponseBody::class.java.canonicalName,
         RequestBody::class.java.canonicalName,
         RequestParam::class.java.canonicalName,
@@ -163,6 +164,18 @@ class ControllerProcessor : AbstractProcessor() {
                         controllerModel.getResourceModel(methodModelKey).httpMethod = DELETE
                         controllerModel.getResourceModel(methodModelKey).methodName =
                             capitalize(methodName)
+                    }
+                    if (element.getAnnotation(RequestMapping::class.java) != null) {
+                        messager.printMessage(NOTE, "Processing RequestMapping annotation")
+                        val path: Array<String> = element.getAnnotation(RequestMapping::class.java).path
+                        val value: Array<String> = element.getAnnotation(RequestMapping::class.java).value
+                        messager.printMessage(NOTE, "Finding controller model: $element")
+                        val controllerModel = model.getControllerModel(element.toString())
+                        if (path.isNotEmpty()) {
+                            controllerModel.rootResource = path[0]
+                        } else if (value.isNotEmpty()) {
+                            controllerModel.rootResource = value[0]
+                        }
                     }
                     if (element.getAnnotation(ResponseStatus::class.java) != null) {
                         messager.printMessage(NOTE, "Processing ResponseStatus annotation")

@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @GenerateWireMockStub
-@RestController("/postController")
+@RestController
 class SimplePostRestController {
 
-    @PostMapping("/resourceWithNoBody")
+    @PostMapping("/postController/resourceWithNoBody")
     fun resourceWithNoBody() = GreetingResponse(name = randomAlphabetic(10))
 
     @ResponseStatus(CREATED)
-    @PostMapping("/resourceWithNoBodyButWithResponseStatus")
+    @PostMapping("/postController/resourceWithNoBodyButWithResponseStatus")
     fun resourceWithNoBodyButWithResponseStatus() = GreetingResponse(name = randomAlphabetic(10))
 }

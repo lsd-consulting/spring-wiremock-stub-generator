@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.web.bind.annotation.*
 
 @GenerateWireMockStub
-@RestController("/putController")
+@RestController
+@RequestMapping("/putController")
 class PutRestController {
 
     @Suppress("UNUSED_PARAMETER")
