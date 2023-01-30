@@ -30,10 +30,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.0"
 
     implementation "io.pebbletemplates:pebble:3.2.0"
-    implementation 'org.apache.commons:commons-text:1.9'
+    implementation 'org.apache.commons:commons-text:1.10.0'
 
-    implementation 'org.springframework:spring-web:5.3.15'
-    implementation 'org.springframework:spring-context:5.3.15'
+    implementation 'org.springframework:spring-web:5.3.25'
+    implementation 'org.springframework:spring-context:5.3.25'
 
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
