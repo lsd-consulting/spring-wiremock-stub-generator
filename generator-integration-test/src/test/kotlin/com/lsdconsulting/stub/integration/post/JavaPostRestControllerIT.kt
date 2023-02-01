@@ -26,7 +26,12 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
     private val underTest = JavaPostRestControllerStub(ObjectMapper())
 
     @Test
-    fun `should handle post mapping with body`(approver: Approver) {
+    fun `should strip unwanted annotations from any arguments`(approver: Approver) {
+        approver.assertApproved(loadGeneratedFile())
+    }
+
+    @Test
+    fun `should handle post mapping with request body`() {
         underTest.verifyPostResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
         underTest.verifyPostResourceWithBodyAndAnnotationsNoInteractionWithUrl()
         underTest.postResourceWithBodyAndAnnotations(greetingResponse)
@@ -41,10 +46,34 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         assertThat(response.body?.name, `is`(name))
         underTest.verifyPostResourceWithBodyAndAnnotations(1, greetingRequest)
         underTest.verifyPostResourceWithBodyAndAnnotations(greetingRequest)
-        assertThrows<VerificationException> { underTest.verifyPostResourceWithBodyAndAnnotationsNoInteraction(greetingRequest) }
+        assertThrows<VerificationException> {
+            underTest.verifyPostResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
+        }
         assertThrows<VerificationException> { underTest.verifyPostResourceWithBodyAndAnnotationsNoInteractionWithUrl() }
+    }
 
-        approver.assertApproved(loadGeneratedFile())
+    @Test
+    fun `should handle post mapping with request body and path variable`() {
+        underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)
+        underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl(param)
+        underTest.postResourceWithBodyAndAnnotationsOnPathVariables(greetingResponse, param)
+        val request = HttpEntity(greetingRequest)
+        val response =
+            restTemplate.postForEntity(
+                "$POST_CONTROLLER_URL/resourceWithBodyAndAnnotationsOnPathVariables/$param",
+                request,
+                GreetingResponse::class.java
+            )
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariables(1, param, greetingRequest)
+        underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariables(param, greetingRequest)
+        assertThrows<VerificationException> {
+            underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)
+        }
+        assertThrows<VerificationException> {
+            underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl(param)
+        }
     }
 
     private fun loadGeneratedFile(): String {

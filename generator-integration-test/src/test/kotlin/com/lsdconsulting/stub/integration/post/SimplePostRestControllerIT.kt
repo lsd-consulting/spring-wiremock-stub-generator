@@ -19,7 +19,7 @@ class SimplePostRestControllerIT : BaseRestControllerIT() {
     private val underTest = SimplePostRestControllerStub(ObjectMapper())
 
     @Test
-    fun `should handle post mapping with no body`() {
+    fun `should handle post mapping with no request body`() {
         underTest.verifyPostResourceWithNoBodyNoInteraction()
         underTest.verifyPostResourceWithNoBodyNoInteractionWithUrl()
         underTest.postResourceWithNoBody(GreetingResponse(name = name))
@@ -38,7 +38,7 @@ class SimplePostRestControllerIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should handle post mapping with no body but with response status`() {
+    fun `should handle post mapping with no request body but with response status`() {
         underTest.verifyPostResourceWithNoBodyButWithResponseStatusNoInteraction()
         underTest.postResourceWithNoBodyButWithResponseStatus(GreetingResponse(name = name))
         val response = restTemplate.postForEntity(

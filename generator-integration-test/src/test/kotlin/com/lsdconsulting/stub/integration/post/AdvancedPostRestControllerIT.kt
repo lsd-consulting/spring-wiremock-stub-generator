@@ -17,7 +17,7 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
     private val underTest = AdvancedPostRestControllerStub(ObjectMapper())
 
     @Test
-    fun `should handle post mapping with body`() {
+    fun `should handle post mapping with request body`() {
         underTest.verifyPostResourceWithBodyNoInteraction(greetingRequest)
         underTest.verifyPostResourceWithBodyNoInteractionWithUrl()
         underTest.postResourceWithBody(greetingResponse)
@@ -34,7 +34,7 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should handle post mapping with body and path variable`() {
+    fun `should handle post mapping with request body and path variable`() {
         underTest.verifyPostResourceWithBodyAndPathVariableNoInteraction(param, greetingRequest)
         underTest.verifyPostResourceWithBodyAndPathVariableNoInteractionWithUrl(param)
         underTest.postResourceWithBodyAndPathVariable(GreetingResponse(name = name), param)
@@ -58,7 +58,7 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should handle post mapping with body and multiple path variable`() {
+    fun `should handle post mapping with request body and multiple path variable`() {
         underTest.verifyPostResourceWithBodyAndMultiplePathVariablesNoInteraction(param1, param2, greetingRequest)
         underTest.verifyPostResourceWithBodyAndMultiplePathVariablesNoInteractionWithUrl(param1, param2)
         underTest.postResourceWithBodyAndMultiplePathVariables(GreetingResponse(name = name), param1, param2)
