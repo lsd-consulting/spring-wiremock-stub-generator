@@ -1,0 +1,85 @@
+package com.lsdconsulting.stub.integration.controller.get;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.MappingBuilder;
+import static java.lang.String.format;
+import javax.annotation.processing.Generated;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
+@Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
+public class JavaGetRestControllerStub {
+
+    private static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
+    private static final String CONTENT_TYPE_HEADER_VALUE = "application/json; charset=utf-8";
+    private static final int OK = 200;
+    private static final int ONCE = 1;
+    private static final int NEVER = 0;
+
+    private ObjectMapper objectMapper;
+
+    public JavaGetRestControllerStub(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    
+    private static final String RESOURCEWITHPARAMANDANNOTATIONS_URL = "/getController/resourceWithParamAndAnnotations";
+
+    public void getResourceWithParamAndAnnotations(
+        com.lsdconsulting.stub.integration.model.GreetingResponse response        ,                         java.lang.String param                            ) {
+
+        String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
+        stub(OK, buildBody(response), get(urlPathEqualTo(url))
+                                 .withQueryParam("param", equalTo(param))
+                        );
+    }
+
+    public void getResourceWithParamAndAnnotations(int httpStatus, String errorResponse, java.lang.String param) {
+        String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
+        stub(httpStatus, errorResponse, get(urlPathEqualTo(url))
+                                 .withQueryParam("param", equalTo(param))
+                        );
+    }
+
+    public void verifyGetResourceWithParamAndAnnotations(java.lang.String param) {
+        verifyGetResourceWithParamAndAnnotations(ONCE, param);
+    }
+
+    public void verifyGetResourceWithParamAndAnnotations(final int times, java.lang.String param) {
+        String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
+        verify(times, getRequestedFor(urlPathEqualTo(format(url)))
+                                 .withQueryParam("param", equalTo(param))
+                                        );
+    }
+
+    public void verifyGetResourceWithParamAndAnnotationsNoInteraction(java.lang.String param) {
+        String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
+        verify(NEVER, getRequestedFor(urlPathEqualTo(format(url)))
+                                 .withQueryParam("param", equalTo(param))
+                                        );
+    }
+
+    public void verifyGetResourceWithParamAndAnnotationsNoInteractionWithUrl() {
+        String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
+        verify(NEVER, getRequestedFor(urlPathEqualTo(format(url))));
+    }
+    
+    void stub(final int status, final String response, final MappingBuilder mappingBuilder) {
+        stubFor(mappingBuilder
+                .willReturn(
+                        aResponse()
+                                .withStatus(status)
+                                .withBody(response)
+                                .withHeader(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
+                )
+        );
+    }
+
+    String buildBody(final Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

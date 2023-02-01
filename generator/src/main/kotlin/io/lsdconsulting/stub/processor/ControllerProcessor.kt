@@ -137,7 +137,7 @@ class ControllerProcessor : AbstractProcessor() {
                     if (element.getAnnotation(RequestParam::class.java) != null) {
                         val methodName = element.enclosingElement.toString()
                         val argumentName = element.simpleName.toString()
-                        val argumentType = element.asType().toString()
+                        val argumentType = getArgumentType(element)
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).type = argumentType
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).name = argumentName
