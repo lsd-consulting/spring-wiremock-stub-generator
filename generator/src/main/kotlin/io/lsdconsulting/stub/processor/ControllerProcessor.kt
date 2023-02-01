@@ -154,7 +154,7 @@ class ControllerProcessor : AbstractProcessor() {
                     if (element.getAnnotation(RequestBody::class.java) != null) {
                         val methodName = element.enclosingElement.toString()
                         val argumentName = element.simpleName.toString()
-                        val argumentType = element.asType().toString()
+                        val argumentType = getArgumentType(element)
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         val requestBody = ArgumentModel(type = argumentType, name = argumentName)
                         controllerModel.getResourceModel(methodName).requestBody = requestBody
@@ -174,7 +174,6 @@ class ControllerProcessor : AbstractProcessor() {
 
         return true
     }
-
 
     private fun elementsBelongingToAnnotatedClasses(annotatedClasses: List<Element>): (Element) -> Boolean =
         {

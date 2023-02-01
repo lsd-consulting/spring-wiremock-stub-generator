@@ -1,0 +1,83 @@
+package com.lsdconsulting.stub.integration.controller.post;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.MappingBuilder;
+import static java.lang.String.format;
+import javax.annotation.processing.Generated;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
+@Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
+public class JavaPostRestControllerStub {
+
+    private static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
+    private static final String CONTENT_TYPE_HEADER_VALUE = "application/json; charset=utf-8";
+    private static final int OK = 200;
+    private static final int ONCE = 1;
+    private static final int NEVER = 0;
+
+    private ObjectMapper objectMapper;
+
+    public JavaPostRestControllerStub(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    
+    private static final String RESOURCEWITHBODYANDANNOTATIONS_URL = "/postController/resourceWithBodyAndAnnotations";
+
+    public void postResourceWithBodyAndAnnotations(
+        com.lsdconsulting.stub.integration.model.GreetingResponse response                                        ) {
+
+        String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
+        stub(OK, buildBody(response), post(urlPathEqualTo(url))
+                        );
+    }
+
+    public void postResourceWithBodyAndAnnotations(int httpStatus, String errorResponse) {
+        String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
+        stub(httpStatus, errorResponse, post(urlPathEqualTo(url))
+                        );
+    }
+
+    public void verifyPostResourceWithBodyAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
+        verifyPostResourceWithBodyAndAnnotations(ONCE, greetingRequest);
+    }
+
+    public void verifyPostResourceWithBodyAndAnnotations(final int times, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
+        String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
+        verify(times, postRequestedFor(urlPathEqualTo(format(url)))
+                                                .withRequestBody(equalToJson(buildBody(greetingRequest)))
+                        );
+    }
+
+    public void verifyPostResourceWithBodyAndAnnotationsNoInteraction(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
+        String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
+        verify(NEVER, postRequestedFor(urlPathEqualTo(format(url)))
+                                                .withRequestBody(equalToJson(buildBody(greetingRequest)))
+                        );
+    }
+
+    public void verifyPostResourceWithBodyAndAnnotationsNoInteractionWithUrl() {
+        String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
+        verify(NEVER, postRequestedFor(urlPathEqualTo(format(url))));
+    }
+    
+    void stub(final int status, final String response, final MappingBuilder mappingBuilder) {
+        stubFor(mappingBuilder
+                .willReturn(
+                        aResponse()
+                                .withStatus(status)
+                                .withBody(response)
+                                .withHeader(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
+                )
+        );
+    }
+
+    String buildBody(final Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
