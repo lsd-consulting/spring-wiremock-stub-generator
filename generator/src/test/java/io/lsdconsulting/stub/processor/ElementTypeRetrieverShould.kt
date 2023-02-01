@@ -12,7 +12,7 @@ import javax.lang.model.type.TypeMirror
 internal class ElementTypeRetrieverShould {
 
     @Test
-    fun `strip parameter annotation`() {
+    fun `remove parameter annotation`() {
         val element = mockk<Element>()
         val type = mockk<TypeMirror>()
         val annotationMirror = mockk<AnnotationMirror>()
@@ -28,7 +28,7 @@ internal class ElementTypeRetrieverShould {
     }
 
     @Test
-    fun `strip parameter annotations`() {
+    fun `remove parameter annotations`() {
         val element = mockk<Element>()
         val type = mockk<TypeMirror>()
         val annotationMirror1 = mockk<AnnotationMirror>()

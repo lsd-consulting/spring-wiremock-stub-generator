@@ -26,7 +26,7 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
     private val underTest = JavaPostRestControllerStub(ObjectMapper())
 
     @Test
-    fun `should strip unwanted annotations from any arguments`(approver: Approver) {
+    fun `should remove unwanted annotations from any arguments`(approver: Approver) {
         approver.assertApproved(loadGeneratedFile())
     }
 
