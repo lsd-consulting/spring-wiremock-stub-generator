@@ -28,14 +28,14 @@ public class {{model.stubClassName}} {
 
     public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}(
         {% if entry.value.responseType is not empty%}{{entry.value.responseType | raw}} response{% endif %}
-    {% if entry.value.responseType is not empty and (entry.value.requestParameters is not empty or entry.value.pathVariables  is not empty)%}, {% endif %}
-    {% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}
-        {% if not loop.last %}, {% endif %}
-    {% endfor %}
-    {% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}
-    {% for entry2 in entry.value.requestParameters %}{{entry2.value.type | raw}} {{entry2.value.name}}
-        {% if not loop.last %}, {% endif %}
-    {% endfor %}
+        {% if entry.value.responseType is not empty and (entry.value.requestParameters is not empty or entry.value.pathVariables  is not empty)%}, {% endif %}
+        {% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}
+            {% if not loop.last %}, {% endif %}
+        {% endfor %}
+        {% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}
+        {% for entry2 in entry.value.requestParameters %}{{entry2.value.type | raw}} {{entry2.value.name}}
+            {% if not loop.last %}, {% endif %}
+        {% endfor %}
         ) {
 
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
@@ -65,7 +65,7 @@ public class {{model.stubClassName}} {
                 {% for entry2 in entry.value.requestParameters %}
                  .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
                 {% endfor %}
-    {% if entry.value.requestBody is not empty%}
+                {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
         );
@@ -77,7 +77,7 @@ public class {{model.stubClassName}} {
                 {% for entry2 in entry.value.requestParameters %}
                  .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
                 {% endfor %}
-    {% if entry.value.requestBody is not empty%}
+                {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
         );
