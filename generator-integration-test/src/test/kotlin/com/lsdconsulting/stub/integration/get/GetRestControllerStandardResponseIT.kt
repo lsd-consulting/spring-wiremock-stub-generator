@@ -7,10 +7,12 @@ import com.lsdconsulting.stub.integration.GET_CONTROLLER_URL
 import com.lsdconsulting.stub.integration.controller.get.GetRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.notNullValue
+import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpEntity.EMPTY
+import org.springframework.http.HttpMethod.GET
 
 class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     private val underTest = GetRestControllerStub(ObjectMapper())
@@ -45,6 +47,22 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyGetResourceWithParam(param)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithParamNoInteraction(param) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithParamNoInteractionWithUrl() }
+    }
+
+    @Test
+    fun `should handle collection response for filter queries`() {
+        underTest.verifyGetFilteredResourceWithParamNoInteraction(param)
+        underTest.verifyGetFilteredResourceWithParamNoInteractionWithUrl()
+        underTest.getFilteredResourceWithParam(listOf(greetingResponse), param)
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/filteredResourceWithParam?param=$param", GET, EMPTY,
+            object: ParameterizedTypeReference<List<GreetingResponse>>(){}
+        )
+        assertThat(response.body, notNullValue())
+        assertThat(response.body, hasSize(1))
+        assertThat(response.body?.get(0)?.name, `is`(name))
+        assertThrows<VerificationException> { underTest.verifyGetFilteredResourceWithParamNoInteraction(param) }
+        assertThrows<VerificationException> { underTest.verifyGetFilteredResourceWithParamNoInteractionWithUrl() }
     }
 
     @Test

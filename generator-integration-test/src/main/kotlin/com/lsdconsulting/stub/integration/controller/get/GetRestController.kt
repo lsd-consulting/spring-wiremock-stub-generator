@@ -19,6 +19,11 @@ class GetRestController {
         GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/filteredResourceWithParam")
+    fun filteredResourceWithParam(@RequestParam param: String) =
+        listOf(GreetingResponse(name = randomAlphabetic(10)))
+
+    @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithMultipleParams")
     fun resourceWithMultipleParams(@RequestParam param1: String, @RequestParam param2: String) =
         GreetingResponse(name = randomAlphabetic(10))

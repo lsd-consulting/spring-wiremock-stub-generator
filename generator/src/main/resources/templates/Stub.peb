@@ -27,15 +27,15 @@ public class {{model.stubClassName}} {
     private static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
 
     public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}(
-        {% if entry.value.responseType is not empty%}{{entry.value.responseType}} response{% endif %}
-        {% if entry.value.responseType is not empty and (entry.value.requestParameters is not empty or entry.value.pathVariables  is not empty)%}, {% endif %}
-        {% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}
-            {% if not loop.last %}, {% endif %}
-        {% endfor %}
-        {% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}
-        {% for entry2 in entry.value.requestParameters %}{{entry2.value.type}} {{entry2.value.name}}
-            {% if not loop.last %}, {% endif %}
-        {% endfor %}
+        {% if entry.value.responseType is not empty%}{{entry.value.responseType | raw}} response{% endif %}
+    {% if entry.value.responseType is not empty and (entry.value.requestParameters is not empty or entry.value.pathVariables  is not empty)%}, {% endif %}
+    {% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}
+        {% if not loop.last %}, {% endif %}
+    {% endfor %}
+    {% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}
+    {% for entry2 in entry.value.requestParameters %}{{entry2.value.type | raw}} {{entry2.value.name}}
+        {% if not loop.last %}, {% endif %}
+    {% endfor %}
         ) {
 
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
@@ -46,7 +46,7 @@ public class {{model.stubClassName}} {
         );
     }
 
-    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}(int httpStatus, String errorResponse{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}) {
+    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}(int httpStatus, String errorResponse{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type | raw}} {{entry2.value.name}}{% endfor %}) {
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
         stub(httpStatus, errorResponse, {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url))
                 {% for entry2 in entry.value.requestParameters %}
@@ -55,29 +55,29 @@ public class {{model.stubClassName}} {
         );
     }
 
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}{% for entry2 in entry.value.requestParameters %}{{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (((entry.value.requestParameters is not empty) or (entry.value.pathVariables  is not empty)) and entry.value.requestBody is not empty)%}, {% endif %}{% if entry.value.requestBody is not empty%}{{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
+    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}{% for entry2 in entry.value.requestParameters %}{{entry2.value.type | raw}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (((entry.value.requestParameters is not empty) or (entry.value.pathVariables  is not empty)) and entry.value.requestBody is not empty)%}, {% endif %}{% if entry.value.requestBody is not empty%}{{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
         verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}(ONCE{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.name}}{% endfor %}{% if entry.value.requestBody is not empty%}, {{ entry.value.requestBody.name }}{% endif %});
     }
 
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}(final int times{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% if entry.value.requestBody is not empty%}, {{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
+    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}(final int times{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type | raw}} {{entry2.value.name}}{% endfor %}{% if entry.value.requestBody is not empty%}, {{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
         verify(times, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)))
                 {% for entry2 in entry.value.requestParameters %}
                  .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
                 {% endfor %}
-                {% if entry.value.requestBody is not empty%}
+    {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
         );
     }
 
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteraction({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}{% for entry2 in entry.value.requestParameters %}{{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (((entry.value.requestParameters is not empty) or (entry.value.pathVariables  is not empty)) and entry.value.requestBody is not empty)%}, {% endif %}{% if entry.value.requestBody is not empty%}{{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
+    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteraction({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}{% for entry2 in entry.value.requestParameters %}{{entry2.value.type | raw}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (((entry.value.requestParameters is not empty) or (entry.value.pathVariables  is not empty)) and entry.value.requestBody is not empty)%}, {% endif %}{% if entry.value.requestBody is not empty%}{{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
         String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
         verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)))
                 {% for entry2 in entry.value.requestParameters %}
                  .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
                 {% endfor %}
-                {% if entry.value.requestBody is not empty%}
+    {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
         );
