@@ -27,6 +27,7 @@ open class BaseRestControllerIT {
     val param3: String = randomAlphabetic(10)
     val param4: String = randomAlphabetic(10)
     val paramSet: Set<String> = setOf(param1, param2, param3, param4)
+    val paramList: List<String> = listOf(param2, param3)
     val customResponseBody: String = randomAlphabetic(10)
     val httpStatus: HttpStatus = HttpStatus.valueOf(RandomUtils.nextInt(500, 511))
 
