@@ -69,4 +69,9 @@ class GetRestController {
 
     @GetMapping
     fun resourceWithNoSubResource() = GreetingResponse(name = randomAlphabetic(10))
+
+    @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/resourceWithParamSet")
+    fun resourceWithParamSet(@RequestParam paramSet: Set<String>) =
+        GreetingResponse(name = randomAlphabetic(10))
 }

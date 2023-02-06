@@ -11,6 +11,7 @@ import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpEntity
 import org.springframework.http.HttpEntity.EMPTY
 import org.springframework.http.HttpMethod.GET
 
@@ -218,5 +219,22 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
             underTest.verifyGetResourceWithNoSubResourceNoInteraction()
             underTest.verifyGetResourceWithNoSubResourceNoInteractionWithUrl()
         }
+    }
+
+    @Test
+    fun `should handle get mapping with request param set`() {
+        underTest.verifyGetResourceWithParamSetNoInteraction(paramSet)
+        underTest.getResourceWithParamSet(greetingResponse, paramSet)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithParamSet?paramSet=$param1&paramSet=$param2&paramSet=$param3&paramSet=$param4",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithParamSet(1, paramSet)
+        underTest.verifyGetResourceWithParamSet(paramSet)
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithParamSetNoInteraction(paramSet) }
     }
 }

@@ -142,6 +142,11 @@ class ControllerProcessor : AbstractProcessor() {
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).type = argumentType
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).name = argumentName
+
+                        if ("java.util.Set<(.*)>".toRegex().containsMatchIn(argumentType)) {
+                            controllerModel.getResourceModel(methodName).hasMultiValueRequestParams = true
+                            controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).iterable = true
+                        }
                     }
                     if (element.getAnnotation(PathVariable::class.java) != null) {
                         val pathVariable = element.getAnnotation(PathVariable::class.java)

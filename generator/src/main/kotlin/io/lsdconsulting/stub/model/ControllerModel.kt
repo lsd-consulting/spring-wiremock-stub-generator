@@ -26,6 +26,7 @@ data class ResourceModel(
     var responseStatus: Int? = null,
     var subResource: String? = null,
     var urlHasPathVariable: Boolean = false,
+    var hasMultiValueRequestParams: Boolean = false,
     val requestParameters: MutableMap<String, ArgumentModel> = mutableMapOf(),
     val pathVariables: MutableMap<String, ArgumentModel> = mutableMapOf(),
     var requestBody: ArgumentModel? = null
@@ -36,5 +37,7 @@ data class ResourceModel(
 
 data class ArgumentModel(
     var name: String? = null,
-    var type: String? = null
-)
+    var type: String? = null,
+    var iterable: Boolean = false
+) {
+}
