@@ -18,7 +18,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     private val underTest = GetRestControllerStub(ObjectMapper())
 
     @Test
-    fun `should Handle Get Mapping With No Param`() {
+    fun `should handle get mapping with no param`() {
         underTest.verifyGetResourceWithNoParamsNoInteraction()
         underTest.verifyGetResourceWithNoParamsNoInteractionWithUrl()
         underTest.getResourceWithNoParams(greetingResponse)
@@ -33,7 +33,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should Handle Get Mapping With Request Param`() {
+    fun `should handle get mapping with request param`() {
         underTest.verifyGetResourceWithParamNoInteraction(param)
         underTest.verifyGetResourceWithParamNoInteractionWithUrl()
         underTest.getResourceWithParam(greetingResponse, param)
@@ -66,7 +66,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should Handle Get Mapping With Multiple Request Params`() {
+    fun `should handle get mapping with multiple request params`() {
         underTest.verifyGetResourceWithMultipleParamsNoInteraction(param1, param2)
         underTest.verifyGetResourceWithMultipleParamsNoInteractionWithUrl()
         underTest.getResourceWithMultipleParams(greetingResponse, param1, param2)
@@ -85,7 +85,24 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should Handle Get Mapping With Path Variable`() {
+    fun `should handle get mapping with mapped request params`() {
+        underTest.verifyGetResourceWithMappedParamsNoInteraction(param1, param2)
+        underTest.verifyGetResourceWithMappedParamsNoInteractionWithUrl(param1, param2)
+        underTest.getResourceWithMappedParams(greetingResponse, param1, param2)
+        val response = restTemplate.getForEntity(
+            "$GET_CONTROLLER_URL/resourceWithMappedParams/$param1/$param2",
+            GreetingResponse::class.java
+        )
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> {
+            underTest.verifyGetResourceWithMappedParamsNoInteraction(param1, param2)
+        }
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithMappedParamsNoInteractionWithUrl(param1, param2) }
+    }
+
+    @Test
+    fun `should handle get mapping with path variable`() {
         underTest.verifyGetResourceWithPathVariableNoInteraction(param)
         underTest.verifyGetResourceWithPathVariableNoInteractionWithUrl(param)
         underTest.getResourceWithPathVariable(greetingResponse, param)
@@ -100,7 +117,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should Handle Get Mapping With Multiple Path Variables`() {
+    fun `should handle get mapping with multiple path variables`() {
         underTest.verifyGetResourceWithMultiplePathVariablesNoInteraction(param1, param2)
         underTest.verifyGetResourceWithMultiplePathVariablesNoInteractionWithUrl(param1, param2)
         underTest.getResourceWithMultiplePathVariables(greetingResponse, param1, param2)
@@ -144,18 +161,11 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with multiple path variables and request params`() {
         underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParamsNoInteraction(
-            param1,
-            param2,
-            param3,
-            param4
+            param1, param2, param3, param4
         )
         underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParamsNoInteractionWithUrl(param1, param2)
         underTest.getResourceWithMultiplePathVariablesAndRequestParams(
-            greetingResponse,
-            param1,
-            param2,
-            param3,
-            param4
+            greetingResponse, param1, param2, param3, param4
         )
         val response = restTemplate.getForEntity(
             "$GET_CONTROLLER_URL/resourceWithParam/$param1/$param2?param3=$param3&param4=$param4",
@@ -167,10 +177,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParams(param1, param2, param3, param4)
         assertThrows<VerificationException> {
             underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParamsNoInteraction(
-                param1,
-                param2,
-                param3,
-                param4
+                param1, param2, param3, param4
             )
         }
         assertThrows<VerificationException> {
@@ -179,7 +186,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should handle get mapping with no subResource`() {
+    fun `should handle get mapping with no subresource`() {
         underTest.verifyGetResourceWithNoSubResourceNoInteraction()
         underTest.verifyGetResourceWithNoSubResourceNoInteractionWithUrl()
         underTest.getResourceWithNoSubResource(greetingResponse)

@@ -143,8 +143,9 @@ class ControllerProcessor : AbstractProcessor() {
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).name = argumentName
                     }
                     if (element.getAnnotation(PathVariable::class.java) != null) {
+                        val pathVariable = element.getAnnotation(PathVariable::class.java)
                         val methodName = element.enclosingElement.toString()
-                        val argumentName = element.simpleName.toString()
+                        val argumentName = listOf(pathVariable.name, pathVariable.value, element.simpleName.toString()).first { it.isNotEmpty() }
                         val argumentType = getArgumentType(element)
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).urlHasPathVariable = true
