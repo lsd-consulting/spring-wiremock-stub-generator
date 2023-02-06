@@ -136,8 +136,8 @@ class ControllerProcessor : AbstractProcessor() {
                     }
                     if (element.getAnnotation(RequestParam::class.java) != null) {
                         val requestParam = element.getAnnotation(RequestParam::class.java)
+                        val argumentName = firstNotNull(requestParam.name, requestParam.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
-                        val argumentName = listOf(requestParam.name, requestParam.value, element.simpleName.toString()).first { it.isNotEmpty() }
                         val argumentType = getArgumentType(element)
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).type = argumentType
@@ -145,8 +145,8 @@ class ControllerProcessor : AbstractProcessor() {
                     }
                     if (element.getAnnotation(PathVariable::class.java) != null) {
                         val pathVariable = element.getAnnotation(PathVariable::class.java)
+                        val argumentName = firstNotNull(pathVariable.name, pathVariable.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
-                        val argumentName = listOf(pathVariable.name, pathVariable.value, element.simpleName.toString()).first { it.isNotEmpty() }
                         val argumentType = getArgumentType(element)
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).urlHasPathVariable = true
@@ -176,6 +176,8 @@ class ControllerProcessor : AbstractProcessor() {
 
         return true
     }
+
+    private fun firstNotNull(vararg elements: String) = elements.first { it.isNotEmpty() }
 
     private fun elementsBelongingToAnnotatedClasses(annotatedClasses: List<Element>): (Element) -> Boolean =
         {
