@@ -29,6 +29,11 @@ class GetRestController {
         GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/resourceWithMappedRequestParams")
+    fun resourceWithMappedRequestParams(@RequestParam("parameter1") param1: String, @RequestParam(name = "parameter2") param2: String) =
+        GreetingResponse(name = randomAlphabetic(10))
+
+    @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithParam/{param}")
     fun resourceWithPathVariable(@PathVariable param: String) =
         GreetingResponse(name = randomAlphabetic(10))
@@ -39,8 +44,8 @@ class GetRestController {
         GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
-    @GetMapping("/resourceWithMappedParams/{parameter1}/{parameter2}")
-    fun resourceWithMappedParams(
+    @GetMapping("/resourceWithMappedPathVariables/{parameter1}/{parameter2}")
+    fun resourceWithMappedPathVariables(
         @PathVariable("parameter1") param1: String, @PathVariable(name = "parameter2") param2: String
     ) = GreetingResponse(name = randomAlphabetic(10))
 

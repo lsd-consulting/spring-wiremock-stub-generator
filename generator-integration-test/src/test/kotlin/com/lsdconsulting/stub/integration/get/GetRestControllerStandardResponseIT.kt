@@ -86,19 +86,19 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
     @Test
     fun `should handle get mapping with mapped request params`() {
-        underTest.verifyGetResourceWithMappedParamsNoInteraction(param1, param2)
-        underTest.verifyGetResourceWithMappedParamsNoInteractionWithUrl(param1, param2)
-        underTest.getResourceWithMappedParams(greetingResponse, param1, param2)
+        underTest.verifyGetResourceWithMappedRequestParamsNoInteraction(param1, param2)
+        underTest.verifyGetResourceWithMappedRequestParamsNoInteractionWithUrl()
+        underTest.getResourceWithMappedRequestParams(greetingResponse, param1, param2)
         val response = restTemplate.getForEntity(
-            "$GET_CONTROLLER_URL/resourceWithMappedParams/$param1/$param2",
+            "$GET_CONTROLLER_URL/resourceWithMappedRequestParams?parameter1=$param1&parameter2=$param2",
             GreetingResponse::class.java
         )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         assertThrows<VerificationException> {
-            underTest.verifyGetResourceWithMappedParamsNoInteraction(param1, param2)
+            underTest.verifyGetResourceWithMappedRequestParamsNoInteraction(param1, param2)
         }
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithMappedParamsNoInteractionWithUrl(param1, param2) }
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithMappedRequestParamsNoInteractionWithUrl() }
     }
 
     @Test
@@ -155,6 +155,25 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         }
         assertThrows<VerificationException> {
             underTest.verifyGetResourceWithPathVariableAndRequestParamNoInteractionWithUrl(param1)
+        }
+    }
+
+    @Test
+    fun `should handle get mapping with mapped path variables`() {
+        underTest.verifyGetResourceWithMappedPathVariablesNoInteraction(param1, param2)
+        underTest.verifyGetResourceWithMappedPathVariablesNoInteractionWithUrl(param1, param2)
+        underTest.getResourceWithMappedPathVariables(greetingResponse, param1, param2)
+        val response = restTemplate.getForEntity(
+            "$GET_CONTROLLER_URL/resourceWithMappedPathVariables/$param1/$param2",
+            GreetingResponse::class.java
+        )
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> {
+            underTest.verifyGetResourceWithMappedPathVariablesNoInteraction(param1, param2)
+        }
+        assertThrows<VerificationException> {
+            underTest.verifyGetResourceWithMappedPathVariablesNoInteractionWithUrl(param1, param2)
         }
     }
 
