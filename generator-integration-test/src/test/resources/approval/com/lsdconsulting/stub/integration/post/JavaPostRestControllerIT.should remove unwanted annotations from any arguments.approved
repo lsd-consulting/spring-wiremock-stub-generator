@@ -2,6 +2,7 @@ package com.lsdconsulting.stub.integration.controller.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
+import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import static java.lang.String.format;
 import javax.annotation.processing.Generated;
 
@@ -30,14 +31,15 @@ public class JavaPostRestControllerStub {
         com.lsdconsulting.stub.integration.model.GreetingResponse response                                        ) {
 
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
-                stub(OK, buildBody(response), post(urlPathEqualTo(url))
-                        );
+                MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
+            ;
+        stub(OK, buildBody(response), mappingBuilder);
             }
 
     public void postResourceWithBodyAndAnnotations(int httpStatus, String errorResponse) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
-                stub(httpStatus, errorResponse, post(urlPathEqualTo(url))
-                        );
+                    MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
+                        stub(httpStatus, errorResponse, mappingBuilder);
             }
 
     public void verifyPostResourceWithBodyAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
@@ -46,16 +48,16 @@ public class JavaPostRestControllerStub {
 
     public void verifyPostResourceWithBodyAndAnnotations(final int times, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
-                verify(times, postRequestedFor(urlPathEqualTo(format(url)))
-                                                .withRequestBody(equalToJson(buildBody(greetingRequest)))
-                        );
+                    RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
+                                        requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
+                        verify(times, requestPatternBuilder);
             }
 
     public void verifyPostResourceWithBodyAndAnnotationsNoInteraction(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
-                verify(NEVER, postRequestedFor(urlPathEqualTo(format(url)))
-                                                .withRequestBody(equalToJson(buildBody(greetingRequest)))
-                        );
+                    RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
+                                        requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
+                        verify(NEVER, requestPatternBuilder);
             }
 
         public void verifyPostResourceWithBodyAndAnnotationsNoInteractionWithUrl() {
@@ -69,14 +71,15 @@ public class JavaPostRestControllerStub {
         com.lsdconsulting.stub.integration.model.GreetingResponse response        ,          java.lang.String param                                            ) {
 
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
-                stub(OK, buildBody(response), post(urlPathEqualTo(url))
-                        );
+                MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
+            ;
+        stub(OK, buildBody(response), mappingBuilder);
             }
 
     public void postResourceWithBodyAndAnnotationsOnPathVariables(int httpStatus, String errorResponse, java.lang.String param) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
-                stub(httpStatus, errorResponse, post(urlPathEqualTo(url))
-                        );
+                    MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
+                        stub(httpStatus, errorResponse, mappingBuilder);
             }
 
     public void verifyPostResourceWithBodyAndAnnotationsOnPathVariables( java.lang.String param, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
@@ -85,16 +88,16 @@ public class JavaPostRestControllerStub {
 
     public void verifyPostResourceWithBodyAndAnnotationsOnPathVariables(final int times, java.lang.String param, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
-                verify(times, postRequestedFor(urlPathEqualTo(format(url)))
-                                                .withRequestBody(equalToJson(buildBody(greetingRequest)))
-                        );
+                    RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
+                                        requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
+                        verify(times, requestPatternBuilder);
             }
 
     public void verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction( java.lang.String param, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
-                verify(NEVER, postRequestedFor(urlPathEqualTo(format(url)))
-                                                .withRequestBody(equalToJson(buildBody(greetingRequest)))
-                        );
+                    RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
+                                        requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
+                        verify(NEVER, requestPatternBuilder);
             }
 
         public void verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl( java.lang.String param) {

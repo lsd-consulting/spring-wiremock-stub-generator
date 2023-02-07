@@ -85,4 +85,17 @@ class GetRestController {
     @GetMapping("/resourceWithBooleanRequestParam")
     fun resourceWithBooleanRequestParam(@RequestParam param: Boolean) =
         GreetingResponse(name = randomAlphabetic(10))
+
+    @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/resourceWithOptionalBooleanRequestParam")
+    fun resourceWithOptionalBooleanRequestParam(@RequestParam(required = false) param: Boolean) =
+        GreetingResponse(name = randomAlphabetic(10))
+
+    @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/resourceWithOptionalIntRequestParams")
+    fun resourceWithOptionalIntRequestParams(@RequestParam param1: Boolean,
+                                             @RequestParam(required = false) param2: Int,
+                                             @RequestParam(required = false) param3: Int,
+                                             @RequestParam("parameter4") param4: Long) =
+        GreetingResponse(name = randomAlphabetic(10))
 }

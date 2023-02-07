@@ -38,6 +38,7 @@ data class ResourceModel(
 data class ArgumentModel(
     var name: String? = null,
     var type: String? = null,
-    var iterable: Boolean = false
+    var iterable: Boolean = false,
+    var optional: Boolean = false
 ) {
 }

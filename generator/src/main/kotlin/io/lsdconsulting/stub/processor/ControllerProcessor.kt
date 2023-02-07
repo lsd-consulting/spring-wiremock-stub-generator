@@ -138,10 +138,11 @@ class ControllerProcessor : AbstractProcessor() {
                         val requestParam = element.getAnnotation(RequestParam::class.java)
                         val argumentName = firstNotNull(requestParam.name, requestParam.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
-                        val argumentType = getArgumentType(element)
+                        val argumentType = replacePrimitive(getArgumentType(element))
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).type = argumentType
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).name = argumentName
+                        controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).optional = !requestParam.required
 
                         if ("java.util.Set<(.*)>|java.util.List<(.*)>".toRegex().containsMatchIn(argumentType)) {
                             controllerModel.getResourceModel(methodName).hasMultiValueRequestParams = true

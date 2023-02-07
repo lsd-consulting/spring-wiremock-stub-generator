@@ -288,4 +288,72 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteraction(false) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteractionWithUrl() }
     }
+
+    @Test
+    fun `should handle get mapping with optional empty boolean request param`() {
+        underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteraction(null)
+        underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteractionWithUrl()
+        underTest.getResourceWithOptionalBooleanRequestParam(greetingResponse, null)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOptionalBooleanRequestParam",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteraction(null) }
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteractionWithUrl() }
+    }
+
+    @Test
+    fun `should handle get mapping with optional boolean request param`() {
+        underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteraction(false)
+        underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteractionWithUrl()
+        underTest.getResourceWithOptionalBooleanRequestParam(greetingResponse, false)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOptionalBooleanRequestParam?param=false",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteraction(false) }
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteractionWithUrl() }
+    }
+
+    @Test
+    fun `should handle get mapping with empty optional int request params`() {
+        underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteraction(true, null, null, 11L)
+        underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteractionWithUrl()
+        underTest.getResourceWithOptionalIntRequestParams(greetingResponse, true, null, null, 11L)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOptionalIntRequestParams?param1=true&parameter4=11",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteraction(true, null, null, 11L) }
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteractionWithUrl() }
+    }
+
+    @Test
+    fun `should handle get mapping with optional int request params`() {
+        underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteraction(true, 5, 7, 11L)
+        underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteractionWithUrl()
+        underTest.getResourceWithOptionalIntRequestParams(greetingResponse, true, 5, 7, 11L)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOptionalIntRequestParams?param1=true&param2=5&param3=7&parameter4=11",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteraction(true, 5, 7, 11L) }
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteractionWithUrl() }
+    }
 }

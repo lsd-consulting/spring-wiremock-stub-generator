@@ -2,6 +2,7 @@ package com.lsdconsulting.stub.integration.controller.get;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
+import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import static java.lang.String.format;
 import javax.annotation.processing.Generated;
 
@@ -30,16 +31,17 @@ public class JavaGetRestControllerStub {
         com.lsdconsulting.stub.integration.model.GreetingResponse response        ,                         java.lang.String param                            ) {
 
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
-                stub(OK, buildBody(response), get(urlPathEqualTo(url))
-                                 .withQueryParam("param", equalTo(String.valueOf(param)))
-                        );
+                MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
+                                        mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                        ;
+        stub(OK, buildBody(response), mappingBuilder);
             }
 
     public void getResourceWithParamAndAnnotations(int httpStatus, String errorResponse, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
-                stub(httpStatus, errorResponse, get(urlPathEqualTo(url))
-                                 .withQueryParam("param", equalTo(String.valueOf(param)))
-                        );
+                    MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
+                                        mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                    stub(httpStatus, errorResponse, mappingBuilder);
             }
 
     public void verifyGetResourceWithParamAndAnnotations(java.lang.String param) {
@@ -48,16 +50,16 @@ public class JavaGetRestControllerStub {
 
     public void verifyGetResourceWithParamAndAnnotations(final int times, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
-                verify(times, getRequestedFor(urlPathEqualTo(format(url)))
-                                 .withQueryParam("param", equalTo(String.valueOf(param)))
-                                        );
+                    RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
+                                        requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                                verify(times, requestPatternBuilder);
             }
 
     public void verifyGetResourceWithParamAndAnnotationsNoInteraction(java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
-                verify(NEVER, getRequestedFor(urlPathEqualTo(format(url)))
-                                 .withQueryParam("param", equalTo(String.valueOf(param)))
-                                        );
+                    RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
+                                        requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                                verify(NEVER, requestPatternBuilder);
             }
 
         public void verifyGetResourceWithParamAndAnnotationsNoInteractionWithUrl() {

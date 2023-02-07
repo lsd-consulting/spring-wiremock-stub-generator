@@ -2,6 +2,7 @@ package {# @pebvariable name="model" type="io.lsdconsulting.stub.model.Controlle
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
+import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import static java.lang.String.format;
 import javax.annotation.processing.Generated;
 
@@ -44,11 +45,17 @@ public class {{model.stubClassName}} {
             {{ addRequestParamsToUrl(entry) }}
         stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
         {% else %}
-        stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url))
-                {% for entry2 in entry.value.requestParameters %}
-                 .withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})))
-                {% endfor %}
-        );
+        MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
+            {% for entry2 in entry.value.requestParameters %}
+            {% if entry2.value.optional %}
+                if ({{entry2.value.name}} != null) {
+            {% endif %}
+                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+            {% if entry2.value.optional %}
+                }
+            {% endif %}
+            {% endfor %};
+        stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% endif %}
     }
 
@@ -56,13 +63,19 @@ public class {{model.stubClassName}} {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-        stub(httpStatus, errorResponse, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
+            stub(httpStatus, errorResponse, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
         {% else %}
-        stub(httpStatus, errorResponse, {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url))
-                {% for entry2 in entry.value.requestParameters %}
-                 .withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})))
-                {% endfor %}
-        );
+            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
+            {% for entry2 in entry.value.requestParameters %}
+            {% if entry2.value.optional %}
+                if ({{entry2.value.name}} != null) {
+            {% endif %}
+                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+            {% if entry2.value.optional %}
+                }
+            {% endif %}
+            {% endfor %}
+            stub(httpStatus, errorResponse, mappingBuilder);
         {% endif %}
     }
 
@@ -74,20 +87,26 @@ public class {{model.stubClassName}} {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-        verify(times, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(format(url)))
+            verify(times, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(format(url)))
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
         );
         {% else %}
-        verify(times, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)))
-                {% for entry2 in entry.value.requestParameters %}
-                 .withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})))
-                {% endfor %}
-                {% if entry.value.requestBody is not empty%}
-                .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
-                {% endif %}
-        );
+            RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
+            {% for entry2 in entry.value.requestParameters %}
+            {% if entry2.value.optional %}
+                if ({{entry2.value.name}} != null) {
+            {% endif %}
+                requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+            {% if entry2.value.optional %}
+                }
+            {% endif %}
+            {% endfor %}
+            {% if entry.value.requestBody is not empty%}
+                requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
+            {% endif %}
+            verify(times, requestPatternBuilder);
         {% endif %}
     }
 
@@ -95,20 +114,26 @@ public class {{model.stubClassName}} {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-        verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(format(url)))
+            verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(format(url)))
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
         );
         {% else %}
-        verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)))
-                {% for entry2 in entry.value.requestParameters %}
-                 .withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})))
-                {% endfor %}
-                {% if entry.value.requestBody is not empty%}
-                .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
-                {% endif %}
-        );
+            RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
+            {% for entry2 in entry.value.requestParameters %}
+            {% if entry2.value.optional %}
+                if ({{entry2.value.name}} != null) {
+            {% endif %}
+                requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+            {% if entry2.value.optional %}
+                }
+            {% endif %}
+            {% endfor %}
+            {% if entry.value.requestBody is not empty%}
+                requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
+            {% endif %}
+            verify(NEVER, requestPatternBuilder);
         {% endif %}
     }
 
