@@ -290,6 +290,23 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
+    fun `should handle get mapping with missing non-optional boolean request param`() {
+        underTest.verifyGetResourceWithBooleanRequestParamNoInteraction(null)
+        underTest.verifyGetResourceWithBooleanRequestParamNoInteractionWithUrl()
+        underTest.getResourceWithBooleanRequestParam(greetingResponse, null)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithBooleanRequestParam?param=null",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteraction(null) }
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteractionWithUrl() }
+    }
+
+    @Test
     fun `should handle get mapping with optional empty boolean request param`() {
         underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteraction(null)
         underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteractionWithUrl()
