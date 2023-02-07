@@ -6,6 +6,7 @@ import static java.lang.String.format;
 import javax.annotation.processing.Generated;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static java.util.stream.Collectors.toList;
 
 @Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
 public class JavaPostRestControllerStub {

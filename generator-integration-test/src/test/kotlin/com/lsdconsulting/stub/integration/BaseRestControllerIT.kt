@@ -21,6 +21,8 @@ open class BaseRestControllerIT {
     val restTemplate = RestTemplate()
 
     val name: String = randomAlphabetic(10)
+    val paramLong: Long = RandomUtils.nextLong()
+    val paramInt: Int = RandomUtils.nextInt()
     val param: String = randomAlphabetic(10)
     val param1: String = randomAlphabetic(10)
     val param2: String = randomAlphabetic(10)

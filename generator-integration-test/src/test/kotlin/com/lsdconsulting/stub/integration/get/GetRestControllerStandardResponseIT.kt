@@ -240,18 +240,18 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
     @Test
     fun `should handle get mapping with request param list`() {
-        underTest.verifyGetResourceWithParamListNoInteraction(param1, paramList, param4)
-        underTest.getResourceWithParamList(greetingResponse, param1, paramList, param4)
+        underTest.verifyGetResourceWithParamListNoInteraction(paramLong, paramList, paramInt)
+        underTest.getResourceWithParamList(greetingResponse, paramLong, paramList, paramInt)
 
         val response = restTemplate.exchange(
-            "$GET_CONTROLLER_URL/resourceWithParamList?parameter1=$param1&param2=$param2&param2=$param3&parameter3=$param4",
+            "$GET_CONTROLLER_URL/resourceWithParamList?parameter1=$paramLong&param2=$param2&param2=$param3&parameter3=$paramInt",
             GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
         )
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithParamList(1, param1, paramList, param4)
-        underTest.verifyGetResourceWithParamList(param1, paramList, param4)
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithParamListNoInteraction(param1, paramList, param4) }
+        underTest.verifyGetResourceWithParamList(1, paramLong, paramList, paramInt)
+        underTest.verifyGetResourceWithParamList(paramLong, paramList, paramInt)
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithParamListNoInteraction(paramLong, paramList, paramInt) }
     }
 }

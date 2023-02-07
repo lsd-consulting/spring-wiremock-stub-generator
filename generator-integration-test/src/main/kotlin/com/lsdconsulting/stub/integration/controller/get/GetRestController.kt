@@ -77,7 +77,7 @@ class GetRestController {
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithParamList")
-    fun resourceWithParamList(@RequestParam("parameter1") param1: String, @RequestParam param2: List<String>,
-                              @RequestParam(name = "parameter3") param3: String) =
+    fun resourceWithParamList(@RequestParam("parameter1") param1: Long, @RequestParam param2: List<String>,
+                              @RequestParam(name = "parameter3") param3: Int) =
         GreetingResponse(name = randomAlphabetic(10))
 }
