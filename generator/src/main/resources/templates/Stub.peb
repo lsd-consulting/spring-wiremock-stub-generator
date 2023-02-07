@@ -39,21 +39,9 @@ public class {{model.stubClassName}} {
         {% endfor %}
         ) {
 
-        String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
+        {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
-            {% for entry2 in entry.value.requestParameters %}
-                {% if loop.first %}
-                    url = url + "?";
-                {% else %}
-                    url = url + "&";
-                {% endif %}
-                {% if entry2.value.iterable %}
-                    url = url + "{{entry2.value.name}}=";
-                    url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
-                {% else %}
-                    url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};
-                {% endif %}
-            {% endfor %}
+            {{ addRequestParamsToUrl(entry) }}
         stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
         {% else %}
         stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url))
@@ -65,21 +53,9 @@ public class {{model.stubClassName}} {
     }
 
     public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}(int httpStatus, String errorResponse{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type | raw}} {{entry2.value.name}}{% endfor %}) {
-        String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
+        {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
-            {% for entry2 in entry.value.requestParameters %}
-                {% if loop.first %}
-                        url = url + "?";
-                    {% else %}
-                        url = url + "&";
-                    {% endif %}
-                {% if entry2.value.iterable %}
-                        url = url + "{{entry2.value.name}}=";
-                        url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
-                    {% else %}
-                        url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};
-                    {% endif %}
-            {% endfor %}
+            {{ addRequestParamsToUrl(entry) }}
         stub(httpStatus, errorResponse, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
         {% else %}
         stub(httpStatus, errorResponse, {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url))
@@ -95,21 +71,9 @@ public class {{model.stubClassName}} {
     }
 
     public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}(final int times{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type | raw}} {{entry2.value.name}}{% endfor %}{% if entry.value.requestBody is not empty%}, {{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
-        String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
+        {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
-            {% for entry2 in entry.value.requestParameters %}
-                {% if loop.first %}
-                            url = url + "?";
-                        {% else %}
-                            url = url + "&";
-                        {% endif %}
-                {% if entry2.value.iterable %}
-                            url = url + "{{entry2.value.name}}=";
-                            url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
-                        {% else %}
-                            url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};
-                        {% endif %}
-            {% endfor %}
+            {{ addRequestParamsToUrl(entry) }}
         verify(times, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(format(url)))
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
@@ -128,21 +92,9 @@ public class {{model.stubClassName}} {
     }
 
     public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteraction({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}{% for entry2 in entry.value.requestParameters %}{{entry2.value.type | raw}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (((entry.value.requestParameters is not empty) or (entry.value.pathVariables  is not empty)) and entry.value.requestBody is not empty)%}, {% endif %}{% if entry.value.requestBody is not empty%}{{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
-        String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
+        {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
-            {% for entry2 in entry.value.requestParameters %}
-                {% if loop.first %}
-                            url = url + "?";
-                        {% else %}
-                            url = url + "&";
-                        {% endif %}
-                {% if entry2.value.iterable %}
-                            url = url + "{{entry2.value.name}}=";
-                            url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
-                        {% else %}
-                            url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};
-                        {% endif %}
-            {% endfor %}
+            {{ addRequestParamsToUrl(entry) }}
         verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(format(url)))
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
@@ -162,7 +114,7 @@ public class {{model.stubClassName}} {
 
     {% if not entry.value.hasMultiValueRequestParams %}
     public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteractionWithUrl({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}) {
-        String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
+        {{ generateUrl(entry) }}
         verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url))));
     }
     {% endif %}
@@ -187,3 +139,22 @@ public class {{model.stubClassName}} {
         }
     }
 }
+{% macro generateUrl(entry) %}
+String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
+{% endmacro %}
+
+{% macro addRequestParamsToUrl(entry) %}
+    {% for entry2 in entry.value.requestParameters %}
+        {% if loop.first %}
+                    url = url + "?";
+                {% else %}
+                    url = url + "&";
+                {% endif %}
+        {% if entry2.value.iterable %}
+                    url = url + "{{entry2.value.name}}=";
+                    url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
+                {% else %}
+                    url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};
+                {% endif %}
+    {% endfor %}
+{% endmacro %}
