@@ -254,4 +254,38 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyGetResourceWithParamList(paramLong, paramList, paramInt)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithParamListNoInteraction(paramLong, paramList, paramInt) }
     }
+
+    @Test
+    fun `should handle get mapping with true boolean request param`() {
+        underTest.verifyGetResourceWithBooleanRequestParamNoInteraction(true)
+        underTest.verifyGetResourceWithBooleanRequestParamNoInteractionWithUrl()
+        underTest.getResourceWithBooleanRequestParam(greetingResponse, true)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithBooleanRequestParam?param=true",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteraction(true) }
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteractionWithUrl() }
+    }
+
+    @Test
+    fun `should handle get mapping with false boolean request param`() {
+        underTest.verifyGetResourceWithBooleanRequestParamNoInteraction(false)
+        underTest.verifyGetResourceWithBooleanRequestParamNoInteractionWithUrl()
+        underTest.getResourceWithBooleanRequestParam(greetingResponse, false)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithBooleanRequestParam?param=false",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteraction(false) }
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteractionWithUrl() }
+    }
 }

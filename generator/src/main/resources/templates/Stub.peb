@@ -58,7 +58,7 @@ public class {{model.stubClassName}} {
         {% else %}
         stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url))
                 {% for entry2 in entry.value.requestParameters %}
-                 .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
+                 .withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})))
                 {% endfor %}
         );
         {% endif %}
@@ -84,7 +84,7 @@ public class {{model.stubClassName}} {
         {% else %}
         stub(httpStatus, errorResponse, {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url))
                 {% for entry2 in entry.value.requestParameters %}
-                 .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
+                 .withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})))
                 {% endfor %}
         );
         {% endif %}
@@ -118,7 +118,7 @@ public class {{model.stubClassName}} {
         {% else %}
         verify(times, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)))
                 {% for entry2 in entry.value.requestParameters %}
-                 .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
+                 .withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})))
                 {% endfor %}
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
@@ -151,7 +151,7 @@ public class {{model.stubClassName}} {
         {% else %}
         verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)))
                 {% for entry2 in entry.value.requestParameters %}
-                 .withQueryParam("{{entry2.value.name}}", equalTo({{entry2.value.name}}))
+                 .withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})))
                 {% endfor %}
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))

@@ -31,14 +31,14 @@ public class JavaGetRestControllerStub {
 
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                 stub(OK, buildBody(response), get(urlPathEqualTo(url))
-                                 .withQueryParam("param", equalTo(param))
+                                 .withQueryParam("param", equalTo(String.valueOf(param)))
                         );
             }
 
     public void getResourceWithParamAndAnnotations(int httpStatus, String errorResponse, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                 stub(httpStatus, errorResponse, get(urlPathEqualTo(url))
-                                 .withQueryParam("param", equalTo(param))
+                                 .withQueryParam("param", equalTo(String.valueOf(param)))
                         );
             }
 
@@ -49,14 +49,14 @@ public class JavaGetRestControllerStub {
     public void verifyGetResourceWithParamAndAnnotations(final int times, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                 verify(times, getRequestedFor(urlPathEqualTo(format(url)))
-                                 .withQueryParam("param", equalTo(param))
+                                 .withQueryParam("param", equalTo(String.valueOf(param)))
                                         );
             }
 
     public void verifyGetResourceWithParamAndAnnotationsNoInteraction(java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                 verify(NEVER, getRequestedFor(urlPathEqualTo(format(url)))
-                                 .withQueryParam("param", equalTo(param))
+                                 .withQueryParam("param", equalTo(String.valueOf(param)))
                                         );
             }
 
