@@ -45,17 +45,9 @@ public class {{model.stubClassName}} {
             {{ addRequestParamsToUrl(entry) }}
         stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
         {% else %}
-        MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
-            {% for entry2 in entry.value.requestParameters %}
-            {% if entry2.value.optional %}
-                if ({{entry2.value.name}} != null) {
-            {% endif %}
-                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
-            {% if entry2.value.optional %}
-                }
-            {% endif %}
-            {% endfor %};
-        stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
+            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
+            {{ addQueryParamsToMappingBuilder(entry) }}
+            stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% endif %}
     }
 
@@ -66,15 +58,7 @@ public class {{model.stubClassName}} {
             stub(httpStatus, errorResponse, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
         {% else %}
             MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
-            {% for entry2 in entry.value.requestParameters %}
-            {% if entry2.value.optional %}
-                if ({{entry2.value.name}} != null) {
-            {% endif %}
-                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
-            {% if entry2.value.optional %}
-                }
-            {% endif %}
-            {% endfor %}
+        {{ addQueryParamsToMappingBuilder(entry) }}
             stub(httpStatus, errorResponse, mappingBuilder);
         {% endif %}
     }
@@ -94,15 +78,7 @@ public class {{model.stubClassName}} {
         );
         {% else %}
             RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
-            {% for entry2 in entry.value.requestParameters %}
-            {% if entry2.value.optional %}
-                if ({{entry2.value.name}} != null) {
-            {% endif %}
-                requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
-            {% if entry2.value.optional %}
-                }
-            {% endif %}
-            {% endfor %}
+            {{ addQueryParamsToRequestPatternBuilder(entry) }}
             {% if entry.value.requestBody is not empty%}
                 requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
             {% endif %}
@@ -121,15 +97,7 @@ public class {{model.stubClassName}} {
         );
         {% else %}
             RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
-            {% for entry2 in entry.value.requestParameters %}
-            {% if entry2.value.optional %}
-                if ({{entry2.value.name}} != null) {
-            {% endif %}
-                requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
-            {% if entry2.value.optional %}
-                }
-            {% endif %}
-            {% endfor %}
+            {{ addQueryParamsToRequestPatternBuilder(entry) }}
             {% if entry.value.requestBody is not empty%}
                 requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
             {% endif %}
@@ -181,5 +149,29 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
                 {% else %}
                     url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};
                 {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro addQueryParamsToMappingBuilder(entry) %}
+    {% for entry2 in entry.value.requestParameters %}
+        {% if entry2.value.optional %}
+                if ({{entry2.value.name}} != null) {
+            {% endif %}
+                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+            {% if entry2.value.optional %}
+                }
+            {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro addQueryParamsToRequestPatternBuilder(entry) %}
+    {% for entry2 in entry.value.requestParameters %}
+        {% if entry2.value.optional %}
+                if ({{entry2.value.name}} != null) {
+            {% endif %}
+                requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+            {% if entry2.value.optional %}
+                }
+            {% endif %}
     {% endfor %}
 {% endmacro %}

@@ -31,17 +31,16 @@ public class JavaGetRestControllerStub {
         com.lsdconsulting.stub.integration.model.GreetingResponse response        ,                         java.lang.String param                            ) {
 
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
-                MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
+                    MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
                                         mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                        ;
-        stub(OK, buildBody(response), mappingBuilder);
+                            stub(OK, buildBody(response), mappingBuilder);
             }
 
     public void getResourceWithParamAndAnnotations(int httpStatus, String errorResponse, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
-                                        mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                    stub(httpStatus, errorResponse, mappingBuilder);
+                                    mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                            stub(httpStatus, errorResponse, mappingBuilder);
             }
 
     public void verifyGetResourceWithParamAndAnnotations(java.lang.String param) {
@@ -52,14 +51,14 @@ public class JavaGetRestControllerStub {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
                                         requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                                verify(times, requestPatternBuilder);
+                                        verify(times, requestPatternBuilder);
             }
 
     public void verifyGetResourceWithParamAndAnnotationsNoInteraction(java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
                                         requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                                verify(NEVER, requestPatternBuilder);
+                                        verify(NEVER, requestPatternBuilder);
             }
 
         public void verifyGetResourceWithParamAndAnnotationsNoInteractionWithUrl() {
@@ -86,4 +85,6 @@ public class JavaGetRestControllerStub {
         }
     }
 }
+
+
 
