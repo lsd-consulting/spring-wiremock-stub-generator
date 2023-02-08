@@ -31,6 +31,7 @@ class StubWriter(processingEnv: ProcessingEnvironment) {
                     .replace("generated/sources/annotationProcessor/java/main", "generated-stub-sources")
                 val directory: String = stubBasePathName.replace(controllerModel.stubClassName + ".java", "")
                 Files.createDirectories(Path.of(directory))
+                Files.deleteIfExists(Path.of(stubBasePathName))
                 val path = Files.createFile(Path.of(stubBasePathName))
                 PrintWriter(builderFile.openWriter()).use { writer ->
                     stubTemplate.evaluate(writer, mapOf("model" to controllerModel))

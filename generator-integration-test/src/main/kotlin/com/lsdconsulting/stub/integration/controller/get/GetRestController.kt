@@ -98,4 +98,12 @@ class GetRestController {
                                              @RequestParam(required = false) param3: Int,
                                              @RequestParam("parameter4") param4: Long) =
         GreetingResponse(name = randomAlphabetic(10))
+
+    @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/resourceWithOptionalMultiValueRequestParams")
+    fun resourceWithOptionalMultiValueRequestParams(@RequestParam required: Boolean,
+                                             @RequestParam(required = false) optional: Int,
+                                             @RequestParam multiValue: Set<Int>,
+                                             @RequestParam(name = "parameter4", required = false) optionalMultiValue: Set<Int>) =
+        GreetingResponse(name = randomAlphabetic(10))
 }

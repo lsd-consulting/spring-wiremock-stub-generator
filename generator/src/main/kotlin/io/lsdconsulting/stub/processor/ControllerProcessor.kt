@@ -79,7 +79,7 @@ class ControllerProcessor : AbstractProcessor() {
                             path = element.getAnnotation(GetMapping::class.java).path,
                             value = element.getAnnotation(GetMapping::class.java).value,
                             httpMethod = GET,
-                            responseType = element.asType().toString().replace(Regex("\\(.*\\)"), "")
+                            responseType = getResponseType(element)
                         )
                     }
                     if (element.getAnnotation(PostMapping::class.java) != null) {
@@ -89,7 +89,7 @@ class ControllerProcessor : AbstractProcessor() {
                             path = element.getAnnotation(PostMapping::class.java).path,
                             value = element.getAnnotation(PostMapping::class.java).value,
                             httpMethod = POST,
-                            responseType = element.asType().toString().replace(Regex("\\(.*\\)"), "")
+                            responseType = getResponseType(element)
                         )
                     }
                     if (element.getAnnotation(PutMapping::class.java) != null) {
@@ -181,6 +181,11 @@ class ControllerProcessor : AbstractProcessor() {
         }
 
         return true
+    }
+
+    private fun getResponseType(element: Element): String? {
+        val responseType = element.asType().toString().replace(Regex("\\(.*\\)"), "")
+        return if (responseType.equals("void", true)) null else responseType
     }
 
     private fun firstNotNull(vararg elements: String) = elements.first { it.isNotEmpty() }

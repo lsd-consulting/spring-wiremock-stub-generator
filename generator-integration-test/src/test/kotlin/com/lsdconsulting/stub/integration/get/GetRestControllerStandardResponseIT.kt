@@ -8,6 +8,7 @@ import com.lsdconsulting.stub.integration.controller.get.GetRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.core.ParameterizedTypeReference
@@ -372,5 +373,36 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         assertThat(response.body?.name, `is`(name))
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteraction(true, 5, 7, 11L) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteractionWithUrl() }
+    }
+
+    @Test
+    fun `should handle get mapping with optional and multi-value request params`() {
+        underTest.verifyGetResourceWithOptionalMultiValueRequestParamsNoInteraction(true, 5, setOf(33, 44), setOf(11, 22))
+        underTest.getResourceWithOptionalMultiValueRequestParams(greetingResponse, true, 5, setOf(33, 44), setOf(11, 22))
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOptionalMultiValueRequestParams?required=true&optional=5&multiValue=33&multiValue=44&parameter4=11&parameter4=22",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalMultiValueRequestParamsNoInteraction(true, 5, setOf(33, 44), setOf(11, 22)) }
+    }
+
+    @Test
+    @Disabled
+    fun `should handle get mapping with missing optional multi-value request params`() {
+        underTest.verifyGetResourceWithOptionalMultiValueRequestParamsNoInteraction(true, null, setOf(33, 44), null)
+        underTest.getResourceWithOptionalMultiValueRequestParams(greetingResponse, true, null, setOf(33, 44), null)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOptionalMultiValueRequestParams?required=true&multiValue=33&multiValue=44",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalMultiValueRequestParamsNoInteraction(true, null, setOf(33, 44), null) }
     }
 }

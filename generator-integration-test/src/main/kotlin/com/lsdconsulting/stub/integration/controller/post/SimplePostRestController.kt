@@ -18,4 +18,7 @@ class SimplePostRestController {
     @ResponseStatus(CREATED)
     @PostMapping("/postController/resourceWithNoBodyButWithResponseStatus")
     fun resourceWithNoBodyButWithResponseStatus() = GreetingResponse(name = randomAlphabetic(10))
+
+    @PostMapping("/postController/resourceWithNoBodyNoResponse")
+    fun resourceWithNoBodyNoResponse() {}
 }
