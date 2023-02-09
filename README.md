@@ -74,7 +74,8 @@ task stubsJar(type: Jar) {
 
 The JAR file can then be published as an artifact:
 
-```publishing {
+```groovy
+publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
@@ -87,11 +88,24 @@ The JAR file can then be published as an artifact:
 ```
 
 The last step is to import it as a dependency in another project and use it.
+```groovy
+testImplementation('group:artifact:+:wiremock-stubs') {
+        exclude group: "*", module: "*"
+    }
+```
+NOTE: The exclusion is necessary if the published artifact imports transitively all the producer's dependencies.
+
 
 ## Examples:
 For Java and Kotlin examples please check out the following project:
 
 https://github.com/lsd-consulting/spring-wiremock-stub-generator-example
+
+## Multi-value request parameters
+TODO
+
+## Optional request parameters
+TODO
 
 ## TODO:
 - add support for path arrays in mappings (currently we use only the first value in the array)
