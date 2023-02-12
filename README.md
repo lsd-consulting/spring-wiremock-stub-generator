@@ -102,10 +102,67 @@ For Java and Kotlin examples please check out the following project:
 https://github.com/lsd-consulting/spring-wiremock-stub-generator-example
 
 ## Multi-value request parameters
-TODO
+
+### The problem
+According to the accepted answer [here](https://stackoverflow.com/questions/24059773/correct-way-to-pass-multiple-values-for-same-parameter-name-in-get-request) 
+and [this Wiki page](https://en.wikipedia.org/wiki/Query_string) :
+```text
+While there is no definitive standard, most web frameworks allow multiple values to be associated with a single field (e.g. field1=value1&field1=value2&field2=value3).
+```
+
+However, according to [this thread](https://github.com/wiremock/wiremock/issues/398), WireMock doesn't support duplicate query names.
+
+Since Spring MVC does provide handling of duplicate query params out of the box, eg.
+```kotlin
+    @GetMapping("/resourceWithParamSet")
+    fun resourceWithParamSet(@RequestParam paramSet: Set<String>) {
+        ...
+    }
+```
+
+there is no easy way to set up a WireMock stub for the above, or similar, examples.
+
+### The implemented solution
+The library handles queries like this in a special way.
+
+As soon as a multi-value query parameter is detected, the WireMock stub is switched from `urlPathEqualTo` matcher, to the `urlEqualTo` one.
+The implication is that the ordering of the request parameters becomes significant.
+
+Therefore, it is important to use ordered collections when sending multi-value parameters in tests to make the queries deterministic.
 
 ## Optional request parameters
-TODO
+Optional request parameters is another feature of the HTTP protocol that is not yet supported by WireMock (see [here](https://groups.google.com/g/wiremock-user/c/WKMkb_LhJTU)).
+
+To handle the following SpringMVC definition:
+```kotlin
+    @GetMapping("/resourceWithOptionalBooleanRequestParam")
+    fun resourceWithOptionalBooleanRequestParam(@RequestParam(required = false) param: Boolean) {
+        ...
+    }
+```
+the library introduces login into the generated stub.
+
+If a parameter is optional and the value passed in is a `null`, the generated stub will not add the query param matcher to the Wiremock stub.
+
+This means that the following call to the generated stub:
+```kotlin
+underTest.getResourceWithOptionalBooleanRequestParam(response, null)
+```
+
+will generate a WireMock matcher to match the following GET request:
+```
+/resourceWithOptionalBooleanRequestParam
+```
+
+But if a value is passed in that call, eg:
+```kotlin
+underTest.getResourceWithOptionalBooleanRequestParam(response, "value")
+```
+
+then WireMock will expect the following request:
+```
+/resourceWithOptionalBooleanRequestParam?param=value
+```
 
 ## TODO:
 - add support for path arrays in mappings (currently we use only the first value in the array)
