@@ -269,6 +269,8 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithBooleanRequestParam(1,true)
+        underTest.verifyGetResourceWithBooleanRequestParam(true)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteraction(true) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteractionWithUrl() }
     }
@@ -286,6 +288,8 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithBooleanRequestParam(1,false)
+        underTest.verifyGetResourceWithBooleanRequestParam(false)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteraction(false) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteractionWithUrl() }
     }
@@ -303,6 +307,8 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithBooleanRequestParam(1,null)
+        underTest.verifyGetResourceWithBooleanRequestParam(null)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteraction(null) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithBooleanRequestParamNoInteractionWithUrl() }
     }
@@ -320,6 +326,8 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithOptionalBooleanRequestParam(1, null)
+        underTest.verifyGetResourceWithOptionalBooleanRequestParam(null)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteraction(null) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteractionWithUrl() }
     }
@@ -337,6 +345,8 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithOptionalBooleanRequestParam(1, false)
+        underTest.verifyGetResourceWithOptionalBooleanRequestParam(false)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteraction(false) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalBooleanRequestParamNoInteractionWithUrl() }
     }
@@ -354,6 +364,8 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithOptionalIntRequestParams(1, true, null, null, 11L)
+        underTest.verifyGetResourceWithOptionalIntRequestParams(true, null, null, 11L)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteraction(true, null, null, 11L) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteractionWithUrl() }
     }
@@ -371,6 +383,8 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithOptionalIntRequestParams(1, true, 5, 7, 11L)
+        underTest.verifyGetResourceWithOptionalIntRequestParams(true, 5, 7, 11L)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteraction(true, 5, 7, 11L) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalIntRequestParamsNoInteractionWithUrl() }
     }
@@ -387,6 +401,8 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithOptionalMultiValueRequestParams(1, true, 5, setOf(33, 44), setOf(11, 22))
+        underTest.verifyGetResourceWithOptionalMultiValueRequestParams(true, 5, setOf(33, 44), setOf(11, 22))
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalMultiValueRequestParamsNoInteraction(true, 5, setOf(33, 44), setOf(11, 22)) }
     }
 
@@ -403,6 +419,8 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
+        underTest.verifyGetResourceWithOptionalMultiValueRequestParams(1, true, null, setOf(33, 44), null)
+        underTest.verifyGetResourceWithOptionalMultiValueRequestParams(true, null, setOf(33, 44), null)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithOptionalMultiValueRequestParamsNoInteraction(true, null, setOf(33, 44), null) }
     }
 }

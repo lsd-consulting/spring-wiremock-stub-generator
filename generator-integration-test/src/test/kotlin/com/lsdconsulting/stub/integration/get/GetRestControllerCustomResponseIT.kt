@@ -1,6 +1,7 @@
 package com.lsdconsulting.stub.integration.get
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.tomakehurst.wiremock.client.VerificationException
 import com.lsdconsulting.stub.integration.BaseRestControllerIT
 import com.lsdconsulting.stub.integration.GET_CONTROLLER_URL
 import com.lsdconsulting.stub.integration.controller.get.GetRestControllerStub
@@ -148,5 +149,7 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
         underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParams(1, param1, param2, param3, param4)
         underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParams(param1, param2, param3, param4)
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParamsNoInteraction(param1, param2, param3, param4) }
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParamsNoInteractionWithUrl(param1, param2) }
     }
 }

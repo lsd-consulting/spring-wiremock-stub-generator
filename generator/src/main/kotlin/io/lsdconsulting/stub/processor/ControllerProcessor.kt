@@ -172,34 +172,12 @@ class ControllerProcessor : AbstractProcessor() {
                     }
                     if (element.getAnnotation(DateTimeFormat::class.java) != null) {
                         val dateTimeFormatAnnotation = element.getAnnotation(DateTimeFormat::class.java)
-
-//                        val printer = Jsr310DateTimeFormatAnnotationFormatterFactory().getPrinter(
-//                            dateTimeFormatAnnotation,
-//                            Class.forName(element.asType().toString())
-//                        )
-
-//                        val dateTimeFormat = DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-
-//                        messager.printMessage(NOTE, "element: ${element}")
-//                        messager.printMessage(NOTE, "element.javaClass: ${element.javaClass}")
-//                        messager.printMessage(NOTE, "element.enclosingElement: ${element.enclosingElement}")
-//                        messager.printMessage(NOTE, "element.kind: ${element.kind}")
-//                        messager.printMessage(NOTE, "element.asType: ${element.asType()}")
-//                        messager.printMessage(NOTE, "element.asType.javaClass: ${element.asType().javaClass}")
-//                        messager.printMessage(NOTE, "element.enclosedElements: ${element.enclosedElements}")
-
-//                        val print = printer.print(element, Locale.getDefault())
-
-//                        val dateFormatter = DateFormatter()
                         val methodName = element.enclosingElement.toString()
                         val argumentName = element.simpleName.toString()
-//                        val argumentType = getArgumentType(element)
                         val controllerModel = model
                             .getControllerModel(element.enclosingElement.enclosingElement.toString())
                             .getResourceModel(methodName)
                             .getRequestParamModel(argumentName)
-//                        val requestBody = ArgumentModel(type = argumentType, name = argumentName)
-//                        controllerModel.getResourceModel(methodName).requestBody = requestBody
                         controllerModel.dateTimeFormatAnnotation =
                             DateTimeFormatAnnotation(
                                 iso = dateTimeFormatAnnotation.iso.name,

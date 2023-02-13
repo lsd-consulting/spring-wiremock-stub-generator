@@ -74,7 +74,7 @@ public class JavaPostRestControllerStub {
 
         public void verifyPostResourceWithBodyAndAnnotationsNoInteractionWithUrl() {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
-        verify(NEVER, postRequestedFor(urlPathEqualTo(format(url))));
+        verify(NEVER, postRequestedFor(urlPathEqualTo(url)));
     }
         
     private static final String RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL = "/postController/resourceWithBodyAndAnnotationsOnPathVariables/%s";
@@ -113,7 +113,7 @@ public class JavaPostRestControllerStub {
 
         public void verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl( java.lang.String param) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
-        verify(NEVER, postRequestedFor(urlPathEqualTo(format(url))));
+        verify(NEVER, postRequestedFor(urlPathEqualTo(url)));
     }
         
     void stub(final int status, final String response, final MappingBuilder mappingBuilder) {

@@ -84,7 +84,7 @@ public class {{model.stubClassName}} {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-            verify(times, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(format(url)))
+            verify(times, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(url))
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
@@ -103,7 +103,7 @@ public class {{model.stubClassName}} {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-            verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(format(url)))
+            verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(url))
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
@@ -121,7 +121,7 @@ public class {{model.stubClassName}} {
     {% if not entry.value.hasMultiValueRequestParams %}
     public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteractionWithUrl({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}) {
         {{ generateUrl(entry) }}
-        verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url))));
+        verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url)));
     }
     {% endif %}
     {% endfor %}
@@ -195,47 +195,51 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
 {% macro addRequestParamsToUrl(entry) %}
     {% for entry2 in entry.value.requestParameters %}
         {% if loop.first %}
-                    url = url + "?";
-                {% else %}
-                    url = url + "&";
-                {% endif %}
+            url = url + "?";
+        {% else %}
+            url = url + "&";
+        {% endif %}
         {% if entry2.value.iterable %}
-                    url = url + "{{entry2.value.name}}=";
-                    url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
-                {% else %}
-                    url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};
-                {% endif %}
+            url = url + "{{entry2.value.name}}=";
+            url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
+        {% else %}
+            {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+                url = url + "{{entry2.value.name}}=" + encode(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}"), UTF_8);
+            {% else %}
+                url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};
+            {% endif %}
+        {% endif %}
     {% endfor %}
 {% endmacro %}
 
 {% macro addQueryParamsToMappingBuilder(entry) %}
     {% for entry2 in entry.value.requestParameters %}
         {% if entry2.value.optional %}
-                if ({{entry2.value.name}} != null) {
-            {% endif %}
-                {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(encode(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}"), UTF_8)));
-                {% else %}
-                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
-                {% endif %}
-            {% if entry2.value.optional %}
-                }
-            {% endif %}
+            if ({{entry2.value.name}} != null) {
+        {% endif %}
+        {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+            mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(encode(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}"), UTF_8)));
+        {% else %}
+            mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+        {% endif %}
+        {% if entry2.value.optional %}
+            }
+        {% endif %}
     {% endfor %}
 {% endmacro %}
 
 {% macro addQueryParamsToRequestPatternBuilder(entry) %}
     {% for entry2 in entry.value.requestParameters %}
         {% if entry2.value.optional %}
-                if ({{entry2.value.name}} != null) {
-            {% endif %}
-                {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-                requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(encode(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}"), UTF_8)));
-                {% else %}
-                requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
-                {% endif %}
-            {% if entry2.value.optional %}
-                }
-            {% endif %}
+            if ({{entry2.value.name}} != null) {
+        {% endif %}
+        {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+            requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(encode(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}"), UTF_8)));
+        {% else %}
+            requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+        {% endif %}
+        {% if entry2.value.optional %}
+            }
+        {% endif %}
     {% endfor %}
 {% endmacro %}
