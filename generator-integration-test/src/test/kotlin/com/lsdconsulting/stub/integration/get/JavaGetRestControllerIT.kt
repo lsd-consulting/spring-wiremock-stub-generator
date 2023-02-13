@@ -8,13 +8,21 @@ import com.lsdconsulting.stub.integration.controller.get.JavaGetRestControllerSt
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import com.oneeyedmen.okeydoke.Approver
 import com.oneeyedmen.okeydoke.junit5.ApprovalsExtension
+import org.apache.http.client.methods.CloseableHttpResponse
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.HttpClientBuilder
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.format.datetime.standard.Jsr310DateTimeFormatAnnotationFormatterFactory
 import java.io.File
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.text.Charsets.UTF_8
 
 internal class CustomApprovalsExtension private constructor() :
@@ -22,7 +30,7 @@ internal class CustomApprovalsExtension private constructor() :
 
 @ExtendWith(CustomApprovalsExtension::class)
 class JavaPostRestControllerIT : BaseRestControllerIT() {
-    private val underTest = JavaGetRestControllerStub(ObjectMapper())
+    private val underTest = JavaGetRestControllerStub(ObjectMapper(), Jsr310DateTimeFormatAnnotationFormatterFactory())
 
     @Test
     fun `should remove unwanted annotations from any arguments`(approver: Approver) {
@@ -44,6 +52,23 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyGetResourceWithParamAndAnnotations(param)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithParamAndAnnotationsNoInteraction(param) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithParamAndAnnotationsNoInteractionWithUrl() }
+    }
+
+    @Test
+    fun `should handle get mapping with ZonedDateTime and multi-value request parameters`() {
+        val param = ZonedDateTime.now()
+        underTest.verifyGetResourceWithZonedDatetimeAndMultiValueNoInteraction(param, setOf(33, 44))
+        underTest.getResourceWithZonedDatetimeAndMultiValue(greetingResponse, param, setOf(33, 44))
+
+        val request = HttpGet(
+            "$GET_CONTROLLER_URL/resourceWithZonedDatetimeAndMultiValue?param=${
+                URLEncoder.encode(param.format(DateTimeFormatter.ISO_DATE_TIME), StandardCharsets.UTF_8)
+            }&multiValue=33&multiValue=44"
+        )
+        HttpClientBuilder.create().build().use { client -> client.execute(request) as CloseableHttpResponse }
+
+        underTest.verifyGetResourceWithZonedDatetimeAndMultiValue(param, setOf(33, 44))
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithZonedDatetimeAndMultiValueNoInteraction(param, setOf(33, 44)) }
     }
 
     private fun loadGeneratedFile(): String {

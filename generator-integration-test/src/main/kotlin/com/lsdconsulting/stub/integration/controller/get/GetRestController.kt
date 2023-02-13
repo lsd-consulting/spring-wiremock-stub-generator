@@ -122,10 +122,4 @@ class GetRestController {
     fun resourceWithZonedDatetimeAndAllDateTimeFormatArguments(@RequestParam @DateTimeFormat(iso = DATE,
         fallbackPatterns = ["pattern1", "pattern2"], style = "SS", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") param: ZonedDateTime) =
         GreetingResponse(name = randomAlphabetic(10))
-
-    @Suppress("UNUSED_PARAMETER")
-    @GetMapping("/resourceWithZonedDatetimeAndMultiValue")
-    fun resourceWithZonedDatetimeAndMultiValue(@RequestParam @DateTimeFormat(iso = DATE_TIME) param: ZonedDateTime,
-                                               @RequestParam multiValue: Set<Int>) =
-        GreetingResponse(name = randomAlphabetic(10))
 }

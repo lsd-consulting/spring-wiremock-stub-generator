@@ -49,7 +49,7 @@ data class DateTimeFormatAnnotation(
     val fallbackPatterns: Array<String>?,
     val pattern: String?,
     val style: String?,
-    val clazz: String
+    val clazz: String?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

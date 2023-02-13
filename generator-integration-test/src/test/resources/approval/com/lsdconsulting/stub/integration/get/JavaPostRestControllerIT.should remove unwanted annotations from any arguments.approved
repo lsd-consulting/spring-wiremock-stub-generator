@@ -38,6 +38,57 @@ public class JavaGetRestControllerStub {
     }
 
     
+    private static final String RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL = "/getController/resourceWithZonedDatetimeAndMultiValue";
+
+    public void getResourceWithZonedDatetimeAndMultiValue(
+        com.lsdconsulting.stub.integration.model.GreetingResponse response        ,                         java.time.ZonedDateTime param            ,         java.util.Set<java.lang.Integer> multiValue                            ) {
+
+        String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
+                                            url = url + "?";
+                                            url = url + "param=" + encode(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", ""), UTF_8);
+                                            url = url + "&";
+                            url = url + "multiValue=";
+            url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
+                    stub(OK, buildBody(response), get(urlEqualTo(url)));
+            }
+
+    public void getResourceWithZonedDatetimeAndMultiValue(int httpStatus, String errorResponse, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
+        String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
+                                            url = url + "?";
+                                            url = url + "param=" + encode(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", ""), UTF_8);
+                                            url = url + "&";
+                            url = url + "multiValue=";
+            url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
+                        stub(httpStatus, errorResponse, get(urlEqualTo(url)));
+            }
+
+    public void verifyGetResourceWithZonedDatetimeAndMultiValue(java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
+        verifyGetResourceWithZonedDatetimeAndMultiValue(ONCE, param, multiValue);
+    }
+
+    public void verifyGetResourceWithZonedDatetimeAndMultiValue(final int times, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
+        String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
+                                            url = url + "?";
+                                            url = url + "param=" + encode(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", ""), UTF_8);
+                                            url = url + "&";
+                            url = url + "multiValue=";
+            url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
+                        verify(times, getRequestedFor(urlEqualTo(url))
+                        );
+            }
+
+    public void verifyGetResourceWithZonedDatetimeAndMultiValueNoInteraction(java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
+        String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
+                                            url = url + "?";
+                                            url = url + "param=" + encode(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", ""), UTF_8);
+                                            url = url + "&";
+                            url = url + "multiValue=";
+            url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
+                        verify(NEVER, getRequestedFor(urlEqualTo(url))
+                        );
+            }
+
+        
     private static final String RESOURCEWITHPARAMANDANNOTATIONS_URL = "/getController/resourceWithParamAndAnnotations";
 
     public void getResourceWithParamAndAnnotations(
