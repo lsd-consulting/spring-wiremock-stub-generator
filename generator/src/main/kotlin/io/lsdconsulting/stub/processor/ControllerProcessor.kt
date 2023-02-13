@@ -82,7 +82,7 @@ class ControllerProcessor : AbstractProcessor() {
                             path = element.getAnnotation(GetMapping::class.java).path,
                             value = element.getAnnotation(GetMapping::class.java).value,
                             httpMethod = GET,
-                            responseType = removeResponseType(getResponseType(element))
+                            responseType = removeResponseEntity(retrieveResponseType(element.asType().toString()))
                         )
                     }
                     if (element.getAnnotation(PostMapping::class.java) != null) {
@@ -92,7 +92,7 @@ class ControllerProcessor : AbstractProcessor() {
                             path = element.getAnnotation(PostMapping::class.java).path,
                             value = element.getAnnotation(PostMapping::class.java).value,
                             httpMethod = POST,
-                            responseType = removeResponseType(getResponseType(element))
+                            responseType = removeResponseEntity(retrieveResponseType(element.asType().toString()))
                         )
                     }
                     if (element.getAnnotation(PutMapping::class.java) != null) {
@@ -141,7 +141,7 @@ class ControllerProcessor : AbstractProcessor() {
                         val requestParam = element.getAnnotation(RequestParam::class.java)
                         val argumentName = firstNotNull(requestParam.name, requestParam.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
-                        val argumentType = replacePrimitive(getArgumentType(element))
+                        val argumentType = replacePrimitive(retrieveArgumentType(element))
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).type = argumentType
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).name = argumentName
@@ -156,7 +156,7 @@ class ControllerProcessor : AbstractProcessor() {
                         val pathVariable = element.getAnnotation(PathVariable::class.java)
                         val argumentName = firstNotNull(pathVariable.name, pathVariable.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
-                        val argumentType = getArgumentType(element)
+                        val argumentType = retrieveArgumentType(element)
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).urlHasPathVariable = true
                         controllerModel.getResourceModel(methodName).getPathVariableModel(argumentName).type = argumentType
@@ -165,7 +165,7 @@ class ControllerProcessor : AbstractProcessor() {
                     if (element.getAnnotation(RequestBody::class.java) != null) {
                         val methodName = element.enclosingElement.toString()
                         val argumentName = element.simpleName.toString()
-                        val argumentType = getArgumentType(element)
+                        val argumentType = retrieveArgumentType(element)
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         val requestBody = ArgumentModel(type = argumentType, name = argumentName)
                         controllerModel.getResourceModel(methodName).requestBody = requestBody
@@ -184,7 +184,7 @@ class ControllerProcessor : AbstractProcessor() {
                                 fallbackPatterns = dateTimeFormatAnnotation.fallbackPatterns,
                                 pattern = dateTimeFormatAnnotation.pattern,
                                 style = dateTimeFormatAnnotation.style,
-                                clazz = getGeneric(getArgumentType(element))
+                                clazz = retrieveGeneric(retrieveArgumentType(element))
                             )
                     }
                 }

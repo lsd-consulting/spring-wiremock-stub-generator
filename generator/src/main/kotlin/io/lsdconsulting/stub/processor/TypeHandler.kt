@@ -2,7 +2,7 @@ package io.lsdconsulting.stub.processor
 
 import javax.lang.model.element.Element
 
-fun getArgumentType(element: Element): String {
+fun retrieveArgumentType(element: Element): String {
     var argumentType = element.asType().toString()
     element.asType().annotationMirrors.forEach {
         argumentType = argumentType.replace(it.toString(), "")
@@ -10,7 +10,7 @@ fun getArgumentType(element: Element): String {
     return argumentType.replace(",", "").trim()
 }
 
-fun getGeneric(type: String): String {
+fun retrieveGeneric(type: String): String {
     return if (type.contains("<") && type.contains(">")) {
         type.substring(type.indexOf("<") + 1, type.lastIndexOf(">"))
     } else if (type.contains("&lt;") && type.contains("&gt;")) {
@@ -20,7 +20,7 @@ fun getGeneric(type: String): String {
     }
 }
 
-fun removeResponseType(type: String?): String? {
+fun removeResponseEntity(type: String?): String? {
     return if (type != null) {
         if (type.contains("ResponseEntity<") && type.contains(">")) {
             type.substring(type.indexOf("ResponseEntity<") + 15, type.lastIndexOf(">"))
@@ -46,7 +46,7 @@ fun replacePrimitive(originalArgument: String): String {
     }
 }
 
-fun getResponseType(element: Element): String? {
-    val responseType = element.asType().toString().replace(Regex("\\(.*\\)"), "")
+fun retrieveResponseType(type: String): String? {
+    val responseType = type.replace(Regex("\\(.*\\)"), "")
     return if (responseType.equals("void", true)) null else responseType
 }

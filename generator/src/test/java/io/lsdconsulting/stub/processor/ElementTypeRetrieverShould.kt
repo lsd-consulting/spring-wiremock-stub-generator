@@ -22,7 +22,7 @@ internal class ElementTypeRetrieverShould {
         every { type.annotationMirrors } returns listOf(annotationMirror)
         every { annotationMirror.toString() } returns "@some.Annotation"
 
-        val result = getArgumentType(element)
+        val result = retrieveArgumentType(element)
 
         assertThat(result, `is`("some.Class"))
     }
@@ -40,7 +40,7 @@ internal class ElementTypeRetrieverShould {
         every { annotationMirror1.toString() } returns "@some.Annotation1"
         every { annotationMirror2.toString() } returns "@some.Annotation2"
 
-        val result = getArgumentType(element)
+        val result = retrieveArgumentType(element)
 
         assertThat(result, `is`("some.Class"))
     }
@@ -54,7 +54,7 @@ internal class ElementTypeRetrieverShould {
         every { type.toString() } returns "some.Class"
         every { type.annotationMirrors } returns listOf()
 
-        val result = getArgumentType(element)
+        val result = retrieveArgumentType(element)
 
         assertThat(result, `is`("some.Class"))
     }
