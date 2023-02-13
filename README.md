@@ -164,7 +164,17 @@ then WireMock will expect the following request:
 /resourceWithOptionalBooleanRequestParam?param=value
 ```
 
-## TODO:
-- add support for path arrays in mappings (currently we use only the first value in the array)
-- add support for @RequestMapping on methods
-- fix Jacoco/Codecov
+## Handling @DateTimeFormat
+If the request parameter or path variable is a date, it needs to be annotated with `@DateTimeFormat`, eg:
+
+```kotlin
+@GetMapping("/resource") 
+fun resource(@RequestParam @DateTimeFormat(iso = DATE_TIME) timestamp: ZonedDateTime)
+```
+
+For the generated stub object to be able to handle such values, it needs an `AnnotationFormatterFactory`, eg. `Jsr310DateTimeFormatAnnotationFormatterFactory`.
+
+A special constructor needs to be used when creating an instance of the stub:
+```kotlin
+RestControllerStub(ObjectMapper(), Jsr310DateTimeFormatAnnotationFormatterFactory())
+```
