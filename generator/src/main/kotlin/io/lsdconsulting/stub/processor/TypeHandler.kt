@@ -32,8 +32,8 @@ fun removeResponseEntity(type: String?): String? {
     } else null
 }
 
-fun replacePrimitive(originalArgument: String): String {
-    return when (originalArgument) {
+fun String.replacePrimitive() =
+    when (this) {
         "boolean" -> "Boolean"
         "int" -> "Integer"
         "long" -> "Long"
@@ -42,9 +42,8 @@ fun replacePrimitive(originalArgument: String): String {
         "float" -> "Float"
         "double" -> "Double"
         "char" -> "Char"
-        else -> originalArgument
+        else -> this
     }
-}
 
 fun retrieveResponseType(type: String): String? {
     val responseType = type.replace(Regex("\\(.*\\)"), "")

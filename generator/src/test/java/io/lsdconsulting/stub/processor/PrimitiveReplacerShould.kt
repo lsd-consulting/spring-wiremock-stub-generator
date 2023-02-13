@@ -8,46 +8,46 @@ internal class PrimitiveReplacerShould {
 
     @Test
     fun `replace boolean with Boolean`() {
-        assertThat(replacePrimitive("boolean"), `is`("Boolean"))
+        assertThat("boolean".replacePrimitive(), `is`("Boolean"))
     }
 
     @Test
     fun `replace int with Integer`() {
-        assertThat(replacePrimitive("int"), `is`("Integer"))
+        assertThat("int".replacePrimitive(), `is`("Integer"))
     }
 
     @Test
     fun `replace long with Long`() {
-        assertThat(replacePrimitive("long"), `is`("Long"))
+        assertThat("long".replacePrimitive(), `is`("Long"))
     }
 
     @Test
     fun `replace byte with Byte`() {
-        assertThat(replacePrimitive("byte"), `is`("Byte"))
+        assertThat("byte".replacePrimitive(), `is`("Byte"))
     }
 
     @Test
     fun `replace short with Short`() {
-        assertThat(replacePrimitive("short"), `is`("Short"))
+        assertThat("short".replacePrimitive(), `is`("Short"))
     }
 
     @Test
     fun `replace float with Float`() {
-        assertThat(replacePrimitive("float"), `is`("Float"))
+        assertThat("float".replacePrimitive(), `is`("Float"))
     }
 
     @Test
     fun `replace double with Double`() {
-        assertThat(replacePrimitive("double"), `is`("Double"))
+        assertThat("double".replacePrimitive(), `is`("Double"))
     }
 
     @Test
     fun `replace char with Char`() {
-        assertThat(replacePrimitive("char"), `is`("Char"))
+        assertThat("char".replacePrimitive(), `is`("Char"))
     }
 
     @Test
     fun `unknown type`() {
-        assertThat(replacePrimitive("someTime"), `is`("someTime"))
+        assertThat("someTime".replacePrimitive(), `is`("someTime"))
     }
 }
