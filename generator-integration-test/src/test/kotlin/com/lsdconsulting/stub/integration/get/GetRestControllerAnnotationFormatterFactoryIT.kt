@@ -6,6 +6,9 @@ import com.lsdconsulting.stub.integration.BaseRestControllerIT
 import com.lsdconsulting.stub.integration.GET_CONTROLLER_URL
 import com.lsdconsulting.stub.integration.controller.get.GetRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingResponse
+import org.apache.http.client.methods.CloseableHttpResponse
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.HttpClientBuilder
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
@@ -59,5 +62,24 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
         underTest.verifyGetResourceWithZonedDatetimeAndAllDateTimeFormatArguments(param)
         assertThrows<VerificationException> { underTest.verifyGetResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteraction(param) }
         assertThrows<VerificationException> { underTest.verifyGetResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteractionWithUrl() }
+    }
+
+    @Test
+    fun `should handle get mapping with multi-value ZonedDateTime`() {
+        val multiValue = listOf(ZonedDateTime.now(), ZonedDateTime.now().plusHours(1))
+        underTest.verifyGetResourceWithMultiValueZonedDatetimeNoInteraction(multiValue)
+        underTest.getResourceWithMultiValueZonedDatetime(greetingResponse, multiValue)
+
+        val request = HttpGet(
+            "$GET_CONTROLLER_URL/resourceWithMultiValueZonedDatetime?multiValue=${
+                multiValue[0].format(ISO_DATE_TIME)
+            }&multiValue=${
+                multiValue[1].format(ISO_DATE_TIME)
+            }"
+        )
+        HttpClientBuilder.create().build().use { client -> client.execute(request) as CloseableHttpResponse }
+
+        underTest.verifyGetResourceWithMultiValueZonedDatetime(multiValue)
+        assertThrows<VerificationException> { underTest.verifyGetResourceWithMultiValueZonedDatetimeNoInteraction(multiValue) }
     }
 }

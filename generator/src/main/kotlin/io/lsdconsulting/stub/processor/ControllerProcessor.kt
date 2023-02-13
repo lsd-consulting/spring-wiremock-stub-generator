@@ -184,7 +184,7 @@ class ControllerProcessor : AbstractProcessor() {
                                 fallbackPatterns = dateTimeFormatAnnotation.fallbackPatterns,
                                 pattern = dateTimeFormatAnnotation.pattern,
                                 style = dateTimeFormatAnnotation.style,
-                                clazz = getArgumentType(element)
+                                clazz = getGeneric(getArgumentType(element))
                             )
                     }
                 }
