@@ -10,25 +10,23 @@ fun retrieveArgumentType(element: Element): String {
     return argumentType.replace(",", "").trim()
 }
 
-fun String.retrieveGeneric(): String {
-    return if (this.contains("<") && this.contains(">")) {
+fun String.retrieveGeneric() =
+    if (this.contains("<") && this.contains(">")) {
         this.substring(this.indexOf("<") + 1, this.lastIndexOf(">"))
     } else if (this.contains("&lt;") && this.contains("&gt;")) {
         this.substring(this.indexOf("&lt;") + 4, this.lastIndexOf("&gt;"))
     } else {
         this
     }
-}
 
-fun String.removeResponseEntity(): String {
-    return if (this.contains("ResponseEntity<") && this.contains(">")) {
+fun String.removeResponseEntity() =
+    if (this.contains("ResponseEntity<") && this.contains(">")) {
         this.substring(this.indexOf("ResponseEntity<") + 15, this.lastIndexOf(">"))
     } else if (this.contains("ResponseEntity&lt;") && this.contains("&gt;")) {
         this.substring(this.indexOf("ResponseEntity&lt;") + 18, this.lastIndexOf("&gt;"))
     } else {
         this
     }
-}
 
 fun String.replacePrimitive() =
     when (this) {
