@@ -82,7 +82,7 @@ class ControllerProcessor : AbstractProcessor() {
                             path = element.getAnnotation(GetMapping::class.java).path,
                             value = element.getAnnotation(GetMapping::class.java).value,
                             httpMethod = GET,
-                            responseType = removeResponseEntity(element.asType().toString().retrieveResponseType())
+                            responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
                         )
                     }
                     if (element.getAnnotation(PostMapping::class.java) != null) {
@@ -92,7 +92,7 @@ class ControllerProcessor : AbstractProcessor() {
                             path = element.getAnnotation(PostMapping::class.java).path,
                             value = element.getAnnotation(PostMapping::class.java).value,
                             httpMethod = POST,
-                            responseType = removeResponseEntity(element.asType().toString().retrieveResponseType())
+                            responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
                         )
                     }
                     if (element.getAnnotation(PutMapping::class.java) != null) {

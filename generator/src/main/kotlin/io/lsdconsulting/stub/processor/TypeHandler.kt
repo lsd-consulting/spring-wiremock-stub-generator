@@ -20,16 +20,14 @@ fun retrieveGeneric(type: String): String {
     }
 }
 
-fun removeResponseEntity(type: String?): String? {
-    return if (type != null) {
-        if (type.contains("ResponseEntity<") && type.contains(">")) {
-            type.substring(type.indexOf("ResponseEntity<") + 15, type.lastIndexOf(">"))
-        } else if (type.contains("ResponseEntity&lt;") && type.contains("&gt;")) {
-            type.substring(type.indexOf("ResponseEntity&lt;") + 18, type.lastIndexOf("&gt;"))
-        } else {
-            type
-        }
-    } else null
+fun String.removeResponseEntity(): String {
+    return if (this.contains("ResponseEntity<") && this.contains(">")) {
+        this.substring(this.indexOf("ResponseEntity<") + 15, this.lastIndexOf(">"))
+    } else if (this.contains("ResponseEntity&lt;") && this.contains("&gt;")) {
+        this.substring(this.indexOf("ResponseEntity&lt;") + 18, this.lastIndexOf("&gt;"))
+    } else {
+        this
+    }
 }
 
 fun String.replacePrimitive() =
