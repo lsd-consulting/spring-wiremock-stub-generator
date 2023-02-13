@@ -13,7 +13,6 @@ import java.lang.annotation.Annotation;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.util.stream.Collectors.toList;
-import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")

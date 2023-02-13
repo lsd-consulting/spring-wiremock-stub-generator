@@ -13,7 +13,6 @@ import java.lang.annotation.Annotation;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.util.stream.Collectors.toList;
-import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
@@ -45,7 +44,7 @@ public class JavaGetRestControllerStub {
 
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
                                             url = url + "?";
-                                            url = url + "param=" + encode(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", ""), UTF_8);
+                                            url = url + "param=" + serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "");
                                             url = url + "&";
                             url = url + "multiValue=";
             url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
@@ -55,7 +54,7 @@ public class JavaGetRestControllerStub {
     public void getResourceWithZonedDatetimeAndMultiValue(int httpStatus, String errorResponse, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
                                             url = url + "?";
-                                            url = url + "param=" + encode(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", ""), UTF_8);
+                                            url = url + "param=" + serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "");
                                             url = url + "&";
                             url = url + "multiValue=";
             url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
@@ -69,7 +68,7 @@ public class JavaGetRestControllerStub {
     public void verifyGetResourceWithZonedDatetimeAndMultiValue(final int times, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
                                             url = url + "?";
-                                            url = url + "param=" + encode(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", ""), UTF_8);
+                                            url = url + "param=" + serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "");
                                             url = url + "&";
                             url = url + "multiValue=";
             url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
@@ -80,7 +79,7 @@ public class JavaGetRestControllerStub {
     public void verifyGetResourceWithZonedDatetimeAndMultiValueNoInteraction(java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
                                             url = url + "?";
-                                            url = url + "param=" + encode(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", ""), UTF_8);
+                                            url = url + "param=" + serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "");
                                             url = url + "&";
                             url = url + "multiValue=";
             url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));

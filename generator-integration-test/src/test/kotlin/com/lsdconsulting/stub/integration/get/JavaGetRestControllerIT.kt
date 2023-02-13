@@ -19,8 +19,6 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.format.datetime.standard.Jsr310DateTimeFormatAnnotationFormatterFactory
 import java.io.File
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.text.Charsets.UTF_8
@@ -61,8 +59,7 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         underTest.getResourceWithZonedDatetimeAndMultiValue(greetingResponse, param, setOf(33, 44))
 
         val request = HttpGet(
-            "$GET_CONTROLLER_URL/resourceWithZonedDatetimeAndMultiValue?param=${
-                URLEncoder.encode(param.format(DateTimeFormatter.ISO_DATE_TIME), StandardCharsets.UTF_8)
+            "$GET_CONTROLLER_URL/resourceWithZonedDatetimeAndMultiValue?param=${param.format(DateTimeFormatter.ISO_DATE_TIME)
             }&multiValue=33&multiValue=44"
         )
         HttpClientBuilder.create().build().use { client -> client.execute(request) as CloseableHttpResponse }

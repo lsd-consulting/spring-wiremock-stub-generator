@@ -14,8 +14,6 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.format.datetime.standard.Jsr310DateTimeFormatAnnotationFormatterFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod.GET
-import java.net.URLEncoder.encode
-import java.nio.charset.StandardCharsets.UTF_8
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 import java.time.format.DateTimeFormatter.ofPattern
@@ -32,7 +30,7 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
         underTest.getResourceWithZonedDatetime(greetingResponse, param)
 
         val response = restTemplate.exchange(
-            "$GET_CONTROLLER_URL/resourceWithZonedDatetime?param=${encode(param.format(ISO_DATE_TIME), UTF_8)}",
+            "$GET_CONTROLLER_URL/resourceWithZonedDatetime?param=${param.format(ISO_DATE_TIME)}",
             GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
         )
 
@@ -51,8 +49,8 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
         underTest.getResourceWithZonedDatetimeAndAllDateTimeFormatArguments(greetingResponse, param)
 
         val response = restTemplate.exchange(
-            "$GET_CONTROLLER_URL/resourceWithZonedDatetimeAndAllDateTimeFormatArguments?param=${encode(param.format(
-                ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")), UTF_8)}",
+            "$GET_CONTROLLER_URL/resourceWithZonedDatetimeAndAllDateTimeFormatArguments?param=${param.format(
+                ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"))}",
             GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
         )
 

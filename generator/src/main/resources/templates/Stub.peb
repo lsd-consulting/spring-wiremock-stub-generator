@@ -13,7 +13,6 @@ import java.lang.annotation.Annotation;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.util.stream.Collectors.toList;
-import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
@@ -204,7 +203,7 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
             url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
         {% else %}
             {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-                url = url + "{{entry2.value.name}}=" + encode(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}"), UTF_8);
+                url = url + "{{entry2.value.name}}=" + serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}");
             {% else %}
                 url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};
             {% endif %}
@@ -218,7 +217,7 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
             if ({{entry2.value.name}} != null) {
         {% endif %}
         {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-            mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(encode(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}"), UTF_8)));
+            mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")));
         {% else %}
             mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
         {% endif %}
@@ -234,7 +233,7 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
             if ({{entry2.value.name}} != null) {
         {% endif %}
         {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-            requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(encode(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}"), UTF_8)));
+            requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")));
         {% else %}
             requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
         {% endif %}
