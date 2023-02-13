@@ -20,6 +20,18 @@ fun getGeneric(type: String): String {
     }
 }
 
+fun removeResponseType(type: String?): String? {
+    return if (type != null) {
+        if (type.contains("ResponseEntity<") && type.contains(">")) {
+            type.substring(type.indexOf("ResponseEntity<") + 15, type.lastIndexOf(">"))
+        } else if (type.contains("ResponseEntity&lt;") && type.contains("&gt;")) {
+            type.substring(type.indexOf("ResponseEntity&lt;") + 18, type.lastIndexOf("&gt;"))
+        } else {
+            type
+        }
+    } else null
+}
+
 fun replacePrimitive(originalArgument: String): String {
     return when (originalArgument) {
         "boolean" -> "Boolean"

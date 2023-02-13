@@ -3,6 +3,7 @@ package com.lsdconsulting.stub.integration.controller.get;
 import com.lsdconsulting.stub.integration.model.GreetingResponse;
 import io.lsdconsulting.stub.annotation.GenerateWireMockStub;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,8 +24,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 class JavaGetRestController {
 
     @GetMapping("/resourceWithParamAndAnnotations")
-    GreetingResponse resourceWithParamAndAnnotations(@RequestParam @Valid @Email String param) {
-        return new GreetingResponse(randomAlphabetic(10));
+    ResponseEntity<GreetingResponse> resourceWithParamAndAnnotations(@RequestParam @Valid @Email String param) {
+        return ResponseEntity.ok().body(new GreetingResponse(randomAlphabetic(10)));
     }
 
     @GetMapping("/resourceWithZonedDatetimeAndMultiValue")
