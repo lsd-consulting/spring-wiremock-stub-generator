@@ -45,3 +45,8 @@ fun replacePrimitive(originalArgument: String): String {
         else -> originalArgument
     }
 }
+
+fun getResponseType(element: Element): String? {
+    val responseType = element.asType().toString().replace(Regex("\\(.*\\)"), "")
+    return if (responseType.equals("void", true)) null else responseType
+}

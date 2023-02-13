@@ -203,11 +203,6 @@ class ControllerProcessor : AbstractProcessor() {
         return true
     }
 
-    private fun getResponseType(element: Element): String? {
-        val responseType = element.asType().toString().replace(Regex("\\(.*\\)"), "")
-        return if (responseType.equals("void", true)) null else responseType
-    }
-
     private fun firstNotNull(vararg elements: String) = elements.first { it.isNotEmpty() }
 
     private fun elementsBelongingToAnnotatedClasses(annotatedClasses: List<Element>): (Element) -> Boolean =
