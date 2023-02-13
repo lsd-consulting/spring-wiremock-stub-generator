@@ -10,13 +10,13 @@ fun retrieveArgumentType(element: Element): String {
     return argumentType.replace(",", "").trim()
 }
 
-fun retrieveGeneric(type: String): String {
-    return if (type.contains("<") && type.contains(">")) {
-        type.substring(type.indexOf("<") + 1, type.lastIndexOf(">"))
-    } else if (type.contains("&lt;") && type.contains("&gt;")) {
-        type.substring(type.indexOf("&lt;") + 4, type.lastIndexOf("&gt;"))
+fun String.retrieveGeneric(): String {
+    return if (this.contains("<") && this.contains(">")) {
+        this.substring(this.indexOf("<") + 1, this.lastIndexOf(">"))
+    } else if (this.contains("&lt;") && this.contains("&gt;")) {
+        this.substring(this.indexOf("&lt;") + 4, this.lastIndexOf("&gt;"))
     } else {
-        type
+        this
     }
 }
 
