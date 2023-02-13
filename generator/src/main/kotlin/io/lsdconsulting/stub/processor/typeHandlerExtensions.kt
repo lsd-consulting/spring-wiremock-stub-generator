@@ -2,9 +2,9 @@ package io.lsdconsulting.stub.processor
 
 import javax.lang.model.element.Element
 
-fun retrieveArgumentType(element: Element): String {
-    var argumentType = element.asType().toString()
-    element.asType().annotationMirrors.forEach {
+fun Element.retrieveArgumentType(): String {
+    var argumentType = this.asType().toString()
+    this.asType().annotationMirrors.forEach {
         argumentType = argumentType.replace(it.toString(), "")
     }
     return argumentType.replace(",", "").trim()

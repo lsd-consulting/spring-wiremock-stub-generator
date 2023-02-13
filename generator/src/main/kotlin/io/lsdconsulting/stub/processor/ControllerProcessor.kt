@@ -141,7 +141,7 @@ class ControllerProcessor : AbstractProcessor() {
                         val requestParam = element.getAnnotation(RequestParam::class.java)
                         val argumentName = firstNotNull(requestParam.name, requestParam.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
-                        val argumentType = retrieveArgumentType(element).replacePrimitive()
+                        val argumentType = element.retrieveArgumentType().replacePrimitive()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).type = argumentType
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).name = argumentName
@@ -156,7 +156,7 @@ class ControllerProcessor : AbstractProcessor() {
                         val pathVariable = element.getAnnotation(PathVariable::class.java)
                         val argumentName = firstNotNull(pathVariable.name, pathVariable.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
-                        val argumentType = retrieveArgumentType(element)
+                        val argumentType = element.retrieveArgumentType()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).urlHasPathVariable = true
                         controllerModel.getResourceModel(methodName).getPathVariableModel(argumentName).type = argumentType
@@ -165,7 +165,7 @@ class ControllerProcessor : AbstractProcessor() {
                     if (element.getAnnotation(RequestBody::class.java) != null) {
                         val methodName = element.enclosingElement.toString()
                         val argumentName = element.simpleName.toString()
-                        val argumentType = retrieveArgumentType(element)
+                        val argumentType = element.retrieveArgumentType()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         val requestBody = ArgumentModel(type = argumentType, name = argumentName)
                         controllerModel.getResourceModel(methodName).requestBody = requestBody
@@ -184,7 +184,7 @@ class ControllerProcessor : AbstractProcessor() {
                                 fallbackPatterns = dateTimeFormatAnnotation.fallbackPatterns,
                                 pattern = dateTimeFormatAnnotation.pattern,
                                 style = dateTimeFormatAnnotation.style,
-                                clazz = retrieveArgumentType(element).retrieveGeneric()
+                                clazz = element.retrieveArgumentType().retrieveGeneric()
                             )
                     }
                 }
