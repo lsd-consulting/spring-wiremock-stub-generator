@@ -45,7 +45,7 @@ fun String.replacePrimitive() =
         else -> this
     }
 
-fun retrieveResponseType(type: String): String? {
-    val responseType = type.replace(Regex("\\(.*\\)"), "")
+fun String.retrieveResponseType(): String? {
+    val responseType = this.replace(Regex("\\(.*\\)"), "")
     return if (responseType.equals("void", true)) null else responseType
 }

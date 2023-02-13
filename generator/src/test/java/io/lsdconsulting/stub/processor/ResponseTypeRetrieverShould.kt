@@ -9,13 +9,13 @@ class ResponseTypeRetrieverShould {
 
     @Test
     fun `Should strip annotations from response type`() {
-        val result = retrieveResponseType("(@javax.validation.Valid,@javax.validation.constraints.Email com.lsdconsulting.stub.integration.model.GreetingRequest)com.lsdconsulting.stub.integration.model.GreetingResponse")
+        val result ="(@javax.validation.Valid,@javax.validation.constraints.Email com.lsdconsulting.stub.integration.model.GreetingRequest)com.lsdconsulting.stub.integration.model.GreetingResponse".retrieveResponseType()
         assertThat(result, `is`("com.lsdconsulting.stub.integration.model.GreetingResponse"))
     }
 
     @Test
     fun `Should handle void response type`() {
-        val result = retrieveResponseType("()void")
+        val result = "()void".retrieveResponseType()
         assertThat(result, nullValue())
     }
 }
