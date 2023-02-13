@@ -5,9 +5,16 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import static java.lang.String.format;
 import javax.annotation.processing.Generated;
+import org.springframework.format.AnnotationFormatterFactory;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.Printer;
+import java.util.Locale;
+import java.lang.annotation.Annotation;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.util.stream.Collectors.toList;
+import static java.net.URLEncoder.encode;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
 public class {{model.stubClassName}} {
@@ -19,9 +26,15 @@ public class {{model.stubClassName}} {
     private static final int NEVER = 0;
 
     private ObjectMapper objectMapper;
+    private AnnotationFormatterFactory annotationFormatterFactory;
 
     public {{model.stubClassName}}(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+    }
+
+    public {{model.stubClassName}}(ObjectMapper objectMapper, AnnotationFormatterFactory annotationFormatterFactory) {
+        this.objectMapper = objectMapper;
+        this.annotationFormatterFactory = annotationFormatterFactory;
     }
 
     {% for entry in model.getResources %}
@@ -131,6 +144,49 @@ public class {{model.stubClassName}} {
             throw new RuntimeException(e);
         }
     }
+
+    String serialise(Object object, String clazz, String iso, String pattern, String style, String...fallbackPatterns) {
+        if (annotationFormatterFactory == null) {
+            throw new IllegalStateException("annotationFormatterFactory not set");
+        }
+
+        DateTimeFormat dateTimeFormat= new DateTimeFormat() {
+
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return null;
+            }
+
+            @Override
+            public String style() {
+                return style;
+            }
+
+            @Override
+            public ISO iso() {
+                return ISO.valueOf(iso);
+            }
+
+            @Override
+            public String pattern() {
+                return pattern;
+            }
+
+            @Override
+            public String[] fallbackPatterns() {
+                return fallbackPatterns;
+            }
+        };
+        try {
+            Printer printer = annotationFormatterFactory.getPrinter(
+                                dateTimeFormat,
+                                Class.forName(clazz)
+                            );
+            return printer.print(object, Locale.getDefault());
+        } catch(ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 {% macro generateUrl(entry) %}
 String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
@@ -157,7 +213,11 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
         {% if entry2.value.optional %}
                 if ({{entry2.value.name}} != null) {
             {% endif %}
+                {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(encode(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}"), UTF_8)));
+                {% else %}
                 mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+                {% endif %}
             {% if entry2.value.optional %}
                 }
             {% endif %}
@@ -169,7 +229,11 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
         {% if entry2.value.optional %}
                 if ({{entry2.value.name}} != null) {
             {% endif %}
+                {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+                requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(encode(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}"), UTF_8)));
+                {% else %}
                 requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+                {% endif %}
             {% if entry2.value.optional %}
                 }
             {% endif %}

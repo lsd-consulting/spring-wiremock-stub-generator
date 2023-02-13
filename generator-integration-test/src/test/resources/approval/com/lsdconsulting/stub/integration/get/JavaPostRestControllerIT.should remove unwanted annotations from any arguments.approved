@@ -5,9 +5,16 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import static java.lang.String.format;
 import javax.annotation.processing.Generated;
+import org.springframework.format.AnnotationFormatterFactory;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.Printer;
+import java.util.Locale;
+import java.lang.annotation.Annotation;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.util.stream.Collectors.toList;
+import static java.net.URLEncoder.encode;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
 public class JavaGetRestControllerStub {
@@ -19,9 +26,15 @@ public class JavaGetRestControllerStub {
     private static final int NEVER = 0;
 
     private ObjectMapper objectMapper;
+    private AnnotationFormatterFactory annotationFormatterFactory;
 
     public JavaGetRestControllerStub(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+    }
+
+    public JavaGetRestControllerStub(ObjectMapper objectMapper, AnnotationFormatterFactory annotationFormatterFactory) {
+        this.objectMapper = objectMapper;
+        this.annotationFormatterFactory = annotationFormatterFactory;
     }
 
     
@@ -32,15 +45,15 @@ public class JavaGetRestControllerStub {
 
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
-                                        mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                            stub(OK, buildBody(response), mappingBuilder);
+                                                        mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                            stub(OK, buildBody(response), mappingBuilder);
             }
 
     public void getResourceWithParamAndAnnotations(int httpStatus, String errorResponse, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
-                                    mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                            stub(httpStatus, errorResponse, mappingBuilder);
+                                                    mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                            stub(httpStatus, errorResponse, mappingBuilder);
             }
 
     public void verifyGetResourceWithParamAndAnnotations(java.lang.String param) {
@@ -50,15 +63,15 @@ public class JavaGetRestControllerStub {
     public void verifyGetResourceWithParamAndAnnotations(final int times, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
-                                        requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                        verify(times, requestPatternBuilder);
+                                                        requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                                        verify(times, requestPatternBuilder);
             }
 
     public void verifyGetResourceWithParamAndAnnotationsNoInteraction(java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
-                                        requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                        verify(NEVER, requestPatternBuilder);
+                                                        requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                                        verify(NEVER, requestPatternBuilder);
             }
 
         public void verifyGetResourceWithParamAndAnnotationsNoInteractionWithUrl() {
@@ -81,6 +94,49 @@ public class JavaGetRestControllerStub {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    String serialise(Object object, String clazz, String iso, String pattern, String style, String...fallbackPatterns) {
+        if (annotationFormatterFactory == null) {
+            throw new IllegalStateException("annotationFormatterFactory not set");
+        }
+
+        DateTimeFormat dateTimeFormat= new DateTimeFormat() {
+
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return null;
+            }
+
+            @Override
+            public String style() {
+                return style;
+            }
+
+            @Override
+            public ISO iso() {
+                return ISO.valueOf(iso);
+            }
+
+            @Override
+            public String pattern() {
+                return pattern;
+            }
+
+            @Override
+            public String[] fallbackPatterns() {
+                return fallbackPatterns;
+            }
+        };
+        try {
+            Printer printer = annotationFormatterFactory.getPrinter(
+                                dateTimeFormat,
+                                Class.forName(clazz)
+                            );
+            return printer.print(object, Locale.getDefault());
+        } catch(ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

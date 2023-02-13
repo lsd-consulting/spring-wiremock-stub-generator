@@ -39,6 +39,37 @@ data class ArgumentModel(
     var name: String? = null,
     var type: String? = null,
     var iterable: Boolean = false,
-    var optional: Boolean = false
+    var optional: Boolean = false,
+    var dateTimeFormatAnnotation: DateTimeFormatAnnotation? = null
 ) {
+}
+
+data class DateTimeFormatAnnotation(
+    val iso: String?,
+    val fallbackPatterns: Array<String>?,
+    val pattern: String?,
+    val style: String?,
+    val clazz: String
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as DateTimeFormatAnnotation
+
+        if (iso != other.iso) return false
+        if (!fallbackPatterns.contentEquals(other.fallbackPatterns)) return false
+        if (pattern != other.pattern) return false
+        if (style != other.style) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = iso.hashCode()
+        result = 31 * result + fallbackPatterns.contentHashCode()
+        result = 31 * result + pattern.hashCode()
+        result = 31 * result + style.hashCode()
+        return result
+    }
 }

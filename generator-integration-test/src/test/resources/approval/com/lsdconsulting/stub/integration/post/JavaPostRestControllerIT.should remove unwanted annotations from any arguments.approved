@@ -5,9 +5,16 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import static java.lang.String.format;
 import javax.annotation.processing.Generated;
+import org.springframework.format.AnnotationFormatterFactory;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.Printer;
+import java.util.Locale;
+import java.lang.annotation.Annotation;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.util.stream.Collectors.toList;
+import static java.net.URLEncoder.encode;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Generated("com.lsdconsulting.stub.plugin.ControllerProcessor")
 public class JavaPostRestControllerStub {
@@ -19,9 +26,15 @@ public class JavaPostRestControllerStub {
     private static final int NEVER = 0;
 
     private ObjectMapper objectMapper;
+    private AnnotationFormatterFactory annotationFormatterFactory;
 
     public JavaPostRestControllerStub(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+    }
+
+    public JavaPostRestControllerStub(ObjectMapper objectMapper, AnnotationFormatterFactory annotationFormatterFactory) {
+        this.objectMapper = objectMapper;
+        this.annotationFormatterFactory = annotationFormatterFactory;
     }
 
     
@@ -118,6 +131,49 @@ public class JavaPostRestControllerStub {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    String serialise(Object object, String clazz, String iso, String pattern, String style, String...fallbackPatterns) {
+        if (annotationFormatterFactory == null) {
+            throw new IllegalStateException("annotationFormatterFactory not set");
+        }
+
+        DateTimeFormat dateTimeFormat= new DateTimeFormat() {
+
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return null;
+            }
+
+            @Override
+            public String style() {
+                return style;
+            }
+
+            @Override
+            public ISO iso() {
+                return ISO.valueOf(iso);
+            }
+
+            @Override
+            public String pattern() {
+                return pattern;
+            }
+
+            @Override
+            public String[] fallbackPatterns() {
+                return fallbackPatterns;
+            }
+        };
+        try {
+            Printer printer = annotationFormatterFactory.getPrinter(
+                                dateTimeFormat,
+                                Class.forName(clazz)
+                            );
+            return printer.print(object, Locale.getDefault());
+        } catch(ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

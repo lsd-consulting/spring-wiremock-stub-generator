@@ -3,7 +3,12 @@ package com.lsdconsulting.stub.integration.controller.get
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import io.lsdconsulting.stub.annotation.GenerateWireMockStub
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.format.annotation.DateTimeFormat.ISO.DATE
+import org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 import org.springframework.web.bind.annotation.*
+import java.time.ZonedDateTime
+
 
 @GenerateWireMockStub
 @RestController
@@ -105,5 +110,16 @@ class GetRestController {
                                              @RequestParam(required = false) optional: Int,
                                              @RequestParam multiValue: Set<Int>,
                                              @RequestParam(name = "parameter4", required = false) optionalMultiValue: Set<Int>) =
+        GreetingResponse(name = randomAlphabetic(10))
+
+    @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/resourceWithZonedDatetime")
+    fun resourceWithZonedDatetime(@RequestParam @DateTimeFormat(iso = DATE_TIME) param: ZonedDateTime) =
+        GreetingResponse(name = randomAlphabetic(10))
+
+    @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/resourceWithZonedDatetimeAndAllDateTimeFormatArguments")
+    fun resourceWithZonedDatetimeAndAllDateTimeFormatArguments(@RequestParam @DateTimeFormat(iso = DATE,
+        fallbackPatterns = ["pattern1", "pattern2"], style = "SS", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") param: ZonedDateTime) =
         GreetingResponse(name = randomAlphabetic(10))
 }
