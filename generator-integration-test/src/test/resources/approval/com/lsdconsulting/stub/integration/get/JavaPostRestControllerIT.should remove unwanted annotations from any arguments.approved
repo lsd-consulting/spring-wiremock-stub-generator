@@ -36,7 +36,6 @@ public class JavaGetRestControllerStub {
         this.annotationFormatterFactory = annotationFormatterFactory;
     }
 
-    
     private static final String RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL = "/getController/resourceWithZonedDatetimeAndMultiValue";
 
     public void getResourceWithZonedDatetimeAndMultiValue(
@@ -73,7 +72,7 @@ public class JavaGetRestControllerStub {
                             url = url + "multiValue=";
                             url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
                                     verify(times, getRequestedFor(urlEqualTo(url))
-                        );
+                            );
             }
 
     public void verifyGetResourceWithZonedDatetimeAndMultiValueNoInteraction(java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
@@ -84,11 +83,10 @@ public class JavaGetRestControllerStub {
                             url = url + "multiValue=";
                             url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
                                     verify(NEVER, getRequestedFor(urlEqualTo(url))
-                        );
+                            );
             }
 
-        
-    private static final String RESOURCEWITHPARAMANDANNOTATIONS_URL = "/getController/resourceWithParamAndAnnotations";
+        private static final String RESOURCEWITHPARAMANDANNOTATIONS_URL = "/getController/resourceWithParamAndAnnotations";
 
     public void getResourceWithParamAndAnnotations(
         com.lsdconsulting.stub.integration.model.GreetingResponse response        ,                         java.lang.String param                            ) {
@@ -128,7 +126,7 @@ public class JavaGetRestControllerStub {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
         verify(NEVER, getRequestedFor(urlPathEqualTo(url)));
     }
-        
+    
     void stub(final int status, final String response, final MappingBuilder mappingBuilder) {
         stubFor(mappingBuilder
                 .willReturn(

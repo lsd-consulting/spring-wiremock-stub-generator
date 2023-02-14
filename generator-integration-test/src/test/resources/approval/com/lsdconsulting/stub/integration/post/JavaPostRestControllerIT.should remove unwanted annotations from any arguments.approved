@@ -36,7 +36,6 @@ public class JavaPostRestControllerStub {
         this.annotationFormatterFactory = annotationFormatterFactory;
     }
 
-    
     private static final String RESOURCEWITHBODYANDANNOTATIONS_URL = "/postController/resourceWithBodyAndAnnotations";
 
     public void postResourceWithBodyAndAnnotations(
@@ -75,8 +74,7 @@ public class JavaPostRestControllerStub {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
         verify(NEVER, postRequestedFor(urlPathEqualTo(url)));
     }
-        
-    private static final String RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL = "/postController/resourceWithBodyAndAnnotationsOnPathVariables/%s";
+        private static final String RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL = "/postController/resourceWithBodyAndAnnotationsOnPathVariables/%s";
 
     public void postResourceWithBodyAndAnnotationsOnPathVariables(
         com.lsdconsulting.stub.integration.model.GreetingResponse response        ,          java.lang.String param                                            ) {
@@ -114,7 +112,7 @@ public class JavaPostRestControllerStub {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
         verify(NEVER, postRequestedFor(urlPathEqualTo(url)));
     }
-        
+    
     void stub(final int status, final String response, final MappingBuilder mappingBuilder) {
         stubFor(mappingBuilder
                 .willReturn(

@@ -36,8 +36,7 @@ public class {{model.stubClassName}} {
         this.annotationFormatterFactory = annotationFormatterFactory;
     }
 
-    {% for entry in model.getResources %}
-
+{% for entry in model.getResources %}
     private static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
 
     public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}(
@@ -87,7 +86,7 @@ public class {{model.stubClassName}} {
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
-        );
+            );
         {% else %}
             RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
             {{ addQueryParamsToRequestPatternBuilder(entry) }}
@@ -106,7 +105,7 @@ public class {{model.stubClassName}} {
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
-        );
+            );
         {% else %}
             RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
             {{ addQueryParamsToRequestPatternBuilder(entry) }}
@@ -123,7 +122,7 @@ public class {{model.stubClassName}} {
         verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url)));
     }
     {% endif %}
-    {% endfor %}
+{% endfor %}
 
     void stub(final int status, final String response, final MappingBuilder mappingBuilder) {
         stubFor(mappingBuilder
