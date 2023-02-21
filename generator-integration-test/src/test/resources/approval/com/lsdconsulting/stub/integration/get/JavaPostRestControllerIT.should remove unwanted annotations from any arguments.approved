@@ -50,6 +50,7 @@ public class JavaGetRestControllerStub {
                                 stub(OK, buildBody(response), get(urlEqualTo(url)));
             }
 
+    
     public void getResourceWithZonedDatetimeAndMultiValue(int httpStatus, String errorResponse, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
                                             url = url + "?";
@@ -97,6 +98,7 @@ public class JavaGetRestControllerStub {
                                 stub(OK, buildBody(response), mappingBuilder);
             }
 
+    
     public void getResourceWithParamAndAnnotations(int httpStatus, String errorResponse, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
