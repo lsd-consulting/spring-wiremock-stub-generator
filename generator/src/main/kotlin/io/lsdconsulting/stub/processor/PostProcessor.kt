@@ -17,11 +17,11 @@ class PostProcessor {
                 }
                 annotatedMethod.stubMethodArgumentList = generateArgumentList(annotatedMethod)
                 annotatedMethod.stubMethodArgumentListWithRequest = generateArgumentListWithRequest(annotatedMethod)
-                annotatedMethod.stubMethodArgumentListForCustomResponse =
-                    generateArgumentListForCustomResponse(annotatedMethod)
+                annotatedMethod.stubMethodArgumentListForCustomResponse = generateArgumentListForCustomResponse(annotatedMethod)
                 annotatedMethod.verifyMethodArgumentList = generateVerifyArgumentList(annotatedMethod)
                 annotatedMethod.verifyMethodArgumentListWithTimes = generateVerifyArgumentListWithTimes(annotatedMethod)
                 annotatedMethod.verifyMethodArgumentListRequestParametersOnly = generatePathVariables(annotatedMethod)
+                annotatedMethod.verifyStubCallArgumentList = generateVerifyStubCallArgumentList(annotatedMethod)
             }
         }
     }
@@ -74,6 +74,17 @@ class PostProcessor {
         val stubMethodArgumentList = mutableListOf<String>()
         stubMethodArgumentList.add("final int times")
         stubMethodArgumentList.addAll(generateVerifyArgumentList(annotatedMethod))
+        return stubMethodArgumentList
+    }
+
+    private fun generateVerifyStubCallArgumentList(annotatedMethod: ResourceModel): MutableList<String> {
+        val stubMethodArgumentList = mutableListOf<String>()
+        stubMethodArgumentList.add("ONCE")
+        stubMethodArgumentList.addAll(annotatedMethod.pathVariables.map { "${it.value.name}" })
+        stubMethodArgumentList.addAll(annotatedMethod.requestParameters.map { "${it.value.name}" })
+        annotatedMethod.requestBody?.let {
+            stubMethodArgumentList.add("${annotatedMethod.requestBody!!.name}")
+        }
         return stubMethodArgumentList
     }
 

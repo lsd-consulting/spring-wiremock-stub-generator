@@ -78,7 +78,7 @@ public class {{model.stubClassName}} {
     }
 
     public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
-        verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}(ONCE{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.name}}{% endfor %}{% if entry.value.requestBody is not empty%}, {{ entry.value.requestBody.name }}{% endif %});
+        verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({{ entry.value.verifyStubCallArgumentList | join(', ') | raw}});
     }
 
     public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimes | join(', ') | raw}}) {
