@@ -35,7 +35,7 @@ data class ResourceModel(
     var stubMethodArgumentListForCustomResponse: MutableList<String> = mutableListOf(),
     var verifyMethodArgumentList: MutableList<String> = mutableListOf(),
     var verifyMethodArgumentListWithTimes: MutableList<String> = mutableListOf(),
-    var verifyMethodArgumentListRequestParametersOnly: List<String> = mutableListOf(),
+    var verifyMethodArgumentListPathVariablesOnly: List<String> = mutableListOf(),
     var verifyStubCallArgumentList: List<String> = mutableListOf()
 ) {
     fun getRequestParamModel(name: String): ArgumentModel = requestParameters.getOrPut(name) {ArgumentModel()}
