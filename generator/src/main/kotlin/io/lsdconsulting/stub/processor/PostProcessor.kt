@@ -19,6 +19,9 @@ class PostProcessor {
                 annotatedMethod.stubMethodArgumentListWithRequest = generateArgumentListWithRequest(annotatedMethod)
                 annotatedMethod.stubMethodArgumentListForCustomResponse =
                     generateArgumentListForCustomResponse(annotatedMethod)
+                annotatedMethod.verifyMethodArgumentList = generateVerifyArgumentList(annotatedMethod)
+                annotatedMethod.verifyMethodArgumentListWithTimes = generateVerifyArgumentListWithTimes(annotatedMethod)
+                annotatedMethod.verifyMethodArgumentListRequestParametersOnly = generatePathVariables(annotatedMethod)
             }
         }
     }
@@ -36,7 +39,7 @@ class PostProcessor {
     private fun generateArgumentListWithRequest(annotatedMethod: ResourceModel): MutableList<String> {
         val stubMethodArgumentList = mutableListOf<String>()
         annotatedMethod.requestBody?.let {
-            stubMethodArgumentList.add("${annotatedMethod.requestBody!!.type} ${annotatedMethod.requestBody!!.name} ")
+            stubMethodArgumentList.add("${annotatedMethod.requestBody!!.type} ${annotatedMethod.requestBody!!.name}")
         }
         stubMethodArgumentList.addAll(generateArgumentList(annotatedMethod))
         return stubMethodArgumentList
@@ -56,6 +59,23 @@ class PostProcessor {
 
     private fun generateRequestParameters(annotatedMethod: ResourceModel) =
         annotatedMethod.requestParameters.map { "${it.value.type} ${it.value.name}" }
+
+    private fun generateVerifyArgumentList(annotatedMethod: ResourceModel): MutableList<String> {
+        val stubMethodArgumentList = mutableListOf<String>()
+        stubMethodArgumentList.addAll(generatePathVariables(annotatedMethod))
+        stubMethodArgumentList.addAll(generateRequestParameters(annotatedMethod))
+        annotatedMethod.requestBody?.let {
+            stubMethodArgumentList.add("${annotatedMethod.requestBody!!.type} ${annotatedMethod.requestBody!!.name}")
+        }
+        return stubMethodArgumentList
+    }
+
+    private fun generateVerifyArgumentListWithTimes(annotatedMethod: ResourceModel): MutableList<String> {
+        val stubMethodArgumentList = mutableListOf<String>()
+        stubMethodArgumentList.add("final int times")
+        stubMethodArgumentList.addAll(generateVerifyArgumentList(annotatedMethod))
+        return stubMethodArgumentList
+    }
 
     private fun updateResponseStatusOnResources(controllerModel: ControllerModel) {
         if (controllerModel.responseStatus != null) {

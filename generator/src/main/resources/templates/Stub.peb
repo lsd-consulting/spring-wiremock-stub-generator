@@ -77,11 +77,11 @@ public class {{model.stubClassName}} {
         {% endif %}
     }
 
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}{% for entry2 in entry.value.requestParameters %}{{entry2.value.type | raw}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (((entry.value.requestParameters is not empty) or (entry.value.pathVariables  is not empty)) and entry.value.requestBody is not empty)%}, {% endif %}{% if entry.value.requestBody is not empty%}{{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
+    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
         verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}(ONCE{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.name}}{% endfor %}{% if entry.value.requestBody is not empty%}, {{ entry.value.requestBody.name }}{% endif %});
     }
 
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}(final int times{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type | raw}} {{entry2.value.name}}{% endfor %}{% if entry.value.requestBody is not empty%}, {{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
+    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimes | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
@@ -100,7 +100,7 @@ public class {{model.stubClassName}} {
         {% endif %}
     }
 
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteraction({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}{% for entry2 in entry.value.requestParameters %}{{entry2.value.type | raw}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}{% if (((entry.value.requestParameters is not empty) or (entry.value.pathVariables  is not empty)) and entry.value.requestBody is not empty)%}, {% endif %}{% if entry.value.requestBody is not empty%}{{ entry.value.requestBody.type }} {{ entry.value.requestBody.name }}{% endif %}) {
+    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
@@ -120,7 +120,7 @@ public class {{model.stubClassName}} {
     }
 
     {% if not entry.value.hasMultiValueRequestParams %}
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteractionWithUrl({% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}{% if not loop.last %}, {% endif %}{% endfor %}) {
+    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteractionWithUrl({{ entry.value.verifyMethodArgumentListRequestParametersOnly | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url)));
     }

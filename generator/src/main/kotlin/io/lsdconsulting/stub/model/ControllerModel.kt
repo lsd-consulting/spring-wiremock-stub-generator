@@ -32,7 +32,10 @@ data class ResourceModel(
     var requestBody: ArgumentModel? = null,
     var stubMethodArgumentList: MutableList<String> = mutableListOf(),
     var stubMethodArgumentListWithRequest: MutableList<String> = mutableListOf(),
-    var stubMethodArgumentListForCustomResponse: MutableList<String> = mutableListOf()
+    var stubMethodArgumentListForCustomResponse: MutableList<String> = mutableListOf(),
+    var verifyMethodArgumentList: MutableList<String> = mutableListOf(),
+    var verifyMethodArgumentListWithTimes: MutableList<String> = mutableListOf(),
+    var verifyMethodArgumentListRequestParametersOnly: List<String> = mutableListOf()
 ) {
     fun getRequestParamModel(name: String): ArgumentModel = requestParameters.getOrPut(name) {ArgumentModel()}
     fun getPathVariableModel(name: String): ArgumentModel = pathVariables.getOrPut(name) {ArgumentModel()}
