@@ -38,16 +38,13 @@ public class JavaPostRestControllerStub {
 
     private static final String RESOURCEWITHBODYANDANNOTATIONS_URL = "/postController/resourceWithBodyAndAnnotations";
 
-    public void postResourceWithBodyAndAnnotations(
-        com.lsdconsulting.stub.integration.model.GreetingResponse response                                        ) {
-
+    public void postResourceWithBodyAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingResponse response) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
                             stub(OK, buildBody(response), mappingBuilder);
             }
 
-        public void postResourceWithBodyAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest        , com.lsdconsulting.stub.integration.model.GreetingResponse response                        ) {
-
+        public void postResourceWithBodyAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest , com.lsdconsulting.stub.integration.model.GreetingResponse response) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = post(urlPathEqualTo(url)).withRequestBody(equalToJson(buildBody(greetingRequest)));
                             stub(OK, buildBody(response), mappingBuilder);
@@ -83,16 +80,13 @@ public class JavaPostRestControllerStub {
     }
         private static final String RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL = "/postController/resourceWithBodyAndAnnotationsOnPathVariables/%s";
 
-    public void postResourceWithBodyAndAnnotationsOnPathVariables(
-        com.lsdconsulting.stub.integration.model.GreetingResponse response        ,          java.lang.String param                                            ) {
-
+    public void postResourceWithBodyAndAnnotationsOnPathVariables(com.lsdconsulting.stub.integration.model.GreetingResponse response, java.lang.String param) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
                     MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
                             stub(OK, buildBody(response), mappingBuilder);
             }
 
-        public void postResourceWithBodyAndAnnotationsOnPathVariables(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest        , com.lsdconsulting.stub.integration.model.GreetingResponse response        , java.lang.String param                ) {
-
+        public void postResourceWithBodyAndAnnotationsOnPathVariables(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest , com.lsdconsulting.stub.integration.model.GreetingResponse response, java.lang.String param) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
                     MappingBuilder mappingBuilder = post(urlPathEqualTo(url)).withRequestBody(equalToJson(buildBody(greetingRequest)));
                             stub(OK, buildBody(response), mappingBuilder);

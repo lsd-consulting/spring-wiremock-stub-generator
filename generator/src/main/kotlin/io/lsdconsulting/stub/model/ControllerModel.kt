@@ -29,7 +29,10 @@ data class ResourceModel(
     var hasMultiValueRequestParams: Boolean = false,
     val requestParameters: MutableMap<String, ArgumentModel> = mutableMapOf(),
     val pathVariables: MutableMap<String, ArgumentModel> = mutableMapOf(),
-    var requestBody: ArgumentModel? = null
+    var requestBody: ArgumentModel? = null,
+    var stubMethodArgumentList: MutableList<String> = mutableListOf(),
+    var stubMethodArgumentListWithRequest: MutableList<String> = mutableListOf(),
+    var stubMethodArgumentListForCustomResponse: MutableList<String> = mutableListOf()
 ) {
     fun getRequestParamModel(name: String): ArgumentModel = requestParameters.getOrPut(name) {ArgumentModel()}
     fun getPathVariableModel(name: String): ArgumentModel = pathVariables.getOrPut(name) {ArgumentModel()}

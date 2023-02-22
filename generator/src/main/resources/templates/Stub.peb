@@ -39,18 +39,7 @@ public class {{model.stubClassName}} {
 {% for entry in model.getResources %}
     private static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
 
-    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}(
-        {% if entry.value.responseType is not empty%}{{entry.value.responseType | raw}} response{% endif %}
-        {% if entry.value.responseType is not empty and (entry.value.requestParameters is not empty or entry.value.pathVariables  is not empty)%}, {% endif %}
-        {% for entry2 in entry.value.pathVariables %} {{entry2.value.type}} {{entry2.value.name}}
-            {% if not loop.last %}, {% endif %}
-        {% endfor %}
-        {% if (entry.value.requestParameters is not empty) and (entry.value.pathVariables  is not empty)%}, {% endif %}
-        {% for entry2 in entry.value.requestParameters %}{{entry2.value.type | raw}} {{entry2.value.name}}
-            {% if not loop.last %}, {% endif %}
-        {% endfor %}
-        ) {
-
+    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}({{ entry.value.stubMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
@@ -62,13 +51,8 @@ public class {{model.stubClassName}} {
         {% endif %}
     }
 
-    {% if ((entry.value.httpMethod.name() == "POST" or entry.value.httpMethod.name() == "PUT") and entry.value.requestBody != null) %}
-    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}({{ entry.value.requestBody.type | raw }} {{ entry.value.requestBody.name }}
-        {% if entry.value.responseType is not empty%}, {{entry.value.responseType | raw}} response{% endif %}
-        {% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}
-        {% for entry2 in entry.value.requestParameters %}, {{entry2.value.type | raw}} {{entry2.value.name}}{% endfor %}
-        ) {
-
+    {% if entry.value.requestBody != null and ["POST", "PUT"] contains entry.value.httpMethod.name() %}
+    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}({{ entry.value.stubMethodArgumentListWithRequest | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
@@ -81,7 +65,7 @@ public class {{model.stubClassName}} {
     }
     {% endif %}
 
-    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}(int httpStatus, String errorResponse{% for entry2 in entry.value.pathVariables %}, {{entry2.value.type}} {{entry2.value.name}}{% endfor %}{% for entry2 in entry.value.requestParameters %}, {{entry2.value.type | raw}} {{entry2.value.name}}{% endfor %}) {
+    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}({{ entry.value.stubMethodArgumentListForCustomResponse | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
