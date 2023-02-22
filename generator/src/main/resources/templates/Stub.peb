@@ -41,11 +41,11 @@ public class {{model.stubClassName}} {
 
     public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}({{ entry.value.stubMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
+        MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-        stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
+            stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% else %}
-            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
             {{ addQueryParamsToMappingBuilder(entry) }}
             stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% endif %}
@@ -54,11 +54,11 @@ public class {{model.stubClassName}} {
     {% if entry.value.requestBody != null and ["POST", "PUT"] contains entry.value.httpMethod.name() %}
     public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}({{ entry.value.stubMethodArgumentListWithRequest | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
+        MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url)).withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-        stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
+            stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% else %}
-            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url)).withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
             {{ addQueryParamsToMappingBuilder(entry) }}
             stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% endif %}

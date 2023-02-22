@@ -40,12 +40,13 @@ public class JavaGetRestControllerStub {
 
     public void getResourceWithZonedDatetimeAndMultiValue(com.lsdconsulting.stub.integration.model.GreetingResponse response, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
+        MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
                                             url = url + "?";
                                             url = url + "param=" + serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "");
                                             url = url + "&";
                             url = url + "multiValue=";
                             url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
-                                stub(OK, buildBody(response), get(urlEqualTo(url)));
+                                    stub(OK, buildBody(response), mappingBuilder);
             }
 
     
@@ -89,8 +90,8 @@ public class JavaGetRestControllerStub {
 
     public void getResourceWithParamAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingResponse response, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
-                    MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
-                                            mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+        MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
+                                                    mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
                                 stub(OK, buildBody(response), mappingBuilder);
             }
 
