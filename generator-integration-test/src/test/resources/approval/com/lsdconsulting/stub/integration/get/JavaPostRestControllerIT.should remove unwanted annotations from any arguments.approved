@@ -25,13 +25,13 @@ public class JavaGetRestControllerStub {
     private static final int NEVER = 0;
 
     private ObjectMapper objectMapper;
-    private AnnotationFormatterFactory annotationFormatterFactory;
+    private AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory;
 
     public JavaGetRestControllerStub(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    public JavaGetRestControllerStub(ObjectMapper objectMapper, AnnotationFormatterFactory annotationFormatterFactory) {
+    public JavaGetRestControllerStub(ObjectMapper objectMapper, AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory) {
         this.objectMapper = objectMapper;
         this.annotationFormatterFactory = annotationFormatterFactory;
     }

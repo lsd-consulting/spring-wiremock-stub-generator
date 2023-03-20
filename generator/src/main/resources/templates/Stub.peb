@@ -25,13 +25,13 @@ public class {{model.stubClassName}} {
     private static final int NEVER = 0;
 
     private ObjectMapper objectMapper;
-    private AnnotationFormatterFactory annotationFormatterFactory;
+    private AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory;
 
     public {{model.stubClassName}}(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    public {{model.stubClassName}}(ObjectMapper objectMapper, AnnotationFormatterFactory annotationFormatterFactory) {
+    public {{model.stubClassName}}(ObjectMapper objectMapper, AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory) {
         this.objectMapper = objectMapper;
         this.annotationFormatterFactory = annotationFormatterFactory;
     }

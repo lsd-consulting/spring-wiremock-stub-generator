@@ -25,13 +25,13 @@ public class JavaPostRestControllerStub {
     private static final int NEVER = 0;
 
     private ObjectMapper objectMapper;
-    private AnnotationFormatterFactory annotationFormatterFactory;
+    private AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory;
 
     public JavaPostRestControllerStub(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    public JavaPostRestControllerStub(ObjectMapper objectMapper, AnnotationFormatterFactory annotationFormatterFactory) {
+    public JavaPostRestControllerStub(ObjectMapper objectMapper, AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory) {
         this.objectMapper = objectMapper;
         this.annotationFormatterFactory = annotationFormatterFactory;
     }
