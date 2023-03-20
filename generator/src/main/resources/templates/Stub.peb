@@ -39,7 +39,7 @@ public class {{model.stubClassName}} {
 {% for entry in model.getResources %}
     private static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
 
-    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}({{ entry.value.stubMethodArgumentList | join(', ') | raw}}) {
+    public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}({{ entry.value.stubMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
         {% if entry.value.hasMultiValueRequestParams %}
@@ -52,7 +52,7 @@ public class {{model.stubClassName}} {
     }
 
     {% if entry.value.requestBody != null and ["POST", "PUT"] contains entry.value.httpMethod.name() %}
-    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}({{ entry.value.stubMethodArgumentListWithRequest | join(', ') | raw}}) {
+    public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}({{ entry.value.stubMethodArgumentListWithRequest | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url)).withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
         {% if entry.value.hasMultiValueRequestParams %}
@@ -65,7 +65,7 @@ public class {{model.stubClassName}} {
     }
     {% endif %}
 
-    public void {{entry.value.httpMethod.name() | lower}}{{entry.value.methodName}}({{ entry.value.stubMethodArgumentListForCustomResponse | join(', ') | raw}}) {
+    public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}({{ entry.value.stubMethodArgumentListForCustomResponse | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
@@ -77,11 +77,11 @@ public class {{model.stubClassName}} {
         {% endif %}
     }
 
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
-        verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({{ entry.value.verifyStubCallArgumentList | join(', ') | raw}});
+    public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
+        verify{{entry.value.methodName}}({{ entry.value.verifyStubCallArgumentList | join(', ') | raw}});
     }
 
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimes | join(', ') | raw}}) {
+    public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimes | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
@@ -100,7 +100,7 @@ public class {{model.stubClassName}} {
         {% endif %}
     }
 
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
+    public void verify{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
@@ -120,7 +120,7 @@ public class {{model.stubClassName}} {
     }
 
     {% if not entry.value.hasMultiValueRequestParams %}
-    public void verify{{entry.value.httpMethod.name() | lower | title}}{{entry.value.methodName}}NoInteractionWithUrl({{ entry.value.verifyMethodArgumentListPathVariablesOnly | join(', ') | raw}}) {
+    public void verify{{entry.value.methodName}}NoInteractionWithUrl({{ entry.value.verifyMethodArgumentListPathVariablesOnly | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url)));
     }
@@ -191,6 +191,10 @@ public class {{model.stubClassName}} {
 }
 {% macro generateUrl(entry) %}
 String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
+{% endmacro %}
+
+{% macro decapitaliseFirstLetterOf(name) %}
+{{ name|first|lower }}{{ name | slice(1,name|length) }}
 {% endmacro %}
 
 {% macro addRequestParamsToUrl(entry) %}

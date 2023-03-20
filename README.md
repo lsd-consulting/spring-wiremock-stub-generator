@@ -146,7 +146,7 @@ If a parameter is optional and the value passed in is a `null`, the generated st
 
 This means that the following call to the generated stub:
 ```kotlin
-underTest.getResourceWithOptionalBooleanRequestParam(response, null)
+underTest.resourceWithOptionalBooleanRequestParam(response, null)
 ```
 
 will generate a WireMock matcher to match the following GET request:
@@ -156,7 +156,7 @@ will generate a WireMock matcher to match the following GET request:
 
 But if a value is passed in that call, eg:
 ```kotlin
-underTest.getResourceWithOptionalBooleanRequestParam(response, "value")
+underTest.resourceWithOptionalBooleanRequestParam(response, "value")
 ```
 
 then WireMock will expect the following request:

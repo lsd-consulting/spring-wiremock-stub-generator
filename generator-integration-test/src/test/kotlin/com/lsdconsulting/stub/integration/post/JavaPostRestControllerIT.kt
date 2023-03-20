@@ -32,9 +32,9 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
 
     @Test
     fun `should handle post mapping with request body`() {
-        underTest.verifyPostResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
-        underTest.verifyPostResourceWithBodyAndAnnotationsNoInteractionWithUrl()
-        underTest.postResourceWithBodyAndAnnotations(greetingResponse)
+        underTest.verifyResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
+        underTest.verifyResourceWithBodyAndAnnotationsNoInteractionWithUrl()
+        underTest.resourceWithBodyAndAnnotations(greetingResponse)
         val request = HttpEntity(greetingRequest)
         val response =
             restTemplate.postForEntity(
@@ -44,19 +44,19 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
             )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyPostResourceWithBodyAndAnnotations(1, greetingRequest)
-        underTest.verifyPostResourceWithBodyAndAnnotations(greetingRequest)
+        underTest.verifyResourceWithBodyAndAnnotations(1, greetingRequest)
+        underTest.verifyResourceWithBodyAndAnnotations(greetingRequest)
         assertThrows<VerificationException> {
-            underTest.verifyPostResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
+            underTest.verifyResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
         }
-        assertThrows<VerificationException> { underTest.verifyPostResourceWithBodyAndAnnotationsNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithBodyAndAnnotationsNoInteractionWithUrl() }
     }
 
     @Test
     fun `should handle post mapping with request body and path variable`() {
-        underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)
-        underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl(param)
-        underTest.postResourceWithBodyAndAnnotationsOnPathVariables(greetingResponse, param)
+        underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)
+        underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl(param)
+        underTest.resourceWithBodyAndAnnotationsOnPathVariables(greetingResponse, param)
         val request = HttpEntity(greetingRequest)
         val response =
             restTemplate.postForEntity(
@@ -66,13 +66,13 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
             )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariables(1, param, greetingRequest)
-        underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariables(param, greetingRequest)
+        underTest.verifyResourceWithBodyAndAnnotationsOnPathVariables(1, param, greetingRequest)
+        underTest.verifyResourceWithBodyAndAnnotationsOnPathVariables(param, greetingRequest)
         assertThrows<VerificationException> {
-            underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)
+            underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)
         }
         assertThrows<VerificationException> {
-            underTest.verifyPostResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl(param)
+            underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl(param)
         }
     }
 

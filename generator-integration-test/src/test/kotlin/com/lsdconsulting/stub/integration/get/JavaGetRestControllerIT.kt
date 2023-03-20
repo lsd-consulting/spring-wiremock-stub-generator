@@ -37,26 +37,26 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
 
     @Test
     fun `should handle get mapping with request param`() {
-        underTest.verifyGetResourceWithParamAndAnnotationsNoInteraction(param)
-        underTest.verifyGetResourceWithParamAndAnnotationsNoInteractionWithUrl()
-        underTest.getResourceWithParamAndAnnotations(greetingResponse, param)
+        underTest.verifyResourceWithParamAndAnnotationsNoInteraction(param)
+        underTest.verifyResourceWithParamAndAnnotationsNoInteractionWithUrl()
+        underTest.resourceWithParamAndAnnotations(greetingResponse, param)
         val response = restTemplate.getForEntity(
             "$GET_CONTROLLER_URL/resourceWithParamAndAnnotations?param=$param",
             GreetingResponse::class.java
         )
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithParamAndAnnotations(1, param)
-        underTest.verifyGetResourceWithParamAndAnnotations(param)
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithParamAndAnnotationsNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithParamAndAnnotationsNoInteractionWithUrl() }
+        underTest.verifyResourceWithParamAndAnnotations(1, param)
+        underTest.verifyResourceWithParamAndAnnotations(param)
+        assertThrows<VerificationException> { underTest.verifyResourceWithParamAndAnnotationsNoInteraction(param) }
+        assertThrows<VerificationException> { underTest.verifyResourceWithParamAndAnnotationsNoInteractionWithUrl() }
     }
 
     @Test
     fun `should handle get mapping with ZonedDateTime and multi-value request parameters`() {
         val param = ZonedDateTime.now()
-        underTest.verifyGetResourceWithZonedDatetimeAndMultiValueNoInteraction(param, setOf(33, 44))
-        underTest.getResourceWithZonedDatetimeAndMultiValue(greetingResponse, param, setOf(33, 44))
+        underTest.verifyResourceWithZonedDatetimeAndMultiValueNoInteraction(param, setOf(33, 44))
+        underTest.resourceWithZonedDatetimeAndMultiValue(greetingResponse, param, setOf(33, 44))
 
         val request = HttpGet(
             "$GET_CONTROLLER_URL/resourceWithZonedDatetimeAndMultiValue?param=${param.format(DateTimeFormatter.ISO_DATE_TIME)
@@ -64,8 +64,8 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         )
         HttpClientBuilder.create().build().use { client -> client.execute(request) as CloseableHttpResponse }
 
-        underTest.verifyGetResourceWithZonedDatetimeAndMultiValue(param, setOf(33, 44))
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithZonedDatetimeAndMultiValueNoInteraction(param, setOf(33, 44)) }
+        underTest.verifyResourceWithZonedDatetimeAndMultiValue(param, setOf(33, 44))
+        assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeAndMultiValueNoInteraction(param, setOf(33, 44)) }
     }
 
     private fun loadGeneratedFile(): String {

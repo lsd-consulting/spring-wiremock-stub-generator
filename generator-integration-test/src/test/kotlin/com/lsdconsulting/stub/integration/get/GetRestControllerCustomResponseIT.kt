@@ -18,7 +18,7 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
 
     @Test
     fun `should handle get mapping with no param and custom response`() {
-        underTest.getResourceWithNoParams(httpStatus.value(), customResponseBody)
+        underTest.resourceWithNoParams(httpStatus.value(), customResponseBody)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithNoParams",
@@ -28,13 +28,13 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
-        underTest.verifyGetResourceWithNoParams(1)
-        underTest.verifyGetResourceWithNoParams()
+        underTest.verifyResourceWithNoParams(1)
+        underTest.verifyResourceWithNoParams()
     }
 
     @Test
     fun `should handle get mapping with request param and custom response`() {
-        underTest.getResourceWithParam(httpStatus.value(), customResponseBody, param)
+        underTest.resourceWithParam(httpStatus.value(), customResponseBody, param)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithParam?param=$param",
@@ -44,13 +44,13 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
-        underTest.verifyGetResourceWithParam(1, param)
-        underTest.verifyGetResourceWithParam(param)
+        underTest.verifyResourceWithParam(1, param)
+        underTest.verifyResourceWithParam(param)
     }
 
     @Test
     fun `should handle get mapping with multiple request params and custom response`() {
-        underTest.getResourceWithMultipleParams(httpStatus.value(), customResponseBody, param1, param2)
+        underTest.resourceWithMultipleParams(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithMultipleParams?param1=$param1&param2=$param2",
@@ -60,13 +60,13 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
-        underTest.verifyGetResourceWithMultipleParams(1, param1, param2)
-        underTest.verifyGetResourceWithMultipleParams(param1, param2)
+        underTest.verifyResourceWithMultipleParams(1, param1, param2)
+        underTest.verifyResourceWithMultipleParams(param1, param2)
     }
 
     @Test
     fun `should handle get mapping with path variable and custom response`() {
-        underTest.getResourceWithPathVariable(httpStatus.value(), customResponseBody, param)
+        underTest.resourceWithPathVariable(httpStatus.value(), customResponseBody, param)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithParam/$param",
@@ -76,13 +76,13 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
-        underTest.verifyGetResourceWithPathVariable(1, param)
-        underTest.verifyGetResourceWithPathVariable(param)
+        underTest.verifyResourceWithPathVariable(1, param)
+        underTest.verifyResourceWithPathVariable(param)
     }
 
     @Test
     fun `should handle get mapping with multiple path variables and custom response`() {
-        underTest.getResourceWithMultiplePathVariables(httpStatus.value(), customResponseBody, param1, param2)
+        underTest.resourceWithMultiplePathVariables(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithParam/$param1/$param2",
@@ -92,13 +92,13 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
-        underTest.verifyGetResourceWithMultiplePathVariables(1, param1, param2)
-        underTest.verifyGetResourceWithMultiplePathVariables(param1, param2)
+        underTest.verifyResourceWithMultiplePathVariables(1, param1, param2)
+        underTest.verifyResourceWithMultiplePathVariables(param1, param2)
     }
 
     @Test
     fun `should handle get mapping with path variable and request param and custom response`() {
-        underTest.getResourceWithPathVariableAndRequestParam(httpStatus.value(), customResponseBody, param1, param2)
+        underTest.resourceWithPathVariableAndRequestParam(httpStatus.value(), customResponseBody, param1, param2)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithParam/$param1?param2=$param2",
@@ -108,13 +108,13 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
-        underTest.verifyGetResourceWithPathVariableAndRequestParam(1, param1, param2)
-        underTest.verifyGetResourceWithPathVariableAndRequestParam(param1, param2)
+        underTest.verifyResourceWithPathVariableAndRequestParam(1, param1, param2)
+        underTest.verifyResourceWithPathVariableAndRequestParam(param1, param2)
     }
 
     @Test
     fun `should handle get mapping with no subResource and custom response`() {
-        underTest.getResourceWithNoSubResource(httpStatus.value(), customResponseBody)
+        underTest.resourceWithNoSubResource(httpStatus.value(), customResponseBody)
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 GET_CONTROLLER_URL,
@@ -124,13 +124,13 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
-        underTest.verifyGetResourceWithNoSubResource(1)
-        underTest.verifyGetResourceWithNoSubResource()
+        underTest.verifyResourceWithNoSubResource(1)
+        underTest.verifyResourceWithNoSubResource()
     }
 
     @Test
     fun `should handle get mapping with multiple path variables and request params and custom response`() {
-        underTest.getResourceWithMultiplePathVariablesAndRequestParams(
+        underTest.resourceWithMultiplePathVariablesAndRequestParams(
             httpStatus.value(),
             customResponseBody,
             param1,
@@ -147,9 +147,9 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         assertThat(ex.statusCode, `is`(httpStatus))
         assertThat(ex.responseBodyAsString, notNullValue())
         assertThat(ex.responseBodyAsString, `is`(customResponseBody))
-        underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParams(1, param1, param2, param3, param4)
-        underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParams(param1, param2, param3, param4)
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParamsNoInteraction(param1, param2, param3, param4) }
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithMultiplePathVariablesAndRequestParamsNoInteractionWithUrl(param1, param2) }
+        underTest.verifyResourceWithMultiplePathVariablesAndRequestParams(1, param1, param2, param3, param4)
+        underTest.verifyResourceWithMultiplePathVariablesAndRequestParams(param1, param2, param3, param4)
+        assertThrows<VerificationException> { underTest.verifyResourceWithMultiplePathVariablesAndRequestParamsNoInteraction(param1, param2, param3, param4) }
+        assertThrows<VerificationException> { underTest.verifyResourceWithMultiplePathVariablesAndRequestParamsNoInteractionWithUrl(param1, param2) }
     }
 }

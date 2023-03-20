@@ -23,33 +23,33 @@ class PutRestControllerIT : BaseRestControllerIT() {
 
     @Test
     fun `should handle put mapping with no body`() {
-        underTest.verifyPutResourceWithNoBodyNoInteraction()
-        underTest.putResourceWithNoBody()
+        underTest.verifyResourceWithNoBodyNoInteraction()
+        underTest.resourceWithNoBody()
         val responseEntity = restTemplate.exchange("$PUT_CONTROLLER_URL/resourceWithNoBody", PUT, HttpEntity<String>(LinkedMultiValueMap()), Unit::class.java)
         assertThat(responseEntity.statusCode, `is`(ACCEPTED))
-        underTest.verifyPutResourceWithNoBody(1)
-        underTest.verifyPutResourceWithNoBody()
-        assertThrows<VerificationException> { underTest.verifyPutResourceWithNoBodyNoInteraction() }
+        underTest.verifyResourceWithNoBody(1)
+        underTest.verifyResourceWithNoBody()
+        assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoInteraction() }
     }
 
     @Test
     fun `should handle put mapping with request body`() {
-        underTest.verifyPutResourceWithRequestBodyNoInteraction(greetingRequest)
-        underTest.putResourceWithRequestBody()
+        underTest.verifyResourceWithRequestBodyNoInteraction(greetingRequest)
+        underTest.resourceWithRequestBody()
         val request = HttpEntity(greetingRequest)
         val responseEntity = restTemplate.exchange("$PUT_CONTROLLER_URL/resourceWithRequestBody", PUT, request, Unit::class.java)
         assertThat(responseEntity.body, `is`(nullValue()))
         assertThat(responseEntity.statusCode, `is`(NO_CONTENT))
-        underTest.verifyPutResourceWithRequestBody(1, greetingRequest)
-        underTest.verifyPutResourceWithRequestBody(greetingRequest)
-        assertThrows<VerificationException> { underTest.verifyPutResourceWithRequestBodyNoInteraction(greetingRequest) }
+        underTest.verifyResourceWithRequestBody(1, greetingRequest)
+        underTest.verifyResourceWithRequestBody(greetingRequest)
+        assertThrows<VerificationException> { underTest.verifyResourceWithRequestBodyNoInteraction(greetingRequest) }
     }
 
     @Test
     fun `should stub a put method with a mapping matching the request body`() {
         val additionalGreetingRequest = GreetingRequest(name = randomAlphabetic(10))
-        underTest.verifyPutResourceWithRequestBodyNoInteraction(greetingRequest)
-        underTest.putResourceWithRequestBody(greetingRequest)
+        underTest.verifyResourceWithRequestBodyNoInteraction(greetingRequest)
+        underTest.resourceWithRequestBody(greetingRequest)
 
         val responseEntity1 = restTemplate.exchange(
             "$PUT_CONTROLLER_URL/resourceWithRequestBody",
@@ -63,25 +63,25 @@ class PutRestControllerIT : BaseRestControllerIT() {
         val exception = assertThrows<HttpClientErrorException> { restTemplate.exchange("$PUT_CONTROLLER_URL/resourceWithRequestBody", PUT, HttpEntity(additionalGreetingRequest), Unit::class.java) }
         assertThat(exception.statusCode, `is`(NOT_FOUND))
 
-        underTest.verifyPutResourceWithRequestBody(1, greetingRequest)
-        underTest.verifyPutResourceWithRequestBody(greetingRequest)
-        assertThrows<VerificationException> { underTest.verifyPutResourceWithRequestBodyNoInteraction(greetingRequest) }
+        underTest.verifyResourceWithRequestBody(1, greetingRequest)
+        underTest.verifyResourceWithRequestBody(greetingRequest)
+        assertThrows<VerificationException> { underTest.verifyResourceWithRequestBodyNoInteraction(greetingRequest) }
     }
 
     @Test
     fun `should handle put mapping with request body and path variable`() {
-        underTest.verifyPutResourceWithRequestBodyAndPathVariableNoInteraction(param, greetingRequest)
-        underTest.putResourceWithRequestBodyAndPathVariable(param)
+        underTest.verifyResourceWithRequestBodyAndPathVariableNoInteraction(param, greetingRequest)
+        underTest.resourceWithRequestBodyAndPathVariable(param)
         val request = HttpEntity(greetingRequest)
         val responseEntity = restTemplate.exchange(
             "$PUT_CONTROLLER_URL/resourceWithRequestBodyAndPathVariable/$param", PUT, request, Unit::class.java
         )
         assertThat(responseEntity.body, `is`(nullValue()))
         assertThat(responseEntity.statusCode, `is`(NO_CONTENT))
-        underTest.verifyPutResourceWithRequestBodyAndPathVariable(1, param, greetingRequest)
-        underTest.verifyPutResourceWithRequestBodyAndPathVariable(param, greetingRequest)
+        underTest.verifyResourceWithRequestBodyAndPathVariable(1, param, greetingRequest)
+        underTest.verifyResourceWithRequestBodyAndPathVariable(param, greetingRequest)
         assertThrows<VerificationException> {
-            underTest.verifyPutResourceWithRequestBodyAndPathVariableNoInteraction(
+            underTest.verifyResourceWithRequestBodyAndPathVariableNoInteraction(
                 param,
                 greetingRequest
             )

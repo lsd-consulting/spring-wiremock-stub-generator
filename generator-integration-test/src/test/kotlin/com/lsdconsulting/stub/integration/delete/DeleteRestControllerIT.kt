@@ -21,31 +21,31 @@ class DeleteRestControllerIT : BaseRestControllerIT() {
 
     @Test
     fun `should handle delete mapping with no body`() {
-        underTest.verifyDeleteResourceWithNoBodyNoInteraction()
-        underTest.deleteResourceWithNoBody()
+        underTest.verifyResourceWithNoBodyNoInteraction()
+        underTest.resourceWithNoBody()
         restTemplate.delete("$DELETE_CONTROLLER_URL/resourceWithNoBody", HttpEntity<String>(LinkedMultiValueMap()))
-        underTest.verifyDeleteResourceWithNoBody(1)
-        underTest.verifyDeleteResourceWithNoBody()
-        assertThrows<VerificationException> { underTest.verifyDeleteResourceWithNoBodyNoInteraction() }
+        underTest.verifyResourceWithNoBody(1)
+        underTest.verifyResourceWithNoBody()
+        assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoInteraction() }
     }
 
     @Test
     fun `should handle delete mapping with request body`() {
-        underTest.verifyDeleteResourceWithRequestBodyNoInteraction(greetingRequest)
-        underTest.deleteResourceWithRequestBody()
+        underTest.verifyResourceWithRequestBodyNoInteraction(greetingRequest)
+        underTest.resourceWithRequestBody()
         val request = HttpEntity(greetingRequest)
         val responseEntity = restTemplate.exchange("$DELETE_CONTROLLER_URL/resourceWithRequestBody", DELETE, request, Unit::class.java)
         assertThat(responseEntity.body, `is`(nullValue()))
         assertThat(responseEntity.statusCode, `is`(OK))
-        underTest.verifyDeleteResourceWithRequestBody(1, greetingRequest)
-        underTest.verifyDeleteResourceWithRequestBody(greetingRequest)
-        assertThrows<VerificationException> { underTest.verifyDeleteResourceWithRequestBodyNoInteraction(greetingRequest) }
+        underTest.verifyResourceWithRequestBody(1, greetingRequest)
+        underTest.verifyResourceWithRequestBody(greetingRequest)
+        assertThrows<VerificationException> { underTest.verifyResourceWithRequestBodyNoInteraction(greetingRequest) }
     }
 
     @Test
     fun `should handle delete mapping with request body and path variable`() {
-        underTest.verifyDeleteResourceWithRequestBodyAndPathVariableNoInteraction(param, greetingRequest)
-        underTest.deleteResourceWithRequestBodyAndPathVariable(param)
+        underTest.verifyResourceWithRequestBodyAndPathVariableNoInteraction(param, greetingRequest)
+        underTest.resourceWithRequestBodyAndPathVariable(param)
         val request = HttpEntity(greetingRequest)
         val responseEntity = restTemplate.exchange(
             "$DELETE_CONTROLLER_URL/resourceWithRequestBodyAndPathVariable/$param",
@@ -55,8 +55,8 @@ class DeleteRestControllerIT : BaseRestControllerIT() {
         )
         assertThat(responseEntity.body, `is`(nullValue()))
         assertThat(responseEntity.statusCode, `is`(NO_CONTENT))
-        underTest.verifyDeleteResourceWithRequestBodyAndPathVariable(1, param, greetingRequest)
-        underTest.verifyDeleteResourceWithRequestBodyAndPathVariable(param, greetingRequest)
-        assertThrows<VerificationException> { underTest.verifyDeleteResourceWithRequestBodyAndPathVariableNoInteraction(param, greetingRequest) }
+        underTest.verifyResourceWithRequestBodyAndPathVariable(1, param, greetingRequest)
+        underTest.verifyResourceWithRequestBodyAndPathVariable(param, greetingRequest)
+        assertThrows<VerificationException> { underTest.verifyResourceWithRequestBodyAndPathVariableNoInteraction(param, greetingRequest) }
     }
 }

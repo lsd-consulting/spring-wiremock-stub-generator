@@ -28,9 +28,9 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with ZonedDateTime request param`() {
         val param = ZonedDateTime.now()
-        underTest.verifyGetResourceWithZonedDatetimeNoInteraction(param)
-        underTest.verifyGetResourceWithZonedDatetimeNoInteractionWithUrl()
-        underTest.getResourceWithZonedDatetime(greetingResponse, param)
+        underTest.verifyResourceWithZonedDatetimeNoInteraction(param)
+        underTest.verifyResourceWithZonedDatetimeNoInteractionWithUrl()
+        underTest.resourceWithZonedDatetime(greetingResponse, param)
 
         val response = restTemplate.exchange(
             "$GET_CONTROLLER_URL/resourceWithZonedDatetime?param=${param.format(ISO_DATE_TIME)}",
@@ -39,17 +39,17 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithZonedDatetime(param)
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithZonedDatetimeNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithZonedDatetimeNoInteractionWithUrl() }
+        underTest.verifyResourceWithZonedDatetime(param)
+        assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeNoInteraction(param) }
+        assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeNoInteractionWithUrl() }
     }
 
     @Test
     fun `should handle get mapping with ZonedDateTime request param and all DateTimeFormat arguments`() {
         val param = ZonedDateTime.now()
-        underTest.verifyGetResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteraction(param)
-        underTest.verifyGetResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteractionWithUrl()
-        underTest.getResourceWithZonedDatetimeAndAllDateTimeFormatArguments(greetingResponse, param)
+        underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteraction(param)
+        underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteractionWithUrl()
+        underTest.resourceWithZonedDatetimeAndAllDateTimeFormatArguments(greetingResponse, param)
 
         val response = restTemplate.exchange(
             "$GET_CONTROLLER_URL/resourceWithZonedDatetimeAndAllDateTimeFormatArguments?param=${param.format(
@@ -59,16 +59,16 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyGetResourceWithZonedDatetimeAndAllDateTimeFormatArguments(param)
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteractionWithUrl() }
+        underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArguments(param)
+        assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteraction(param) }
+        assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteractionWithUrl() }
     }
 
     @Test
     fun `should handle get mapping with multi-value ZonedDateTime`() {
         val multiValue = listOf(ZonedDateTime.now(), ZonedDateTime.now().plusHours(1))
-        underTest.verifyGetResourceWithMultiValueZonedDatetimeNoInteraction(multiValue)
-        underTest.getResourceWithMultiValueZonedDatetime(greetingResponse, multiValue)
+        underTest.verifyResourceWithMultiValueZonedDatetimeNoInteraction(multiValue)
+        underTest.resourceWithMultiValueZonedDatetime(greetingResponse, multiValue)
 
         val request = HttpGet(
             "$GET_CONTROLLER_URL/resourceWithMultiValueZonedDatetime?multiValue=${
@@ -79,7 +79,7 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
         )
         HttpClientBuilder.create().build().use { client -> client.execute(request) as CloseableHttpResponse }
 
-        underTest.verifyGetResourceWithMultiValueZonedDatetime(multiValue)
-        assertThrows<VerificationException> { underTest.verifyGetResourceWithMultiValueZonedDatetimeNoInteraction(multiValue) }
+        underTest.verifyResourceWithMultiValueZonedDatetime(multiValue)
+        assertThrows<VerificationException> { underTest.verifyResourceWithMultiValueZonedDatetimeNoInteraction(multiValue) }
     }
 }
