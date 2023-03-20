@@ -19,7 +19,7 @@ import javax.lang.model.element.ElementKind.CLASS
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic.Kind.NOTE
 
-@SupportedSourceVersion(SourceVersion.RELEASE_11)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 class ControllerProcessor : AbstractProcessor() {
     private lateinit var restControllerAnnotationHandler: RestControllerAnnotationHandler
     private lateinit var messager: Messager
@@ -53,7 +53,7 @@ class ControllerProcessor : AbstractProcessor() {
     )
 
     override fun getSupportedSourceVersion(): SourceVersion {
-        return SourceVersion.RELEASE_11
+        return SourceVersion.RELEASE_17
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
