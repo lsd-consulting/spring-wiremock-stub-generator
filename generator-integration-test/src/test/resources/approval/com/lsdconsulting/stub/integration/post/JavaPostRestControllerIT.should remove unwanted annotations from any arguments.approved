@@ -140,6 +140,7 @@ public class JavaPostRestControllerStub {
         }
     }
 
+    @SuppressWarnings("unchecked")
     String serialise(Object object, String clazz, String iso, String pattern, String style, String...fallbackPatterns) {
         if (annotationFormatterFactory == null) {
             throw new IllegalStateException("annotationFormatterFactory not set");
