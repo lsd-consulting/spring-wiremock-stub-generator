@@ -12,11 +12,14 @@ import org.apache.http.impl.client.HttpClientBuilder
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.format.datetime.standard.Jsr310DateTimeFormatAnnotationFormatterFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod.GET
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 import java.time.format.DateTimeFormatter.ofPattern
@@ -27,7 +30,7 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
 
     @Test
     fun `should handle get mapping with ZonedDateTime request param`() {
-        val param = ZonedDateTime.now()
+        val param = ZonedDateTime.now(ZoneId.of("UTC"))
         underTest.verifyResourceWithZonedDatetimeNoInteraction(param)
         underTest.verifyResourceWithZonedDatetimeNoInteractionWithUrl()
         underTest.resourceWithZonedDatetime(greetingResponse, param)
@@ -45,8 +48,28 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
     }
 
     @Test
+    @Disabled
+    fun `should handle get mapping with OffsetDateTime request param for different timezone`() {
+        val param = OffsetDateTime.now(ZoneId.of("CET"))
+        underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteraction(param)
+        underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteractionWithUrl()
+        underTest.resourceWithOffsetDateTimeAndMultiValue(greetingResponse, param)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOffsetDateTime?param=${param.format(ISO_DATE_TIME)}",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyResourceWithOffsetDateTimeAndMultiValue(param)
+        assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteraction(param) }
+        assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteractionWithUrl() }
+    }
+
+    @Test
     fun `should handle get mapping with ZonedDateTime request param and all DateTimeFormat arguments`() {
-        val param = ZonedDateTime.now()
+        val param = ZonedDateTime.now(ZoneId.of("UTC"))
         underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteraction(param)
         underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteractionWithUrl()
         underTest.resourceWithZonedDatetimeAndAllDateTimeFormatArguments(greetingResponse, param)

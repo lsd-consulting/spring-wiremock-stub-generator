@@ -7,7 +7,9 @@ import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.format.annotation.DateTimeFormat.ISO.DATE
 import org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 import org.springframework.web.bind.annotation.*
+import java.time.OffsetDateTime
 import java.time.ZonedDateTime
+import javax.validation.constraints.NotBlank
 
 
 @GenerateWireMockStub
@@ -122,6 +124,12 @@ class GetRestController {
     fun resourceWithZonedDatetimeAndAllDateTimeFormatArguments(@RequestParam @DateTimeFormat(iso = DATE,
         fallbackPatterns = ["pattern1", "pattern2"], style = "SS", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") param: ZonedDateTime) =
         GreetingResponse(name = randomAlphabetic(10))
+
+    @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/resourceWithOffsetDateTimeAndMultiValue")
+    fun resourceWithOffsetDateTimeAndMultiValue(
+        @RequestParam @DateTimeFormat(iso = DATE_TIME) param: @NotBlank OffsetDateTime): GreetingResponse =
+        GreetingResponse(randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithMultiValueZonedDatetime")
