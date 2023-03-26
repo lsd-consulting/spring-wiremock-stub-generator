@@ -22,15 +22,15 @@ The WireMock generator has the following constraints and limitations:
 ## How to use it
 Add the following dependencies to a Java project:
 ```groovy
-    implementation 'io.github.lsd-consulting:spring-wiremock-stub-generator:x.x.x'
     annotationProcessor 'io.github.lsd-consulting:spring-wiremock-stub-generator:x.x.x'
+    compileOnly 'io.github.lsd-consulting:spring-wiremock-stub-generator:x.x.x'
     compileOnly 'com.github.tomakehurst:wiremock:2.27.2'
 ```
 
 or these for a Kotlin project:
 ```groovy
     kapt 'io.github.lsd-consulting:spring-wiremock-stub-generator:x.x.x'
-    annotationProcessor 'io.github.lsd-consulting:spring-wiremock-stub-generator:x.x.x'
+    compileOnly 'io.github.lsd-consulting:spring-wiremock-stub-generator:x.x.x'
     compileOnly 'com.github.tomakehurst:wiremock:2.27.2'
 ```
 
