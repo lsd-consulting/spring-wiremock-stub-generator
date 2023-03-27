@@ -1,9 +1,12 @@
 package io.lsdconsulting.stub.writer
 
+import io.lsdconsulting.stub.model.ControllerModel
 import io.lsdconsulting.stub.model.Model
 import io.pebbletemplates.pebble.PebbleEngine
+import java.io.File
 import java.io.IOException
 import java.io.PrintWriter
+import java.io.Writer
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.annotation.processing.Messager
@@ -24,25 +27,37 @@ class StubWriter(processingEnv: ProcessingEnvironment) {
     fun writeStubFile(model: Model) {
         model.controllers.values.forEach { controllerModel ->
             try {
-                val builderFile = processingEnv.filer.createSourceFile(controllerModel.stubFullyQualifiedName)
                 messager.printMessage(NOTE, "Generating stub file: ${controllerModel.stubFullyQualifiedName}")
-                val stubBasePathName = builderFile.toUri().path
-                    .replace("generated/source/kapt/main", "generated-stub-sources")
-                    .replace("generated/sources/annotationProcessor/java/main", "generated-stub-sources")
-                val directory: String = stubBasePathName.replace(controllerModel.stubClassName + ".java", "")
-                Files.createDirectories(Path.of(directory))
-                Files.deleteIfExists(Path.of(stubBasePathName))
-                val path = Files.createFile(Path.of(stubBasePathName))
-                PrintWriter(builderFile.openWriter()).use { writer ->
-                    stubTemplate.evaluate(writer, mapOf("model" to controllerModel))
-                }
-                PrintWriter(path.toFile()).use { writer ->
-                    stubTemplate.evaluate(writer, mapOf("model" to controllerModel))
-                }
+                val builderFile = processingEnv.filer.createSourceFile(controllerModel.stubFullyQualifiedName)
+                writeFileForCompilation(builderFile.openWriter(), controllerModel)
+
+                val path = createLocationForPackaging(builderFile.toUri().path, controllerModel.stubClassName)
+                writeFileForPackaging(path.toFile(), controllerModel)
             } catch (e: IOException) {
                 e.printStackTrace()
                 throw e
             }
         }
     }
+
+    private fun createLocationForPackaging(compilationPath: String, stubClassName: String?): Path {
+        val stubBasePathName = compilationPath
+            .replace("generated/source/kapt/main", "generated-stub-sources")
+            .replace("generated/sources/annotationProcessor/java/main", "generated-stub-sources")
+        val directory: String = stubBasePathName.replace("$stubClassName.java", "")
+        Files.createDirectories(Path.of(directory))
+        Files.deleteIfExists(Path.of(stubBasePathName))
+        return Files.createFile(Path.of(stubBasePathName))
+    }
+
+    private fun writeFileForPackaging(file: File, controllerModel: ControllerModel) =
+        PrintWriter(file).use { writer ->
+            stubTemplate.evaluate(writer, mapOf("model" to controllerModel))
+        }
+
+    // The file for packaging needs to be placed in a separate location, so it doesn't get mixed up with other generated files
+    private fun writeFileForCompilation(openWriter1: Writer, controllerModel: ControllerModel) =
+        PrintWriter(openWriter1).use { writer ->
+            stubTemplate.evaluate(writer, mapOf("model" to controllerModel))
+        }
 }
