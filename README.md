@@ -140,7 +140,7 @@ To handle the following SpringMVC definition:
         ...
     }
 ```
-the library introduces login into the generated stub.
+the library introduces conditions into the generated stub.
 
 If a parameter is optional and the value passed in is a `null`, the generated stub will not add the query param matcher to the Wiremock stub.
 
