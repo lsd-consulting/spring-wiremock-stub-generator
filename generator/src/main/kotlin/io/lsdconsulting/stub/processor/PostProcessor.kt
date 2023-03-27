@@ -25,13 +25,10 @@ class PostProcessor {
         }
     }
 
-    private fun updateResponseStatusOnResources(controllerModel: ControllerModel) {
-        if (controllerModel.responseStatus != null) {
+    private fun updateResponseStatusOnResources(controllerModel: ControllerModel) =
+        controllerModel.responseStatus?.let {
             controllerModel.resources.values.forEach {
-                if (it.responseStatus == null) {
-                    it.responseStatus = controllerModel.responseStatus
-                }
+                it.responseStatus = it.responseStatus ?: controllerModel.responseStatus
             }
         }
-    }
 }
