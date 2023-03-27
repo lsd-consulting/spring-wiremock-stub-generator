@@ -71,11 +71,11 @@ class ControllerProcessor : AbstractProcessor() {
             annotatedElements
                 .filter(elementsBelongingToAnnotatedClasses(annotatedClasses))
                 .forEach { element: Element ->
-                    if (element.getAnnotation(RestController::class.java) != null) {
+                    element.getAnnotation(RestController::class.java)?.let {
                         val controllerModel = model.getControllerModel(element.toString())
                         restControllerAnnotationHandler.handle(element, controllerModel)
                     }
-                    if (element.getAnnotation(GetMapping::class.java) != null) {
+                    element.getAnnotation(GetMapping::class.java)?.let {
                         methodMappingAnnotationHandler.handle(
                             element = element,
                             model = model,
@@ -85,7 +85,7 @@ class ControllerProcessor : AbstractProcessor() {
                             responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
                         )
                     }
-                    if (element.getAnnotation(PostMapping::class.java) != null) {
+                    element.getAnnotation(PostMapping::class.java)?.let {
                         methodMappingAnnotationHandler.handle(
                             element = element,
                             model = model,
@@ -95,7 +95,7 @@ class ControllerProcessor : AbstractProcessor() {
                             responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
                         )
                     }
-                    if (element.getAnnotation(PutMapping::class.java) != null) {
+                    element.getAnnotation(PutMapping::class.java)?.let {
                         methodMappingAnnotationHandler.handle(
                             element = element,
                             model = model,
@@ -104,7 +104,7 @@ class ControllerProcessor : AbstractProcessor() {
                             httpMethod = PUT
                         )
                     }
-                    if (element.getAnnotation(DeleteMapping::class.java) != null) {
+                    element.getAnnotation(DeleteMapping::class.java)?.let {
                         methodMappingAnnotationHandler.handle(
                             element = element,
                             model = model,
@@ -113,7 +113,7 @@ class ControllerProcessor : AbstractProcessor() {
                             httpMethod = DELETE
                         )
                     }
-                    if (element.getAnnotation(RequestMapping::class.java) != null) {
+                    element.getAnnotation(RequestMapping::class.java)?.let {
                         val path: Array<String> = element.getAnnotation(RequestMapping::class.java).path
                         val value: Array<String> = element.getAnnotation(RequestMapping::class.java).value
                         val controllerModel = model.getControllerModel(element.toString())
@@ -123,7 +123,7 @@ class ControllerProcessor : AbstractProcessor() {
                             controllerModel.rootResource = value[0]
                         }
                     }
-                    if (element.getAnnotation(ResponseStatus::class.java) != null) {
+                    element.getAnnotation(ResponseStatus::class.java)?.let {
                         val responseStatusAnnotation = element.getAnnotation(ResponseStatus::class.java)
                         val value: HttpStatus =
                             if (responseStatusAnnotation.code != INTERNAL_SERVER_ERROR) responseStatusAnnotation.code
@@ -137,7 +137,7 @@ class ControllerProcessor : AbstractProcessor() {
                             controllerModel.getResourceModel(methodModelKey).responseStatus = value.value()
                         }
                     }
-                    if (element.getAnnotation(RequestParam::class.java) != null) {
+                    element.getAnnotation(RequestParam::class.java)?.let {
                         val requestParam = element.getAnnotation(RequestParam::class.java)
                         val argumentName = firstNotNull(requestParam.name, requestParam.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
@@ -152,7 +152,7 @@ class ControllerProcessor : AbstractProcessor() {
                             controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).iterable = true
                         }
                     }
-                    if (element.getAnnotation(PathVariable::class.java) != null) {
+                    element.getAnnotation(PathVariable::class.java)?.let {
                         val pathVariable = element.getAnnotation(PathVariable::class.java)
                         val argumentName = firstNotNull(pathVariable.name, pathVariable.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
@@ -162,7 +162,7 @@ class ControllerProcessor : AbstractProcessor() {
                         controllerModel.getResourceModel(methodName).getPathVariableModel(argumentName).type = argumentType
                         controllerModel.getResourceModel(methodName).getPathVariableModel(argumentName).name = argumentName
                     }
-                    if (element.getAnnotation(RequestBody::class.java) != null) {
+                    element.getAnnotation(RequestBody::class.java)?.let {
                         val methodName = element.enclosingElement.toString()
                         val argumentName = element.simpleName.toString()
                         val argumentType = element.retrieveArgumentType()
@@ -170,7 +170,7 @@ class ControllerProcessor : AbstractProcessor() {
                         val requestBody = ArgumentModel(type = argumentType, name = argumentName)
                         controllerModel.getResourceModel(methodName).requestBody = requestBody
                     }
-                    if (element.getAnnotation(DateTimeFormat::class.java) != null) {
+                    element.getAnnotation(DateTimeFormat::class.java)?.let {
                         val dateTimeFormatAnnotation = element.getAnnotation(DateTimeFormat::class.java)
                         val methodName = element.enclosingElement.toString()
                         val argumentName = element.simpleName.toString()
@@ -207,9 +207,9 @@ class ControllerProcessor : AbstractProcessor() {
 
     private fun elementsBelongingToAnnotatedClasses(annotatedClasses: List<Element>): (Element) -> Boolean =
         {
-            annotatedClasses.contains(it) ||
-                    annotatedClasses.contains(it.enclosingElement) ||
-                    annotatedClasses.contains(it.enclosingElement.enclosingElement) ||
+            annotatedClasses.contains(it) or
+                    annotatedClasses.contains(it.enclosingElement) or
+                    annotatedClasses.contains(it.enclosingElement.enclosingElement) or
                     annotatedClasses.contains(it.enclosingElement.enclosingElement.enclosingElement)
         }
 }

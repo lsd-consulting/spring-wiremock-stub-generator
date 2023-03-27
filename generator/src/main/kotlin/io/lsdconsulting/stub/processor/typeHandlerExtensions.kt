@@ -11,18 +11,18 @@ fun Element.retrieveArgumentType(): String {
 }
 
 fun String.retrieveGeneric() =
-    if (this.contains("<") && this.contains(">")) {
+    if (this.contains("<") and this.contains(">")) {
         this.substring(this.indexOf("<") + 1, this.lastIndexOf(">"))
-    } else if (this.contains("&lt;") && this.contains("&gt;")) {
+    } else if (this.contains("&lt;") and this.contains("&gt;")) {
         this.substring(this.indexOf("&lt;") + 4, this.lastIndexOf("&gt;"))
     } else {
         this
     }
 
 fun String.removeResponseEntity() =
-    if (this.contains("ResponseEntity<") && this.contains(">")) {
+    if (this.contains("ResponseEntity<") and this.contains(">")) {
         this.substring(this.indexOf("ResponseEntity<") + 15, this.lastIndexOf(">"))
-    } else if (this.contains("ResponseEntity&lt;") && this.contains("&gt;")) {
+    } else if (this.contains("ResponseEntity&lt;") and this.contains("&gt;")) {
         this.substring(this.indexOf("ResponseEntity&lt;") + 18, this.lastIndexOf("&gt;"))
     } else {
         this

@@ -20,7 +20,7 @@ class AdvancedPostRestController {
     @PostMapping("/resourceWithBody/{param}")
     fun resourceWithBodyAndPathVariable(
         @RequestBody greetingRequest: GreetingRequest,
-        @PathVariable param: String
+        @PathVariable param: String,
     ) = GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
@@ -28,6 +28,6 @@ class AdvancedPostRestController {
     fun resourceWithBodyAndMultiplePathVariables(
         @RequestBody greetingRequest: GreetingRequest,
         @PathVariable param1: String,
-        @PathVariable param2: String
+        @PathVariable param2: String,
     ) = GreetingResponse(name = randomAlphabetic(10))
 }

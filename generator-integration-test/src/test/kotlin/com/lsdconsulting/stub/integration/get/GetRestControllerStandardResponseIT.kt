@@ -24,8 +24,10 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithNoParamsNoInteraction()
         underTest.verifyResourceWithNoParamsNoInteractionWithUrl()
         underTest.resourceWithNoParams(greetingResponse)
+
         val response =
             restTemplate.getForEntity("$GET_CONTROLLER_URL/resourceWithNoParams", GreetingResponse::class.java)
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithNoParams(1)
@@ -39,10 +41,12 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithParamNoInteraction(param)
         underTest.verifyResourceWithParamNoInteractionWithUrl()
         underTest.resourceWithParam(greetingResponse, param)
+
         val response = restTemplate.getForEntity(
             "$GET_CONTROLLER_URL/resourceWithParam?param=$param",
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithParam(1, param)
@@ -56,10 +60,12 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyFilteredResourceWithParamNoInteraction(param)
         underTest.verifyFilteredResourceWithParamNoInteractionWithUrl()
         underTest.filteredResourceWithParam(listOf(greetingResponse), param)
+
         val response = restTemplate.exchange(
             "$GET_CONTROLLER_URL/filteredResourceWithParam?param=$param", GET, EMPTY,
             object: ParameterizedTypeReference<List<GreetingResponse>>(){}
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body, hasSize(1))
         assertThat(response.body?.get(0)?.name, `is`(name))
@@ -72,10 +78,12 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithMultipleParamsNoInteraction(param1, param2)
         underTest.verifyResourceWithMultipleParamsNoInteractionWithUrl()
         underTest.resourceWithMultipleParams(greetingResponse, param1, param2)
+
         val response = restTemplate.getForEntity(
             "$GET_CONTROLLER_URL/resourceWithMultipleParams?param1=$param1&param2=$param2",
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithMultipleParams(1, param1, param2)
@@ -91,10 +99,12 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithMappedRequestParamsNoInteraction(param1, param2)
         underTest.verifyResourceWithMappedRequestParamsNoInteractionWithUrl()
         underTest.resourceWithMappedRequestParams(greetingResponse, param1, param2)
+
         val response = restTemplate.getForEntity(
             "$GET_CONTROLLER_URL/resourceWithMappedRequestParams?parameter1=$param1&parameter2=$param2",
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         assertThrows<VerificationException> {
@@ -108,8 +118,10 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithPathVariableNoInteraction(param)
         underTest.verifyResourceWithPathVariableNoInteractionWithUrl(param)
         underTest.resourceWithPathVariable(greetingResponse, param)
+
         val response =
             restTemplate.getForEntity("$GET_CONTROLLER_URL/resourceWithParam/$param", GreetingResponse::class.java)
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithPathVariable(1, param)
@@ -123,10 +135,12 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithMultiplePathVariablesNoInteraction(param1, param2)
         underTest.verifyResourceWithMultiplePathVariablesNoInteractionWithUrl(param1, param2)
         underTest.resourceWithMultiplePathVariables(greetingResponse, param1, param2)
+
         val response = restTemplate.getForEntity(
             "$GET_CONTROLLER_URL/resourceWithParam/$param1/$param2",
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithMultiplePathVariables(1, param1, param2)
@@ -144,10 +158,12 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithPathVariableAndRequestParamNoInteraction(param1, param2)
         underTest.verifyResourceWithPathVariableAndRequestParamNoInteractionWithUrl(param1)
         underTest.resourceWithPathVariableAndRequestParam(greetingResponse, param1, param2)
+
         val response = restTemplate.getForEntity(
             "$GET_CONTROLLER_URL/resourceWithParam/$param1?param2=$param2",
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithPathVariableAndRequestParam(1, param1, param2)
@@ -165,10 +181,12 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithMappedPathVariablesNoInteraction(param1, param2)
         underTest.verifyResourceWithMappedPathVariablesNoInteractionWithUrl(param1, param2)
         underTest.resourceWithMappedPathVariables(greetingResponse, param1, param2)
+
         val response = restTemplate.getForEntity(
             "$GET_CONTROLLER_URL/resourceWithMappedPathVariables/$param1/$param2",
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         assertThrows<VerificationException> {
@@ -188,10 +206,12 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.resourceWithMultiplePathVariablesAndRequestParams(
             greetingResponse, param1, param2, param3, param4
         )
+
         val response = restTemplate.getForEntity(
             "$GET_CONTROLLER_URL/resourceWithParam/$param1/$param2?param3=$param3&param4=$param4",
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithMultiplePathVariablesAndRequestParams(1, param1, param2, param3, param4)
@@ -211,7 +231,9 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithNoSubResourceNoInteraction()
         underTest.verifyResourceWithNoSubResourceNoInteractionWithUrl()
         underTest.resourceWithNoSubResource(greetingResponse)
+
         val response = restTemplate.getForEntity(GET_CONTROLLER_URL, GreetingResponse::class.java)
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithNoSubResource(1)

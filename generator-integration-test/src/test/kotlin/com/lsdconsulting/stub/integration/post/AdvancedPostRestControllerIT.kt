@@ -25,9 +25,14 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyResourceWithBodyNoInteraction(greetingRequest)
         underTest.verifyResourceWithBodyNoInteractionWithUrl()
         underTest.resourceWithBody(greetingResponse)
-        val request = HttpEntity(greetingRequest)
+
         val response =
-            restTemplate.postForEntity("$POST_CONTROLLER_URL/resourceWithBody", request, GreetingResponse::class.java)
+            restTemplate.postForEntity(
+                "$POST_CONTROLLER_URL/resourceWithBody",
+                HttpEntity(greetingRequest),
+                GreetingResponse::class.java
+            )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBody(1, greetingRequest)
@@ -50,6 +55,7 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
             HttpEntity(greetingRequest),
             GreetingResponse::class.java
         )
+
         assertThat(response1.body, notNullValue())
         assertThat(response1.body?.name, `is`(name))
 
@@ -61,8 +67,6 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
             )
         }
         assertThat(exception.statusCode, `is`(NOT_FOUND))
-
-
         underTest.verifyResourceWithBody(1, greetingRequest)
         underTest.verifyResourceWithBody(1, additionalGreetingRequest)
         underTest.verifyResourceWithBody(greetingRequest)
@@ -74,12 +78,13 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyResourceWithBodyAndPathVariableNoInteraction(param, greetingRequest)
         underTest.verifyResourceWithBodyAndPathVariableNoInteractionWithUrl(param)
         underTest.resourceWithBodyAndPathVariable(GreetingResponse(name = name), param)
-        val request = HttpEntity(greetingRequest)
+
         val response = restTemplate.postForEntity(
             "$POST_CONTROLLER_URL/resourceWithBody/$param",
-            request,
+            HttpEntity(greetingRequest),
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBodyAndPathVariable(1, param, greetingRequest)
@@ -98,12 +103,13 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyResourceWithBodyAndMultiplePathVariablesNoInteraction(param1, param2, greetingRequest)
         underTest.verifyResourceWithBodyAndMultiplePathVariablesNoInteractionWithUrl(param1, param2)
         underTest.resourceWithBodyAndMultiplePathVariables(GreetingResponse(name = name), param1, param2)
-        val request = HttpEntity(greetingRequest)
+
         val response = restTemplate.postForEntity(
             "$POST_CONTROLLER_URL/resourceWithBodyAndMultiplePathVariables/$param1/$param2",
-            request,
+            HttpEntity(greetingRequest),
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBodyAndMultiplePathVariables(1, param1, param2, greetingRequest)

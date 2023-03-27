@@ -23,11 +23,10 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.text.Charsets.UTF_8
 
-internal class CustomApprovalsExtension private constructor() :
-    ApprovalsExtension("src/test/resources/approval")
+internal class CustomApprovalsExtension private constructor() : ApprovalsExtension("src/test/resources/approval")
 
 @ExtendWith(CustomApprovalsExtension::class)
-class JavaPostRestControllerIT : BaseRestControllerIT() {
+class JavaGetRestControllerIT : BaseRestControllerIT() {
     private val underTest = JavaGetRestControllerStub(ObjectMapper(), Jsr310DateTimeFormatAnnotationFormatterFactory())
 
     @Test
@@ -40,10 +39,12 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyResourceWithParamAndAnnotationsNoInteraction(param)
         underTest.verifyResourceWithParamAndAnnotationsNoInteractionWithUrl()
         underTest.resourceWithParamAndAnnotations(greetingResponse, param)
+
         val response = restTemplate.getForEntity(
             "$GET_CONTROLLER_URL/resourceWithParamAndAnnotations?param=$param",
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithParamAndAnnotations(1, param)

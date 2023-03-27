@@ -18,8 +18,7 @@ import org.springframework.http.HttpEntity
 import java.io.File
 import kotlin.text.Charsets.UTF_8
 
-internal class CustomApprovalsExtension private constructor() :
-    ApprovalsExtension("src/test/resources/approval")
+internal class CustomApprovalsExtension private constructor() : ApprovalsExtension("src/test/resources/approval")
 
 @ExtendWith(CustomApprovalsExtension::class)
 class JavaPostRestControllerIT : BaseRestControllerIT() {
@@ -35,13 +34,14 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
         underTest.verifyResourceWithBodyAndAnnotationsNoInteractionWithUrl()
         underTest.resourceWithBodyAndAnnotations(greetingResponse)
-        val request = HttpEntity(greetingRequest)
+
         val response =
             restTemplate.postForEntity(
                 "$POST_CONTROLLER_URL/resourceWithBodyAndAnnotations",
-                request,
+                HttpEntity(greetingRequest),
                 GreetingResponse::class.java
             )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBodyAndAnnotations(1, greetingRequest)
@@ -57,13 +57,14 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)
         underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl(param)
         underTest.resourceWithBodyAndAnnotationsOnPathVariables(greetingResponse, param)
-        val request = HttpEntity(greetingRequest)
+
         val response =
             restTemplate.postForEntity(
                 "$POST_CONTROLLER_URL/resourceWithBodyAndAnnotationsOnPathVariables/$param",
-                request,
+                HttpEntity(greetingRequest),
                 GreetingResponse::class.java
             )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBodyAndAnnotationsOnPathVariables(1, param, greetingRequest)

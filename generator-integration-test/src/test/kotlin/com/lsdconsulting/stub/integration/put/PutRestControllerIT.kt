@@ -25,7 +25,14 @@ class PutRestControllerIT : BaseRestControllerIT() {
     fun `should handle put mapping with no body`() {
         underTest.verifyResourceWithNoBodyNoInteraction()
         underTest.resourceWithNoBody()
-        val responseEntity = restTemplate.exchange("$PUT_CONTROLLER_URL/resourceWithNoBody", PUT, HttpEntity<String>(LinkedMultiValueMap()), Unit::class.java)
+
+        val responseEntity = restTemplate.exchange(
+            "$PUT_CONTROLLER_URL/resourceWithNoBody",
+            PUT,
+            HttpEntity<String>(LinkedMultiValueMap()),
+            Unit::class.java
+        )
+
         assertThat(responseEntity.statusCode, `is`(ACCEPTED))
         underTest.verifyResourceWithNoBody(1)
         underTest.verifyResourceWithNoBody()
@@ -36,8 +43,15 @@ class PutRestControllerIT : BaseRestControllerIT() {
     fun `should handle put mapping with request body`() {
         underTest.verifyResourceWithRequestBodyNoInteraction(greetingRequest)
         underTest.resourceWithRequestBody()
-        val request = HttpEntity(greetingRequest)
-        val responseEntity = restTemplate.exchange("$PUT_CONTROLLER_URL/resourceWithRequestBody", PUT, request, Unit::class.java)
+
+        val responseEntity =
+            restTemplate.exchange(
+                "$PUT_CONTROLLER_URL/resourceWithRequestBody",
+                PUT,
+                HttpEntity(greetingRequest),
+                Unit::class.java
+            )
+
         assertThat(responseEntity.body, `is`(nullValue()))
         assertThat(responseEntity.statusCode, `is`(NO_CONTENT))
         underTest.verifyResourceWithRequestBody(1, greetingRequest)
@@ -57,10 +71,17 @@ class PutRestControllerIT : BaseRestControllerIT() {
             HttpEntity(greetingRequest),
             Unit::class.java
         )
+
         assertThat(responseEntity1.body, `is`(nullValue()))
         assertThat(responseEntity1.statusCode, `is`(NO_CONTENT))
-
-        val exception = assertThrows<HttpClientErrorException> { restTemplate.exchange("$PUT_CONTROLLER_URL/resourceWithRequestBody", PUT, HttpEntity(additionalGreetingRequest), Unit::class.java) }
+        val exception = assertThrows<HttpClientErrorException> {
+            restTemplate.exchange(
+                "$PUT_CONTROLLER_URL/resourceWithRequestBody",
+                PUT,
+                HttpEntity(additionalGreetingRequest),
+                Unit::class.java
+            )
+        }
         assertThat(exception.statusCode, `is`(NOT_FOUND))
 
         underTest.verifyResourceWithRequestBody(1, greetingRequest)
@@ -72,10 +93,14 @@ class PutRestControllerIT : BaseRestControllerIT() {
     fun `should handle put mapping with request body and path variable`() {
         underTest.verifyResourceWithRequestBodyAndPathVariableNoInteraction(param, greetingRequest)
         underTest.resourceWithRequestBodyAndPathVariable(param)
-        val request = HttpEntity(greetingRequest)
+
         val responseEntity = restTemplate.exchange(
-            "$PUT_CONTROLLER_URL/resourceWithRequestBodyAndPathVariable/$param", PUT, request, Unit::class.java
+            "$PUT_CONTROLLER_URL/resourceWithRequestBodyAndPathVariable/$param",
+            PUT,
+            HttpEntity(greetingRequest),
+            Unit::class.java
         )
+
         assertThat(responseEntity.body, `is`(nullValue()))
         assertThat(responseEntity.statusCode, `is`(NO_CONTENT))
         underTest.verifyResourceWithRequestBodyAndPathVariable(1, param, greetingRequest)

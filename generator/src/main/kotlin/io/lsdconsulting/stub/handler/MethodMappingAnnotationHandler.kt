@@ -12,7 +12,7 @@ class MethodMappingAnnotationHandler {
         path: Array<String>,
         value: Array<String>,
         httpMethod: HttpMethod,
-        responseType: String? = null
+        responseType: String? = null,
     ) {
         val methodModelKey = element.toString()
         val methodName = element.simpleName.toString()

@@ -19,6 +19,7 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with no param and custom response`() {
         underTest.resourceWithNoParams(httpStatus.value(), customResponseBody)
+
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithNoParams",
@@ -35,6 +36,7 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with request param and custom response`() {
         underTest.resourceWithParam(httpStatus.value(), customResponseBody, param)
+
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithParam?param=$param",
@@ -51,6 +53,7 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with multiple request params and custom response`() {
         underTest.resourceWithMultipleParams(httpStatus.value(), customResponseBody, param1, param2)
+
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithMultipleParams?param1=$param1&param2=$param2",
@@ -67,6 +70,7 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with path variable and custom response`() {
         underTest.resourceWithPathVariable(httpStatus.value(), customResponseBody, param)
+
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithParam/$param",
@@ -83,6 +87,7 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with multiple path variables and custom response`() {
         underTest.resourceWithMultiplePathVariables(httpStatus.value(), customResponseBody, param1, param2)
+
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithParam/$param1/$param2",
@@ -99,6 +104,7 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with path variable and request param and custom response`() {
         underTest.resourceWithPathVariableAndRequestParam(httpStatus.value(), customResponseBody, param1, param2)
+
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithParam/$param1?param2=$param2",
@@ -115,6 +121,7 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with no subResource and custom response`() {
         underTest.resourceWithNoSubResource(httpStatus.value(), customResponseBody)
+
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 GET_CONTROLLER_URL,
@@ -138,6 +145,7 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
             param3,
             param4
         )
+
         val ex = assertThrows<HttpServerErrorException> {
             restTemplate.getForEntity(
                 "$GET_CONTROLLER_URL/resourceWithParam/$param1/$param2?param3=$param3&param4=$param4",

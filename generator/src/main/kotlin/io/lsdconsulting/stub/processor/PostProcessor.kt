@@ -28,7 +28,9 @@ class PostProcessor {
     private fun updateResponseStatusOnResources(controllerModel: ControllerModel) {
         if (controllerModel.responseStatus != null) {
             controllerModel.resources.values.forEach {
-                if (it.responseStatus == null) it.responseStatus = controllerModel.responseStatus
+                if (it.responseStatus == null) {
+                    it.responseStatus = controllerModel.responseStatus
+                }
             }
         }
     }

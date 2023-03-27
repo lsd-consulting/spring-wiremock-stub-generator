@@ -37,9 +37,7 @@ open class BaseRestControllerIT {
     val greetingRequest = GreetingRequest(name = name)
 
     @BeforeEach
-    fun setup() {
-        WireMock.reset()
-    }
+    fun setup() = WireMock.reset()
 
     companion object {
         private var wireMockServer: WireMockServer = WireMockServer(WireMockConfiguration.options().port(8080))

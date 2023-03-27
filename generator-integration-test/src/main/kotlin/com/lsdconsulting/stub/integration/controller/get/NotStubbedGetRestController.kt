@@ -14,7 +14,6 @@ class NotStubbedGetRestController {
         @PathVariable param1: String,
         @PathVariable param2: String,
         @RequestParam param3: String,
-        @RequestParam param4: String
-    ) =
-        GreetingResponse(name = randomAlphabetic(10))
+        @RequestParam param4: String,
+    ) = GreetingResponse(name = randomAlphabetic(10))
 }

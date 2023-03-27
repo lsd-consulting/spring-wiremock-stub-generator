@@ -23,7 +23,9 @@ class DeleteRestControllerIT : BaseRestControllerIT() {
     fun `should handle delete mapping with no body`() {
         underTest.verifyResourceWithNoBodyNoInteraction()
         underTest.resourceWithNoBody()
+
         restTemplate.delete("$DELETE_CONTROLLER_URL/resourceWithNoBody", HttpEntity<String>(LinkedMultiValueMap()))
+
         underTest.verifyResourceWithNoBody(1)
         underTest.verifyResourceWithNoBody()
         assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoInteraction() }
@@ -33,8 +35,14 @@ class DeleteRestControllerIT : BaseRestControllerIT() {
     fun `should handle delete mapping with request body`() {
         underTest.verifyResourceWithRequestBodyNoInteraction(greetingRequest)
         underTest.resourceWithRequestBody()
-        val request = HttpEntity(greetingRequest)
-        val responseEntity = restTemplate.exchange("$DELETE_CONTROLLER_URL/resourceWithRequestBody", DELETE, request, Unit::class.java)
+
+        val responseEntity = restTemplate.exchange(
+            "$DELETE_CONTROLLER_URL/resourceWithRequestBody",
+            DELETE,
+            HttpEntity(greetingRequest),
+            Unit::class.java
+        )
+
         assertThat(responseEntity.body, `is`(nullValue()))
         assertThat(responseEntity.statusCode, `is`(OK))
         underTest.verifyResourceWithRequestBody(1, greetingRequest)
@@ -46,13 +54,14 @@ class DeleteRestControllerIT : BaseRestControllerIT() {
     fun `should handle delete mapping with request body and path variable`() {
         underTest.verifyResourceWithRequestBodyAndPathVariableNoInteraction(param, greetingRequest)
         underTest.resourceWithRequestBodyAndPathVariable(param)
-        val request = HttpEntity(greetingRequest)
+
         val responseEntity = restTemplate.exchange(
             "$DELETE_CONTROLLER_URL/resourceWithRequestBodyAndPathVariable/$param",
             DELETE,
-            request,
+            HttpEntity(greetingRequest),
             Unit::class.java
         )
+
         assertThat(responseEntity.body, `is`(nullValue()))
         assertThat(responseEntity.statusCode, `is`(NO_CONTENT))
         underTest.verifyResourceWithRequestBodyAndPathVariable(1, param, greetingRequest)

@@ -37,8 +37,10 @@ class GetRestController {
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithMappedRequestParams")
-    fun resourceWithMappedRequestParams(@RequestParam("parameter1") param1: String, @RequestParam(name = "parameter2") param2: String) =
-        GreetingResponse(name = randomAlphabetic(10))
+    fun resourceWithMappedRequestParams(
+        @RequestParam("parameter1") param1: String,
+        @RequestParam(name = "parameter2") param2: String,
+    ) = GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithParam/{param}")
@@ -47,22 +49,24 @@ class GetRestController {
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithParam/{param1}/{param2}")
-    fun resourceWithMultiplePathVariables(@PathVariable param1: String, @PathVariable param2: String) =
-        GreetingResponse(name = randomAlphabetic(10))
+    fun resourceWithMultiplePathVariables(
+        @PathVariable param1: String,
+        @PathVariable param2: String
+    ) = GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithMappedPathVariables/{parameter1}/{parameter2}")
     fun resourceWithMappedPathVariables(
-        @PathVariable("parameter1") param1: String, @PathVariable(name = "parameter2") param2: String
+        @PathVariable("parameter1") param1: String,
+        @PathVariable(name = "parameter2") param2: String,
     ) = GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithParam/{param1}")
     fun resourceWithPathVariableAndRequestParam(
         @PathVariable param1: String,
-        @RequestParam param2: String
-    ) =
-        GreetingResponse(name = randomAlphabetic(10))
+        @RequestParam param2: String,
+    ) = GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithParam/{param1}/{param2}")
@@ -70,9 +74,8 @@ class GetRestController {
         @PathVariable param1: String,
         @PathVariable param2: String,
         @RequestParam param3: String,
-        @RequestParam param4: String
-    ) =
-        GreetingResponse(name = randomAlphabetic(10))
+        @RequestParam param4: String,
+    ) = GreetingResponse(name = randomAlphabetic(10))
 
     @GetMapping
     fun resourceWithNoSubResource() = GreetingResponse(name = randomAlphabetic(10))
@@ -84,9 +87,10 @@ class GetRestController {
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithParamList")
-    fun resourceWithParamList(@RequestParam("parameter1") param1: Long, @RequestParam param2: List<String>,
-                              @RequestParam(name = "parameter3") param3: Int) =
-        GreetingResponse(name = randomAlphabetic(10))
+    fun resourceWithParamList(
+        @RequestParam("parameter1") param1: Long, @RequestParam param2: List<String>,
+        @RequestParam(name = "parameter3") param3: Int,
+    ) = GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithBooleanRequestParam")
@@ -100,19 +104,21 @@ class GetRestController {
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithOptionalIntRequestParams")
-    fun resourceWithOptionalIntRequestParams(@RequestParam param1: Boolean,
-                                             @RequestParam(required = false) param2: Int,
-                                             @RequestParam(required = false) param3: Int,
-                                             @RequestParam("parameter4") param4: Long) =
-        GreetingResponse(name = randomAlphabetic(10))
+    fun resourceWithOptionalIntRequestParams(
+        @RequestParam param1: Boolean,
+        @RequestParam(required = false) param2: Int,
+        @RequestParam(required = false) param3: Int,
+        @RequestParam("parameter4") param4: Long,
+    ) = GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithOptionalMultiValueRequestParams")
-    fun resourceWithOptionalMultiValueRequestParams(@RequestParam required: Boolean,
-                                             @RequestParam(required = false) optional: Int,
-                                             @RequestParam multiValue: Set<Int>,
-                                             @RequestParam(name = "parameter4", required = false) optionalMultiValue: Set<Int>) =
-        GreetingResponse(name = randomAlphabetic(10))
+    fun resourceWithOptionalMultiValueRequestParams(
+        @RequestParam required: Boolean,
+        @RequestParam(required = false) optional: Int,
+        @RequestParam multiValue: Set<Int>,
+        @RequestParam(name = "parameter4", required = false) optionalMultiValue: Set<Int>,
+    ) = GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithZonedDatetime")
@@ -121,18 +127,22 @@ class GetRestController {
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithZonedDatetimeAndAllDateTimeFormatArguments")
-    fun resourceWithZonedDatetimeAndAllDateTimeFormatArguments(@RequestParam @DateTimeFormat(iso = DATE,
-        fallbackPatterns = ["pattern1", "pattern2"], style = "SS", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") param: ZonedDateTime) =
-        GreetingResponse(name = randomAlphabetic(10))
+    fun resourceWithZonedDatetimeAndAllDateTimeFormatArguments(
+        @RequestParam @DateTimeFormat(
+            iso = DATE,
+            fallbackPatterns = ["pattern1", "pattern2"], style = "SS", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+        ) param: ZonedDateTime
+    ) = GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithOffsetDateTimeAndMultiValue")
     fun resourceWithOffsetDateTimeAndMultiValue(
-        @RequestParam @DateTimeFormat(iso = DATE_TIME) param: @NotBlank OffsetDateTime): GreetingResponse =
-        GreetingResponse(randomAlphabetic(10))
+        @RequestParam @DateTimeFormat(iso = DATE_TIME) param: @NotBlank OffsetDateTime
+    ) = GreetingResponse(randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithMultiValueZonedDatetime")
-    fun resourceWithMultiValueZonedDatetime(@RequestParam @DateTimeFormat(iso = DATE_TIME) multiValue: List<ZonedDateTime>) =
-        GreetingResponse(name = randomAlphabetic(10))
+    fun resourceWithMultiValueZonedDatetime(
+        @RequestParam @DateTimeFormat(iso = DATE_TIME) multiValue: List<ZonedDateTime>
+    ) = GreetingResponse(name = randomAlphabetic(10))
 }

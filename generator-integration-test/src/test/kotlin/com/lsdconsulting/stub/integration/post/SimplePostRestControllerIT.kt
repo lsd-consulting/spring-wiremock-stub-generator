@@ -23,11 +23,13 @@ class SimplePostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyResourceWithNoBodyNoInteraction()
         underTest.verifyResourceWithNoBodyNoInteractionWithUrl()
         underTest.resourceWithNoBody(GreetingResponse(name = name))
+
         val response = restTemplate.postForEntity(
             "$POST_CONTROLLER_URL/resourceWithNoBody",
             HttpEntity(""),
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithNoBody(1)
@@ -41,11 +43,13 @@ class SimplePostRestControllerIT : BaseRestControllerIT() {
     fun `should handle post mapping with no request body but with response status`() {
         underTest.verifyResourceWithNoBodyButWithResponseStatusNoInteraction()
         underTest.resourceWithNoBodyButWithResponseStatus(GreetingResponse(name = name))
+
         val response = restTemplate.postForEntity(
             "$POST_CONTROLLER_URL/resourceWithNoBodyButWithResponseStatus",
             HttpEntity(""),
             GreetingResponse::class.java
         )
+
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         assertThat(response.statusCode, `is`(CREATED))
@@ -59,11 +63,13 @@ class SimplePostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyResourceWithNoBodyNoResponseNoInteraction()
         underTest.verifyResourceWithNoBodyNoResponseNoInteractionWithUrl()
         underTest.resourceWithNoBodyNoResponse()
+
         val response = restTemplate.postForEntity(
             "$POST_CONTROLLER_URL/resourceWithNoBodyNoResponse",
             HttpEntity(""),
             Unit::class.java
         )
+
         assertThat(response.statusCode, `is`(OK))
         assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoResponseNoInteraction() }
         assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoResponseNoInteractionWithUrl() }

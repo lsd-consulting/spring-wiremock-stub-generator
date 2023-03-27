@@ -29,7 +29,7 @@ class PutRestController {
     @PutMapping("/resourceWithRequestBodyAndPathVariable/{param}")
     fun resourceWithRequestBodyAndPathVariable(
         @RequestBody greetingRequest: GreetingRequest,
-        @PathVariable param: String
+        @PathVariable param: String,
     ) {
     }
 }

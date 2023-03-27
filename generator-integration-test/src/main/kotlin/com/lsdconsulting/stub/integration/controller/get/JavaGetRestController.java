@@ -24,13 +24,15 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 class JavaGetRestController {
 
     @GetMapping("/resourceWithParamAndAnnotations")
-    ResponseEntity<GreetingResponse> resourceWithParamAndAnnotations(@RequestParam @Valid @Email String param) {
+    ResponseEntity<GreetingResponse> resourceWithParamAndAnnotations(
+            @RequestParam @Valid @Email @SuppressWarnings("unused") String param) {
         return ResponseEntity.ok().body(new GreetingResponse(randomAlphabetic(10)));
     }
 
     @GetMapping("/resourceWithZonedDatetimeAndMultiValue")
-    GreetingResponse resourceWithZonedDatetimeAndMultiValue(@RequestParam @NotBlank @DateTimeFormat(iso = DATE_TIME) ZonedDateTime param,
-                                                            @RequestParam Set<Integer> multiValue){
+    GreetingResponse resourceWithZonedDatetimeAndMultiValue(
+            @RequestParam @NotBlank @DateTimeFormat(iso = DATE_TIME) @SuppressWarnings("unused") ZonedDateTime param,
+            @RequestParam @SuppressWarnings("unused") Set<Integer> multiValue) {
         return new GreetingResponse(randomAlphabetic(10));
     }
 }

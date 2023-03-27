@@ -16,12 +16,15 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 class JavaPostRestController {
 
     @PostMapping("/resourceWithBodyAndAnnotations")
-    GreetingResponse resourceWithBodyAndAnnotations(@RequestBody @Valid @Email GreetingRequest greetingRequest) {
+    GreetingResponse resourceWithBodyAndAnnotations(
+            @RequestBody @Valid @Email @SuppressWarnings("unused") GreetingRequest greetingRequest) {
         return new GreetingResponse(randomAlphabetic(10));
     }
 
     @PostMapping("/resourceWithBodyAndAnnotationsOnPathVariables/{param}")
-    GreetingResponse resourceWithBodyAndAnnotationsOnPathVariables(@RequestBody GreetingRequest greetingRequest, @PathVariable @Valid @Email String param) {
+    GreetingResponse resourceWithBodyAndAnnotationsOnPathVariables(
+            @RequestBody @SuppressWarnings("unused") GreetingRequest greetingRequest,
+            @PathVariable @Valid @Email @SuppressWarnings("unused") String param) {
         return new GreetingResponse(randomAlphabetic(10));
     }
 }
