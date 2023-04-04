@@ -37,7 +37,7 @@ public class {{model.stubClassName}} {
     }
 
 {% for entry in model.getResources %}
-    private static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
+    public static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
 
     public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}({{ entry.value.stubMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
