@@ -1,7 +1,7 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id 'org.springframework.boot' version '2.7.8' apply false
+    id 'org.springframework.boot' version '2.7.10' apply false
     id 'signing'
     id 'maven-publish'
     id 'jacoco'
@@ -32,8 +32,8 @@ dependencies {
     implementation "io.pebbletemplates:pebble:3.2.0"
     implementation 'org.apache.commons:commons-text:1.10.0'
 
-    implementation 'org.springframework:spring-web:5.3.25'
-    implementation 'org.springframework:spring-context:5.3.25'
+    implementation 'org.springframework:spring-web:5.3.26'
+    implementation 'org.springframework:spring-context:5.3.26'
 
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
