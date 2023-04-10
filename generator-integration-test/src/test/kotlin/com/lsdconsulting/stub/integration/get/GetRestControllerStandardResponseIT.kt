@@ -279,6 +279,23 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
+    fun `should handle get mapping with Kotlin vararg request params`() {
+        underTest.verifyResourceWithVarargParamsNoInteraction(paramLong, paramList, paramInt)
+        underTest.resourceWithVarargParams(greetingResponse, paramLong, paramList, paramInt)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithVarargParams?parameter1=$paramLong&param2=$param2&param2=$param3&parameter3=$paramInt",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyResourceWithVarargParams(1, paramLong, paramList, paramInt)
+        underTest.verifyResourceWithVarargParams(paramLong, paramList, paramInt)
+        assertThrows<VerificationException> { underTest.verifyResourceWithVarargParamsNoInteraction(paramLong, paramList, paramInt) }
+    }
+
+    @Test
     fun `should handle get mapping with true boolean request param`() {
         underTest.verifyResourceWithBooleanRequestParamNoInteraction(true)
         underTest.verifyResourceWithBooleanRequestParamNoInteractionWithUrl()

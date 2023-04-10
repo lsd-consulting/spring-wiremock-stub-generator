@@ -34,7 +34,14 @@ fun pathVariables(annotatedMethod: ResourceModel) =
     annotatedMethod.pathVariables.map { "${it.value.type} ${it.value.name}" }
 
 private fun requestParameters(annotatedMethod: ResourceModel) =
-    annotatedMethod.requestParameters.map { "${it.value.type} ${it.value.name}" }
+    annotatedMethod.requestParameters.map {
+        val type = if ("java.lang.String\\[]".toRegex().containsMatchIn(it.value.type!!)) {
+            "java.util.List<String>"
+        } else {
+            "${it.value.type}"
+        }
+        "$type ${it.value.name}"
+    }
 
 fun verifyArgumentList(annotatedMethod: ResourceModel): MutableList<String> {
     val stubMethodArgumentList = mutableListOf<String>()

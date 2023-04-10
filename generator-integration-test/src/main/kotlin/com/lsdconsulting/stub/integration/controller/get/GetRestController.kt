@@ -93,6 +93,13 @@ class GetRestController {
     ) = GreetingResponse(name = randomAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
+    @GetMapping("/resourceWithVarargParams")
+    fun resourceWithVarargParams(
+        @RequestParam("parameter1") param1: Long, @RequestParam vararg param2: String,
+        @RequestParam(name = "parameter3") param3: Int,
+    ) = GreetingResponse(name = randomAlphabetic(10))
+
+    @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithBooleanRequestParam")
     fun resourceWithBooleanRequestParam(@RequestParam param: Boolean) =
         GreetingResponse(name = randomAlphabetic(10))

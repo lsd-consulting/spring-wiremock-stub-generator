@@ -147,7 +147,7 @@ class ControllerProcessor : AbstractProcessor() {
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).name = argumentName
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).optional = !requestParam.required
 
-                        if ("java.util.Set<(.*)>|java.util.List<(.*)>".toRegex().containsMatchIn(argumentType)) {
+                        if ("java.util.Set<(.*)>|java.util.List<(.*)>|java.lang.String\\[]".toRegex().containsMatchIn(argumentType)) {
                             controllerModel.getResourceModel(methodName).hasMultiValueRequestParams = true
                             controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).iterable = true
                         }
