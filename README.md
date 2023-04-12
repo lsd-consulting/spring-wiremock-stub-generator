@@ -178,3 +178,26 @@ A special constructor needs to be used when creating an instance of the stub:
 ```kotlin
 RestControllerStub(ObjectMapper(), Jsr310DateTimeFormatAnnotationFormatterFactory())
 ```
+
+## Contributing
+We welcome bug fixes and new features in the form of pull requests. If you'd like to contribute, please be mindful of the following guidelines:
+
+- Start with raising an issue
+- All changes should include suitable tests, whether to demonstrate the bug or exercise and document the new feature.
+- Please make one change per pull request.
+- Use [conventional commits](https://www.conventionalcommits.org/)
+- If the new feature is significantly large/complex/breaks existing behaviour, please first post a summary on the issue to generate a discussion. This will avoid significant amounts of coding time spent on changes that ultimately get rejected.
+- Try to avoid reformats of files that change the indentation, spaces to tabs etc., as this makes reviewing diffs much more difficult.
+
+### Preferred approach 
+Probably the best way to add functionality to this project is through tests.
+
+[Here](https://github.com/lsd-consulting/spring-wiremock-stub-generator/commit/be46ab8fa9cc5a2d448c370111ee7236ec2d66ca) is an example commit of adding support for Kotlin `vararg`.
+
+That commit doesn't show how the change actually came about, but here are the steps that were taken in the following order: 
+1. Add a new resource to a controller in the integration tests
+2. Build the project so that the stubs are updated
+3. Add a failing integration test
+4. Make a change in the library that makes the test pass
+
+In the majority of cases following the above steps should suffice.
