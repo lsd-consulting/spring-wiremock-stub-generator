@@ -22,7 +22,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with no param`() {
         underTest.verifyResourceWithNoParamsNoInteraction()
-        underTest.verifyResourceWithNoParamsNoInteractionWithUrl()
+        underTest.verifyResourceWithNoParamsNoInteraction()
         underTest.resourceWithNoParams(greetingResponse)
 
         val response =
@@ -33,13 +33,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithNoParams(1)
         underTest.verifyResourceWithNoParams()
         assertThrows<VerificationException> { underTest.verifyResourceWithNoParamsNoInteraction() }
-        assertThrows<VerificationException> { underTest.verifyResourceWithNoParamsNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithNoParamsNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with request param`() {
         underTest.verifyResourceWithParamNoInteraction(param)
-        underTest.verifyResourceWithParamNoInteractionWithUrl()
+        underTest.verifyResourceWithParamNoInteraction()
         underTest.resourceWithParam(greetingResponse, param)
 
         val response = restTemplate.getForEntity(
@@ -52,13 +52,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithParam(1, param)
         underTest.verifyResourceWithParam(param)
         assertThrows<VerificationException> { underTest.verifyResourceWithParamNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithParamNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithParamNoInteraction() }
     }
 
     @Test
     fun `should handle collection response for filter queries`() {
         underTest.verifyFilteredResourceWithParamNoInteraction(param)
-        underTest.verifyFilteredResourceWithParamNoInteractionWithUrl()
+        underTest.verifyFilteredResourceWithParamNoInteraction()
         underTest.filteredResourceWithParam(listOf(greetingResponse), param)
 
         val response = restTemplate.exchange(
@@ -70,13 +70,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         assertThat(response.body, hasSize(1))
         assertThat(response.body?.get(0)?.name, `is`(name))
         assertThrows<VerificationException> { underTest.verifyFilteredResourceWithParamNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyFilteredResourceWithParamNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyFilteredResourceWithParamNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with multiple request params`() {
         underTest.verifyResourceWithMultipleParamsNoInteraction(param1, param2)
-        underTest.verifyResourceWithMultipleParamsNoInteractionWithUrl()
+        underTest.verifyResourceWithMultipleParamsNoInteraction()
         underTest.resourceWithMultipleParams(greetingResponse, param1, param2)
 
         val response = restTemplate.getForEntity(
@@ -91,13 +91,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         assertThrows<VerificationException> {
             underTest.verifyResourceWithMultipleParamsNoInteraction(param1, param2)
         }
-        assertThrows<VerificationException> { underTest.verifyResourceWithMultipleParamsNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithMultipleParamsNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with mapped request params`() {
         underTest.verifyResourceWithMappedRequestParamsNoInteraction(param1, param2)
-        underTest.verifyResourceWithMappedRequestParamsNoInteractionWithUrl()
+        underTest.verifyResourceWithMappedRequestParamsNoInteraction()
         underTest.resourceWithMappedRequestParams(greetingResponse, param1, param2)
 
         val response = restTemplate.getForEntity(
@@ -110,13 +110,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         assertThrows<VerificationException> {
             underTest.verifyResourceWithMappedRequestParamsNoInteraction(param1, param2)
         }
-        assertThrows<VerificationException> { underTest.verifyResourceWithMappedRequestParamsNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithMappedRequestParamsNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with path variable`() {
         underTest.verifyResourceWithPathVariableNoInteraction(param)
-        underTest.verifyResourceWithPathVariableNoInteractionWithUrl(param)
+        underTest.verifyResourceWithPathVariableNoInteraction(param)
         underTest.resourceWithPathVariable(greetingResponse, param)
 
         val response =
@@ -127,13 +127,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithPathVariable(1, param)
         underTest.verifyResourceWithPathVariable(param)
         assertThrows<VerificationException> { underTest.verifyResourceWithPathVariableNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithPathVariableNoInteractionWithUrl(param) }
+        assertThrows<VerificationException> { underTest.verifyResourceWithPathVariableNoInteraction(param) }
     }
 
     @Test
     fun `should handle get mapping with multiple path variables`() {
         underTest.verifyResourceWithMultiplePathVariablesNoInteraction(param1, param2)
-        underTest.verifyResourceWithMultiplePathVariablesNoInteractionWithUrl(param1, param2)
+        underTest.verifyResourceWithMultiplePathVariablesNoInteraction(param1, param2)
         underTest.resourceWithMultiplePathVariables(greetingResponse, param1, param2)
 
         val response = restTemplate.getForEntity(
@@ -149,14 +149,14 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
             underTest.verifyResourceWithMultiplePathVariablesNoInteraction(param1, param2)
         }
         assertThrows<VerificationException> {
-            underTest.verifyResourceWithMultiplePathVariablesNoInteractionWithUrl(param1, param2)
+            underTest.verifyResourceWithMultiplePathVariablesNoInteraction(param1, param2)
         }
     }
 
     @Test
     fun `should handle get mapping with path variable and request param`() {
         underTest.verifyResourceWithPathVariableAndRequestParamNoInteraction(param1, param2)
-        underTest.verifyResourceWithPathVariableAndRequestParamNoInteractionWithUrl(param1)
+        underTest.verifyResourceWithPathVariableAndRequestParamNoInteraction(param1)
         underTest.resourceWithPathVariableAndRequestParam(greetingResponse, param1, param2)
 
         val response = restTemplate.getForEntity(
@@ -172,14 +172,14 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
             underTest.verifyResourceWithPathVariableAndRequestParamNoInteraction(param1, param2)
         }
         assertThrows<VerificationException> {
-            underTest.verifyResourceWithPathVariableAndRequestParamNoInteractionWithUrl(param1)
+            underTest.verifyResourceWithPathVariableAndRequestParamNoInteraction(param1)
         }
     }
 
     @Test
     fun `should handle get mapping with mapped path variables`() {
         underTest.verifyResourceWithMappedPathVariablesNoInteraction(param1, param2)
-        underTest.verifyResourceWithMappedPathVariablesNoInteractionWithUrl(param1, param2)
+        underTest.verifyResourceWithMappedPathVariablesNoInteraction(param1, param2)
         underTest.resourceWithMappedPathVariables(greetingResponse, param1, param2)
 
         val response = restTemplate.getForEntity(
@@ -193,7 +193,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
             underTest.verifyResourceWithMappedPathVariablesNoInteraction(param1, param2)
         }
         assertThrows<VerificationException> {
-            underTest.verifyResourceWithMappedPathVariablesNoInteractionWithUrl(param1, param2)
+            underTest.verifyResourceWithMappedPathVariablesNoInteraction(param1, param2)
         }
     }
 
@@ -202,7 +202,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithMultiplePathVariablesAndRequestParamsNoInteraction(
             param1, param2, param3, param4
         )
-        underTest.verifyResourceWithMultiplePathVariablesAndRequestParamsNoInteractionWithUrl(param1, param2)
+        underTest.verifyResourceWithMultiplePathVariablesAndRequestParamsNoInteraction(param1, param2)
         underTest.resourceWithMultiplePathVariablesAndRequestParams(
             greetingResponse, param1, param2, param3, param4
         )
@@ -222,14 +222,14 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
             )
         }
         assertThrows<VerificationException> {
-            underTest.verifyResourceWithMultiplePathVariablesAndRequestParamsNoInteractionWithUrl(param1, param2)
+            underTest.verifyResourceWithMultiplePathVariablesAndRequestParamsNoInteraction(param1, param2)
         }
     }
 
     @Test
     fun `should handle get mapping with no subresource`() {
         underTest.verifyResourceWithNoSubResourceNoInteraction()
-        underTest.verifyResourceWithNoSubResourceNoInteractionWithUrl()
+        underTest.verifyResourceWithNoSubResourceNoInteraction()
         underTest.resourceWithNoSubResource(greetingResponse)
 
         val response = restTemplate.getForEntity(GET_CONTROLLER_URL, GreetingResponse::class.java)
@@ -240,7 +240,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithNoSubResource()
         assertThrows<VerificationException> {
             underTest.verifyResourceWithNoSubResourceNoInteraction()
-            underTest.verifyResourceWithNoSubResourceNoInteractionWithUrl()
+            underTest.verifyResourceWithNoSubResourceNoInteraction()
         }
     }
 
@@ -298,7 +298,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with true boolean request param`() {
         underTest.verifyResourceWithBooleanRequestParamNoInteraction(true)
-        underTest.verifyResourceWithBooleanRequestParamNoInteractionWithUrl()
+        underTest.verifyResourceWithBooleanRequestParamNoInteraction()
         underTest.resourceWithBooleanRequestParam(greetingResponse, true)
 
         val response = restTemplate.exchange(
@@ -311,13 +311,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithBooleanRequestParam(1,true)
         underTest.verifyResourceWithBooleanRequestParam(true)
         assertThrows<VerificationException> { underTest.verifyResourceWithBooleanRequestParamNoInteraction(true) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithBooleanRequestParamNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithBooleanRequestParamNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with false boolean request param`() {
         underTest.verifyResourceWithBooleanRequestParamNoInteraction(false)
-        underTest.verifyResourceWithBooleanRequestParamNoInteractionWithUrl()
+        underTest.verifyResourceWithBooleanRequestParamNoInteraction()
         underTest.resourceWithBooleanRequestParam(greetingResponse, false)
 
         val response = restTemplate.exchange(
@@ -330,13 +330,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithBooleanRequestParam(1,false)
         underTest.verifyResourceWithBooleanRequestParam(false)
         assertThrows<VerificationException> { underTest.verifyResourceWithBooleanRequestParamNoInteraction(false) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithBooleanRequestParamNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithBooleanRequestParamNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with missing non-optional boolean request param`() {
         underTest.verifyResourceWithBooleanRequestParamNoInteraction(null)
-        underTest.verifyResourceWithBooleanRequestParamNoInteractionWithUrl()
+        underTest.verifyResourceWithBooleanRequestParamNoInteraction()
         underTest.resourceWithBooleanRequestParam(greetingResponse, null)
 
         val response = restTemplate.exchange(
@@ -349,13 +349,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithBooleanRequestParam(1,null)
         underTest.verifyResourceWithBooleanRequestParam(null)
         assertThrows<VerificationException> { underTest.verifyResourceWithBooleanRequestParamNoInteraction(null) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithBooleanRequestParamNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithBooleanRequestParamNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with optional empty boolean request param`() {
         underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(null)
-        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteractionWithUrl()
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction()
         underTest.resourceWithOptionalBooleanRequestParam(greetingResponse, null)
 
         val response = restTemplate.exchange(
@@ -368,13 +368,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithOptionalBooleanRequestParam(1, null)
         underTest.verifyResourceWithOptionalBooleanRequestParam(null)
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(null) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with optional boolean request param`() {
         underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(false)
-        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteractionWithUrl()
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction()
         underTest.resourceWithOptionalBooleanRequestParam(greetingResponse, false)
 
         val response = restTemplate.exchange(
@@ -387,13 +387,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithOptionalBooleanRequestParam(1, false)
         underTest.verifyResourceWithOptionalBooleanRequestParam(false)
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(false) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with empty optional int request params`() {
         underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction(true, null, null, 11L)
-        underTest.verifyResourceWithOptionalIntRequestParamsNoInteractionWithUrl()
+        underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction()
         underTest.resourceWithOptionalIntRequestParams(greetingResponse, true, null, null, 11L)
 
         val response = restTemplate.exchange(
@@ -406,13 +406,13 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithOptionalIntRequestParams(1, true, null, null, 11L)
         underTest.verifyResourceWithOptionalIntRequestParams(true, null, null, 11L)
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction(true, null, null, 11L) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalIntRequestParamsNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with optional int request params`() {
         underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction(true, 5, 7, 11L)
-        underTest.verifyResourceWithOptionalIntRequestParamsNoInteractionWithUrl()
+        underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction()
         underTest.resourceWithOptionalIntRequestParams(greetingResponse, true, 5, 7, 11L)
 
         val response = restTemplate.exchange(
@@ -425,7 +425,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithOptionalIntRequestParams(1, true, 5, 7, 11L)
         underTest.verifyResourceWithOptionalIntRequestParams(true, 5, 7, 11L)
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction(true, 5, 7, 11L) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalIntRequestParamsNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction() }
     }
 
     @Test

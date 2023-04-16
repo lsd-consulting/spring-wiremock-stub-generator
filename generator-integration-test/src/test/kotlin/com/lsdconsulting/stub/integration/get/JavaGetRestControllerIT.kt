@@ -37,7 +37,7 @@ class JavaGetRestControllerIT : BaseRestControllerIT() {
     @Test
     fun `should handle get mapping with request param`() {
         underTest.verifyResourceWithParamAndAnnotationsNoInteraction(param)
-        underTest.verifyResourceWithParamAndAnnotationsNoInteractionWithUrl()
+        underTest.verifyResourceWithParamAndAnnotationsNoInteraction()
         underTest.resourceWithParamAndAnnotations(greetingResponse, param)
 
         val response = restTemplate.getForEntity(
@@ -50,7 +50,7 @@ class JavaGetRestControllerIT : BaseRestControllerIT() {
         underTest.verifyResourceWithParamAndAnnotations(1, param)
         underTest.verifyResourceWithParamAndAnnotations(param)
         assertThrows<VerificationException> { underTest.verifyResourceWithParamAndAnnotationsNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithParamAndAnnotationsNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithParamAndAnnotationsNoInteraction() }
     }
 
     @Test

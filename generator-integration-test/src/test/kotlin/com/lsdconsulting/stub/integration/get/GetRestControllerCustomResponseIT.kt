@@ -158,6 +158,6 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithMultiplePathVariablesAndRequestParams(1, param1, param2, param3, param4)
         underTest.verifyResourceWithMultiplePathVariablesAndRequestParams(param1, param2, param3, param4)
         assertThrows<VerificationException> { underTest.verifyResourceWithMultiplePathVariablesAndRequestParamsNoInteraction(param1, param2, param3, param4) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithMultiplePathVariablesAndRequestParamsNoInteractionWithUrl(param1, param2) }
+        assertThrows<VerificationException> { underTest.verifyResourceWithMultiplePathVariablesAndRequestParamsNoInteraction(param1, param2) }
     }
 }

@@ -32,7 +32,7 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
     fun `should handle get mapping with ZonedDateTime request param`() {
         val param = ZonedDateTime.now(ZoneId.of("UTC"))
         underTest.verifyResourceWithZonedDatetimeNoInteraction(param)
-        underTest.verifyResourceWithZonedDatetimeNoInteractionWithUrl()
+        underTest.verifyResourceWithZonedDatetimeNoInteraction()
         underTest.resourceWithZonedDatetime(greetingResponse, param)
 
         val response = restTemplate.exchange(
@@ -44,7 +44,7 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithZonedDatetime(param)
         assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeNoInteraction() }
     }
 
     @Test
@@ -52,7 +52,7 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
     fun `should handle get mapping with OffsetDateTime request param for different timezone`() {
         val param = OffsetDateTime.now(ZoneId.of("CET"))
         underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteraction(param)
-        underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteractionWithUrl()
+        underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteraction()
         underTest.resourceWithOffsetDateTimeAndMultiValue(greetingResponse, param)
 
         val response = restTemplate.exchange(
@@ -64,14 +64,14 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithOffsetDateTimeAndMultiValue(param)
         assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteraction() }
     }
 
     @Test
     fun `should handle get mapping with ZonedDateTime request param and all DateTimeFormat arguments`() {
         val param = ZonedDateTime.now(ZoneId.of("UTC"))
         underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteraction(param)
-        underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteractionWithUrl()
+        underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteraction()
         underTest.resourceWithZonedDatetimeAndAllDateTimeFormatArguments(greetingResponse, param)
 
         val response = restTemplate.exchange(
@@ -84,7 +84,7 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArguments(param)
         assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeAndAllDateTimeFormatArgumentsNoInteraction() }
     }
 
     @Test

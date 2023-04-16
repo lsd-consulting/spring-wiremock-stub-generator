@@ -119,8 +119,8 @@ public class {{model.stubClassName}} {
         {% endif %}
     }
 
-    {% if not entry.value.hasMultiValueRequestParams %}
-    public void verify{{entry.value.methodName}}NoInteractionWithUrl({{ entry.value.verifyMethodArgumentListPathVariablesOnly | join(', ') | raw}}) {
+    {% if not entry.value.hasMultiValueRequestParams and entry.value.verifyMethodArgumentList != entry.value.verifyMethodArgumentListPathVariablesOnly %}
+    public void verify{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentListPathVariablesOnly | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url)));
     }

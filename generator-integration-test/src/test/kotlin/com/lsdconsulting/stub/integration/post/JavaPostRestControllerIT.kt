@@ -32,7 +32,7 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
     @Test
     fun `should handle post mapping with request body`() {
         underTest.verifyResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
-        underTest.verifyResourceWithBodyAndAnnotationsNoInteractionWithUrl()
+        underTest.verifyResourceWithBodyAndAnnotationsNoInteraction()
         underTest.resourceWithBodyAndAnnotations(greetingResponse)
 
         val response =
@@ -49,13 +49,13 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         assertThrows<VerificationException> {
             underTest.verifyResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
         }
-        assertThrows<VerificationException> { underTest.verifyResourceWithBodyAndAnnotationsNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithBodyAndAnnotationsNoInteraction() }
     }
 
     @Test
     fun `should handle post mapping with request body and path variable`() {
         underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)
-        underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl(param)
+        underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param)
         underTest.resourceWithBodyAndAnnotationsOnPathVariables(greetingResponse, param)
 
         val response =
@@ -73,7 +73,7 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
             underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)
         }
         assertThrows<VerificationException> {
-            underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl(param)
+            underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param)
         }
     }
 

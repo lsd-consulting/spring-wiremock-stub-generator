@@ -21,7 +21,7 @@ class SimplePostRestControllerIT : BaseRestControllerIT() {
     @Test
     fun `should handle post mapping with no request body`() {
         underTest.verifyResourceWithNoBodyNoInteraction()
-        underTest.verifyResourceWithNoBodyNoInteractionWithUrl()
+        underTest.verifyResourceWithNoBodyNoInteraction()
         underTest.resourceWithNoBody(GreetingResponse(name = name))
 
         val response = restTemplate.postForEntity(
@@ -36,7 +36,7 @@ class SimplePostRestControllerIT : BaseRestControllerIT() {
         underTest.verifyResourceWithNoBody()
         assertThat(response.statusCode, `is`(OK))
         assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoInteraction() }
-        assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoInteraction() }
     }
 
     @Test
@@ -61,7 +61,7 @@ class SimplePostRestControllerIT : BaseRestControllerIT() {
     @Test
     fun `should handle post mapping with no request body and no response`() {
         underTest.verifyResourceWithNoBodyNoResponseNoInteraction()
-        underTest.verifyResourceWithNoBodyNoResponseNoInteractionWithUrl()
+        underTest.verifyResourceWithNoBodyNoResponseNoInteraction()
         underTest.resourceWithNoBodyNoResponse()
 
         val response = restTemplate.postForEntity(
@@ -72,6 +72,6 @@ class SimplePostRestControllerIT : BaseRestControllerIT() {
 
         assertThat(response.statusCode, `is`(OK))
         assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoResponseNoInteraction() }
-        assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoResponseNoInteractionWithUrl() }
+        assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoResponseNoInteraction() }
     }
 }

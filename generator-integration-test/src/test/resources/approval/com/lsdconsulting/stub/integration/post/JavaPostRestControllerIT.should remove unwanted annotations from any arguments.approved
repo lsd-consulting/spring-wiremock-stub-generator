@@ -74,7 +74,7 @@ public class JavaPostRestControllerStub {
                         verify(NEVER, requestPatternBuilder);
             }
 
-        public void verifyResourceWithBodyAndAnnotationsNoInteractionWithUrl() {
+        public void verifyResourceWithBodyAndAnnotationsNoInteraction() {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
         verify(NEVER, postRequestedFor(urlPathEqualTo(url)));
     }
@@ -116,7 +116,7 @@ public class JavaPostRestControllerStub {
                         verify(NEVER, requestPatternBuilder);
             }
 
-        public void verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteractionWithUrl(java.lang.String param) {
+        public void verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(java.lang.String param) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
         verify(NEVER, postRequestedFor(urlPathEqualTo(url)));
     }

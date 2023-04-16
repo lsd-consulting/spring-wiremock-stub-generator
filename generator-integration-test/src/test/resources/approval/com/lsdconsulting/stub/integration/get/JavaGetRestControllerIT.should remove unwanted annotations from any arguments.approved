@@ -121,7 +121,7 @@ public class JavaGetRestControllerStub {
                                             verify(NEVER, requestPatternBuilder);
             }
 
-        public void verifyResourceWithParamAndAnnotationsNoInteractionWithUrl() {
+        public void verifyResourceWithParamAndAnnotationsNoInteraction() {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
         verify(NEVER, getRequestedFor(urlPathEqualTo(url)));
     }
