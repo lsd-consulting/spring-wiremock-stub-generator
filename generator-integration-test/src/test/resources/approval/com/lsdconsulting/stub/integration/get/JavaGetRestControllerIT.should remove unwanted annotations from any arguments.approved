@@ -24,11 +24,14 @@ public class JavaGetRestControllerStub {
     private static final int ONCE = 1;
     private static final int NEVER = 0;
 
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
     private AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory;
 
     public JavaGetRestControllerStub(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+    }
+
+    public JavaGetRestControllerStub() {
     }
 
     public JavaGetRestControllerStub(ObjectMapper objectMapper, AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory) {

@@ -37,6 +37,25 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
+    fun `stub should use a built-in objectMapper if not provided`() {
+        val underTestDefaultConstructor = GetRestControllerStub()
+
+        underTestDefaultConstructor.verifyResourceWithNoParamsNoInteraction()
+        underTestDefaultConstructor.verifyResourceWithNoParamsNoInteraction()
+        underTestDefaultConstructor.resourceWithNoParams(greetingResponse)
+
+        val response =
+            restTemplate.getForEntity("$GET_CONTROLLER_URL/resourceWithNoParams", GreetingResponse::class.java)
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTestDefaultConstructor.verifyResourceWithNoParams(1)
+        underTestDefaultConstructor.verifyResourceWithNoParams()
+        assertThrows<VerificationException> { underTestDefaultConstructor.verifyResourceWithNoParamsNoInteraction() }
+        assertThrows<VerificationException> { underTestDefaultConstructor.verifyResourceWithNoParamsNoInteraction() }
+    }
+
+    @Test
     fun `should handle get mapping with request param`() {
         underTest.verifyResourceWithParamNoInteraction(param)
         underTest.verifyResourceWithParamNoInteraction()
