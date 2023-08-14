@@ -96,6 +96,7 @@ public class {{model.stubClassName}} {
         {% else %}
             RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
             {{ addQueryParamsToRequestPatternBuilder(entry) }}
+            {{ addRequestHeadersToRequestPatternBuilder(entry) }}
             {% if entry.value.requestBody is not empty%}
                 requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
             {% endif %}
@@ -115,6 +116,7 @@ public class {{model.stubClassName}} {
         {% else %}
             RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
             {{ addQueryParamsToRequestPatternBuilder(entry) }}
+            {{ addRequestHeadersToRequestPatternBuilder(entry) }}
             {% if entry.value.requestBody is not empty%}
                 requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
             {% endif %}
@@ -251,6 +253,18 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
         {% else %}
             requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
         {% endif %}
+        {% if entry2.value.optional %}
+            }
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro addRequestHeadersToRequestPatternBuilder(entry) %}
+    {% for entry2 in entry.value.requestHeaders %}
+        {% if entry2.value.optional %}
+            if ({{entry2.value.name}} != null) {
+        {% endif %}
+        requestPatternBuilder.withHeader("{{entry2.value.name}}", matching(String.valueOf({{entry2.value.name}})));
         {% if entry2.value.optional %}
             }
         {% endif %}

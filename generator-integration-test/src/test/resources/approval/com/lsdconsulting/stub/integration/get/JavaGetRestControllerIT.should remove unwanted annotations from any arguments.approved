@@ -114,14 +114,14 @@ public class JavaGetRestControllerStub {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
                                             requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                            verify(times, requestPatternBuilder);
+                                                            verify(times, requestPatternBuilder);
             }
 
     public void verifyResourceWithParamAndAnnotationsNoInteraction(java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
                                             requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                            verify(NEVER, requestPatternBuilder);
+                                                            verify(NEVER, requestPatternBuilder);
             }
 
         public void verifyResourceWithParamAndAnnotationsNoInteraction() {
@@ -192,6 +192,7 @@ public class JavaGetRestControllerStub {
         }
     }
 }
+
 
 
 

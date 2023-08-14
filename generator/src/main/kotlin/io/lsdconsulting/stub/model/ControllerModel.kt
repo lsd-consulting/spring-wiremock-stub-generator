@@ -36,10 +36,12 @@ data class ResourceModel(
     var verifyMethodArgumentList: MutableList<String> = mutableListOf(),
     var verifyMethodArgumentListWithTimes: MutableList<String> = mutableListOf(),
     var verifyMethodArgumentListPathVariablesOnly: List<String> = mutableListOf(),
-    var verifyStubCallArgumentList: List<String> = mutableListOf()
+    var verifyStubCallArgumentList: List<String> = mutableListOf(),
+    val requestHeaders: MutableMap<String, ArgumentModel> = mutableMapOf(),
 ) {
     fun getRequestParamModel(name: String): ArgumentModel = requestParameters.getOrPut(name) {ArgumentModel()}
     fun getPathVariableModel(name: String): ArgumentModel = pathVariables.getOrPut(name) {ArgumentModel()}
+    fun getRequestHeaderModel(name: String): ArgumentModel = requestHeaders.getOrPut(name) {ArgumentModel()}
 }
 
 data class ArgumentModel(
