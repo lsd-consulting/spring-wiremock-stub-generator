@@ -49,7 +49,8 @@ class ControllerProcessor : AbstractProcessor() {
         RequestParam::class.java.canonicalName,
         PathVariable::class.java.canonicalName,
         ResponseStatus::class.java.canonicalName,
-        DateTimeFormat::class.java.canonicalName
+        DateTimeFormat::class.java.canonicalName,
+        RequestHeader::class.java.canonicalName,
     )
 
     override fun getSupportedSourceVersion(): SourceVersion {
@@ -186,6 +187,16 @@ class ControllerProcessor : AbstractProcessor() {
                                 style = dateTimeFormatAnnotation.style,
                                 clazz = element.retrieveArgumentType().retrieveGeneric()
                             )
+                    }
+                    element.getAnnotation(RequestHeader::class.java)?.let {
+                        val requestHeader = element.getAnnotation(RequestHeader::class.java)
+                        val argumentName = firstNotNull(requestHeader.name, requestHeader.value, element.simpleName.toString())
+                        val methodName = element.enclosingElement.toString()
+                        val argumentType = element.retrieveArgumentType()
+                        val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
+                        controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).type = argumentType
+                        controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).name = argumentName
+                        controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).optional = !requestHeader.required
                     }
                 }
         }

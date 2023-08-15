@@ -66,14 +66,14 @@ public class JavaPostRestControllerStub {
     public void verifyResourceWithBodyAndAnnotations(final int times, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
                     RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
-                                            requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
+                                                            requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
                         verify(times, requestPatternBuilder);
             }
 
     public void verifyResourceWithBodyAndAnnotationsNoInteraction(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
                     RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
-                                            requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
+                                                            requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
                         verify(NEVER, requestPatternBuilder);
             }
 
@@ -108,14 +108,14 @@ public class JavaPostRestControllerStub {
     public void verifyResourceWithBodyAndAnnotationsOnPathVariables(final int times, java.lang.String param, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
                     RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
-                                            requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
+                                                            requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
                         verify(times, requestPatternBuilder);
             }
 
     public void verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(java.lang.String param, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
                     RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
-                                            requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
+                                                            requestPatternBuilder.withRequestBody(equalToJson(buildBody(greetingRequest)));
                         verify(NEVER, requestPatternBuilder);
             }
 
@@ -187,6 +187,7 @@ public class JavaPostRestControllerStub {
         }
     }
 }
+
 
 
 

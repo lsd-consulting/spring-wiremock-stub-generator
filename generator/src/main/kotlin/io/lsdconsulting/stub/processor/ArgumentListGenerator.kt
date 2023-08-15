@@ -43,10 +43,14 @@ private fun requestParameters(annotatedMethod: ResourceModel) =
         "$type ${it.value.name}"
     }
 
+private fun requestHeaders(annotatedMethod: ResourceModel) =
+    annotatedMethod.requestHeaders.map { "${it.value.type} ${it.value.name}" }
+
 fun verifyArgumentList(annotatedMethod: ResourceModel): MutableList<String> {
     val stubMethodArgumentList = mutableListOf<String>()
     stubMethodArgumentList.addAll(pathVariables(annotatedMethod))
     stubMethodArgumentList.addAll(requestParameters(annotatedMethod))
+    stubMethodArgumentList.addAll(requestHeaders(annotatedMethod))
     annotatedMethod.requestBody?.let {
         stubMethodArgumentList.add("${annotatedMethod.requestBody!!.type} ${annotatedMethod.requestBody!!.name}")
     }
@@ -65,6 +69,7 @@ fun verifyStubCallArgumentList(annotatedMethod: ResourceModel): MutableList<Stri
     stubMethodArgumentList.add("ONCE")
     stubMethodArgumentList.addAll(annotatedMethod.pathVariables.map { "${it.value.name}" })
     stubMethodArgumentList.addAll(annotatedMethod.requestParameters.map { "${it.value.name}" })
+    stubMethodArgumentList.addAll(annotatedMethod.requestHeaders.map { "${it.value.name}" })
     annotatedMethod.requestBody?.let {
         stubMethodArgumentList.add("${annotatedMethod.requestBody!!.name}")
     }
