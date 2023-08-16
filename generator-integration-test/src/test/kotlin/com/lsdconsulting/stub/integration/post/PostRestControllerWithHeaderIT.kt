@@ -7,9 +7,9 @@ import com.lsdconsulting.stub.integration.POST_CONTROLLER_URL
 import com.lsdconsulting.stub.integration.controller.post.PostRestControllerWithHeaderStub
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
-
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.notNullValue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpEntity
@@ -39,7 +39,7 @@ class PostRestControllerWithHeaderIT : BaseRestControllerIT() {
             Unit::class.java
         )
 
-        assertThat(response.statusCode, Matchers.`is`(HttpStatus.OK))
+        assertThat(response.statusCode, `is`(HttpStatus.OK))
         underTest.verifyResourceWithNoBodyNoResponseWithMappedHeader(bearerAuthorizationHeaderValue)
         underTest.verifyResourceWithNoBodyNoResponseWithMappedHeader(1, bearerAuthorizationHeaderValue)
         assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoResponseWithMappedHeaderNoInteraction() }
@@ -64,9 +64,9 @@ class PostRestControllerWithHeaderIT : BaseRestControllerIT() {
             GreetingResponse::class.java
         )
 
-        assertThat(response.body, Matchers.notNullValue())
-        assertThat(response.body?.name, Matchers.`is`(name))
-        assertThat(response.statusCode, Matchers.`is`(HttpStatus.CREATED))
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        assertThat(response.statusCode, `is`(HttpStatus.CREATED))
         underTest.verifyResourceWithNoBodyButWithResponseStatusWithHeader(customHeaderValue)
         underTest.verifyResourceWithNoBodyButWithResponseStatusWithHeader(1, customHeaderValue)
         assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyButWithResponseStatusWithHeaderNoInteraction() }
@@ -96,8 +96,8 @@ class PostRestControllerWithHeaderIT : BaseRestControllerIT() {
             GreetingResponse::class.java
         )
 
-        assertThat(response.body, Matchers.notNullValue())
-        assertThat(response.body?.name, Matchers.`is`(name))
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBodyAndMultiplePathVariablesWithMultipleHeaders(
             param1, param2, bearerAuthorizationHeaderValue, customHeaderValue, greetingRequest
         )
