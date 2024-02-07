@@ -5,9 +5,11 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import static java.lang.String.format;
 import javax.annotation.processing.Generated;
+{% if model.containsDateTimeFormat %}
 import org.springframework.format.AnnotationFormatterFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.Printer;
+{% endif %}
 import java.util.Locale;
 import java.lang.annotation.Annotation;
 
@@ -25,7 +27,9 @@ public class {{model.stubClassName}} {
     private static final int NEVER = 0;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+{% if model.containsDateTimeFormat %}
     private AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory;
+{% endif %}
 
     public {{model.stubClassName}}(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -34,10 +38,12 @@ public class {{model.stubClassName}} {
     public {{model.stubClassName}}() {
     }
 
+{% if model.containsDateTimeFormat %}
     public {{model.stubClassName}}(ObjectMapper objectMapper, AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory) {
         this.objectMapper = objectMapper;
         this.annotationFormatterFactory = annotationFormatterFactory;
     }
+{% endif %}
 
 {% for entry in model.getResources %}
     public static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
@@ -151,6 +157,7 @@ public class {{model.stubClassName}} {
         }
     }
 
+{% if model.containsDateTimeFormat %}
     @SuppressWarnings("unchecked")
     String serialise(Object object, String clazz, String iso, String pattern, String style, String...fallbackPatterns) {
         if (annotationFormatterFactory == null) {
@@ -194,6 +201,7 @@ public class {{model.stubClassName}} {
             throw new RuntimeException(e);
         }
     }
+{% endif %}
 }
 {% macro generateUrl(entry) %}
 String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
