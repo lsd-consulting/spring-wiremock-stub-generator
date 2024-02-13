@@ -78,11 +78,11 @@ public class {{model.stubClassName}} {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-            stub(httpStatus, errorResponse, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
+            stub(httpStatus, response, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
         {% else %}
             MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
         {{ addQueryParamsToMappingBuilder(entry) }}
-            stub(httpStatus, errorResponse, mappingBuilder);
+            stub(httpStatus, response, mappingBuilder);
         {% endif %}
     }
 

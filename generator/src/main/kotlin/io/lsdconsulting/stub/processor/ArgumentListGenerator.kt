@@ -24,7 +24,7 @@ fun stubArgumentListWithRequest(annotatedMethod: ResourceModel): MutableList<Str
 fun stubArgumentListForCustomResponse(annotatedMethod: ResourceModel): MutableList<String> {
     val stubMethodArgumentList = mutableListOf<String>()
     stubMethodArgumentList.add("int httpStatus")
-    stubMethodArgumentList.add("String errorResponse")
+    stubMethodArgumentList.add("String response")
     stubMethodArgumentList.addAll(pathVariables(annotatedMethod))
     stubMethodArgumentList.addAll(requestParameters(annotatedMethod))
     return stubMethodArgumentList

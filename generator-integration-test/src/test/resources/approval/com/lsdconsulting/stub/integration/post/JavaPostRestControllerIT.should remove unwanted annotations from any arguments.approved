@@ -45,10 +45,10 @@ public class JavaPostRestControllerStub {
                                     stub(OK, buildBody(response), mappingBuilder);
             }
     
-    public void resourceWithBodyAndAnnotations(int httpStatus, String errorResponse) {
+    public void resourceWithBodyAndAnnotations(int httpStatus, String response) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
-                        stub(httpStatus, errorResponse, mappingBuilder);
+                        stub(httpStatus, response, mappingBuilder);
             }
 
     public void verifyResourceWithBodyAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
@@ -87,10 +87,10 @@ public class JavaPostRestControllerStub {
                                     stub(OK, buildBody(response), mappingBuilder);
             }
     
-    public void resourceWithBodyAndAnnotationsOnPathVariables(int httpStatus, String errorResponse, java.lang.String param) {
+    public void resourceWithBodyAndAnnotationsOnPathVariables(int httpStatus, String response, java.lang.String param) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
                     MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
-                        stub(httpStatus, errorResponse, mappingBuilder);
+                        stub(httpStatus, response, mappingBuilder);
             }
 
     public void verifyResourceWithBodyAndAnnotationsOnPathVariables(java.lang.String param, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
