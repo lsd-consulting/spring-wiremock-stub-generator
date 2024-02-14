@@ -53,14 +53,14 @@ public class JavaGetRestControllerStub {
             }
 
     
-    public void resourceWithZonedDatetimeAndMultiValue(int httpStatus, String errorResponse, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
+    public void resourceWithZonedDatetimeAndMultiValue(int httpStatus, String response, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
                                             url = url + "?";
                                             url = url + "param=" + serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "");
                                             url = url + "&";
                             url = url + "multiValue=";
                             url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
-                                    stub(httpStatus, errorResponse, get(urlEqualTo(url)));
+                                    stub(httpStatus, response, get(urlEqualTo(url)));
             }
 
     public void verifyResourceWithZonedDatetimeAndMultiValue(java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
@@ -99,11 +99,11 @@ public class JavaGetRestControllerStub {
             }
 
     
-    public void resourceWithParamAndAnnotations(int httpStatus, String errorResponse, java.lang.String param) {
+    public void resourceWithParamAndAnnotations(int httpStatus, String response, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
                                         mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                stub(httpStatus, errorResponse, mappingBuilder);
+                                stub(httpStatus, response, mappingBuilder);
             }
 
     public void verifyResourceWithParamAndAnnotations(java.lang.String param) {
