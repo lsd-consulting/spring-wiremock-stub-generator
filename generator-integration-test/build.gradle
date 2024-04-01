@@ -22,8 +22,9 @@ test {
     }
 }
 
-compileKotlin.kotlinOptions.jvmTarget = "17"
-compileTestKotlin.kotlinOptions.jvmTarget = "17"
+kotlin {
+    jvmToolchain(17)
+}
 
 dependencies {
     kapt project(":generator")
