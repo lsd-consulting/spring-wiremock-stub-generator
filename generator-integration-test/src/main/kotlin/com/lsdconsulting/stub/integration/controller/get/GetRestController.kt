@@ -2,6 +2,7 @@ package com.lsdconsulting.stub.integration.controller.get
 
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import io.lsdconsulting.stub.annotation.GenerateWireMockStub
+import jakarta.validation.constraints.NotBlank
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.format.annotation.DateTimeFormat.ISO.DATE
@@ -9,7 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 import org.springframework.web.bind.annotation.*
 import java.time.OffsetDateTime
 import java.time.ZonedDateTime
-import javax.validation.constraints.NotBlank
 
 
 @GenerateWireMockStub

@@ -18,9 +18,7 @@ import org.springframework.http.HttpEntity
 import java.io.File
 import kotlin.text.Charsets.UTF_8
 
-internal class CustomApprovalsExtension private constructor() : ApprovalsExtension("src/test/resources/approval")
-
-@ExtendWith(CustomApprovalsExtension::class)
+@ExtendWith(ApprovalsExtension::class)
 class JavaPostRestControllerIT : BaseRestControllerIT() {
     private val underTest = JavaPostRestControllerStub(ObjectMapper())
 
