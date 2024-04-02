@@ -23,9 +23,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.text.Charsets.UTF_8
 
-internal class CustomApprovalsExtension private constructor() : ApprovalsExtension("src/test/resources/approval")
-
-@ExtendWith(CustomApprovalsExtension::class)
+@ExtendWith(ApprovalsExtension::class)
 class JavaGetRestControllerIT : BaseRestControllerIT() {
     private val underTest = JavaGetRestControllerStub(ObjectMapper(), Jsr310DateTimeFormatAnnotationFormatterFactory())
 
