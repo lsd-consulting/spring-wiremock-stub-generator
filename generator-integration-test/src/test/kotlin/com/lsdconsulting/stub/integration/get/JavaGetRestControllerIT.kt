@@ -8,9 +8,8 @@ import com.lsdconsulting.stub.integration.controller.get.JavaGetRestControllerSt
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import com.oneeyedmen.okeydoke.Approver
 import com.oneeyedmen.okeydoke.junit5.ApprovalsExtension
-import org.apache.http.client.methods.CloseableHttpResponse
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.hc.client5.http.classic.methods.HttpGet
+import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
@@ -61,7 +60,7 @@ class JavaGetRestControllerIT : BaseRestControllerIT() {
             "$GET_CONTROLLER_URL/resourceWithZonedDatetimeAndMultiValue?param=${param.format(DateTimeFormatter.ISO_DATE_TIME)
             }&multiValue=33&multiValue=44"
         )
-        HttpClientBuilder.create().build().use { client -> client.execute(request) as CloseableHttpResponse }
+        HttpClients.createDefault().use { client -> client.execute(request) { } }
 
         underTest.verifyResourceWithZonedDatetimeAndMultiValue(param, setOf(33, 44))
         assertThrows<VerificationException> { underTest.verifyResourceWithZonedDatetimeAndMultiValueNoInteraction(param, setOf(33, 44)) }

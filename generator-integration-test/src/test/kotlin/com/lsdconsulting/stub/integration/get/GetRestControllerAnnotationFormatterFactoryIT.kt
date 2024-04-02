@@ -6,9 +6,8 @@ import com.lsdconsulting.stub.integration.BaseRestControllerIT
 import com.lsdconsulting.stub.integration.GET_CONTROLLER_URL
 import com.lsdconsulting.stub.integration.controller.get.GetRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingResponse
-import org.apache.http.client.methods.CloseableHttpResponse
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.hc.client5.http.classic.methods.HttpGet
+import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
@@ -23,7 +22,6 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 import java.time.format.DateTimeFormatter.ofPattern
-
 
 class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
     private val underTest = GetRestControllerStub(ObjectMapper(), Jsr310DateTimeFormatAnnotationFormatterFactory())
@@ -100,7 +98,7 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
                 multiValue[1].format(ISO_DATE_TIME)
             }"
         )
-        HttpClientBuilder.create().build().use { client -> client.execute(request) as CloseableHttpResponse }
+        HttpClients.createDefault().use { client -> client.execute(request) { } }
 
         underTest.verifyResourceWithMultiValueZonedDatetime(multiValue)
         assertThrows<VerificationException> { underTest.verifyResourceWithMultiValueZonedDatetimeNoInteraction(multiValue) }
