@@ -190,12 +190,14 @@ class ControllerProcessor : AbstractProcessor() {
                     }
                     element.getAnnotation(RequestHeader::class.java)?.let {
                         val requestHeader = element.getAnnotation(RequestHeader::class.java)
-                        val argumentName = firstNotNull(requestHeader.name, requestHeader.value, element.simpleName.toString())
+                        val argumentName = firstNotNull(element.simpleName.toString())
+                        val headerName = firstNotNull(requestHeader.name, requestHeader.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
                         val argumentType = element.retrieveArgumentType()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).type = argumentType
                         controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).name = argumentName
+                        controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).headerName = headerName
                         controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).optional = !requestHeader.required
                     }
                 }

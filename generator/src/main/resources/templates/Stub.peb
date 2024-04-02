@@ -272,7 +272,7 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
         {% if entry2.value.optional %}
             if ({{entry2.value.name}} != null) {
         {% endif %}
-        requestPatternBuilder.withHeader("{{entry2.value.name}}", matching(String.valueOf({{entry2.value.name}})));
+        requestPatternBuilder.withHeader("{{entry2.value.headerName}}", matching(String.valueOf({{entry2.value.name}})));
         {% if entry2.value.optional %}
             }
         {% endif %}
