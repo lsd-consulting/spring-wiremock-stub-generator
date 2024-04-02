@@ -30,18 +30,18 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-common:1.9.23"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.23"
 
-    implementation "io.pebbletemplates:pebble:3.2.0"
-    implementation 'org.apache.commons:commons-text:1.10.0'
+    implementation "io.pebbletemplates:pebble:3.2.2"
+    implementation 'org.apache.commons:commons-text:1.11.0'
 
-    implementation 'org.springframework:spring-web:5.3.33'
-    implementation 'org.springframework:spring-context:5.3.33'
+    implementation 'org.springframework:spring-web:6.1.5'
+    implementation 'org.springframework:spring-context:6.1.5'
 
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
-    testImplementation 'org.junit.platform:junit-platform-commons:1.9.2'
-    testImplementation 'io.mockk:mockk-jvm:1.13.3'
-    testImplementation 'org.mockito:mockito-core:4.3.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testImplementation 'org.junit.platform:junit-platform-commons:1.10.2'
+    testImplementation 'io.mockk:mockk-jvm:1.13.10'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
     testImplementation 'org.hamcrest:hamcrest:2.2'
 }
 
