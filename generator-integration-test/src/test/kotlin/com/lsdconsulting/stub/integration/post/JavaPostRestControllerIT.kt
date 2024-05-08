@@ -43,6 +43,7 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBodyAndAnnotations(1, greetingRequest)
+        underTest.verifyResourceWithBodyAndAnnotations(1)
         underTest.verifyResourceWithBodyAndAnnotations(greetingRequest)
         assertThrows<VerificationException> {
             underTest.verifyResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
@@ -66,6 +67,7 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBodyAndAnnotationsOnPathVariables(1, param, greetingRequest)
+        underTest.verifyResourceWithBodyAndAnnotationsOnPathVariables(1, param)
         underTest.verifyResourceWithBodyAndAnnotationsOnPathVariables(param, greetingRequest)
         assertThrows<VerificationException> {
             underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)

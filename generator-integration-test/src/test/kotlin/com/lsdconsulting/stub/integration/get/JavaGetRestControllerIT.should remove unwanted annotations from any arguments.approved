@@ -78,6 +78,7 @@ public class JavaGetRestControllerStub {
                             );
             }
 
+    
     public void verifyResourceWithZonedDatetimeAndMultiValueNoInteraction(java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
                                             url = url + "?";
@@ -117,6 +118,7 @@ public class JavaGetRestControllerStub {
                                                             verify(times, requestPatternBuilder);
             }
 
+    
     public void verifyResourceWithParamAndAnnotationsNoInteraction(java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));

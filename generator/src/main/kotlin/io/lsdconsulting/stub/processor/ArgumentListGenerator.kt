@@ -64,6 +64,15 @@ fun verifyArgumentListWithTimes(annotatedMethod: ResourceModel): MutableList<Str
     return stubMethodArgumentList
 }
 
+fun verifyArgumentListWithTimesWithoutBody(annotatedMethod: ResourceModel): MutableList<String> {
+    val stubMethodArgumentList = mutableListOf<String>()
+    stubMethodArgumentList.add("final int times")
+    stubMethodArgumentList.addAll(pathVariables(annotatedMethod))
+    stubMethodArgumentList.addAll(requestParameters(annotatedMethod))
+    stubMethodArgumentList.addAll(requestHeaders(annotatedMethod))
+    return stubMethodArgumentList
+}
+
 fun verifyStubCallArgumentList(annotatedMethod: ResourceModel): MutableList<String> {
     val stubMethodArgumentList = mutableListOf<String>()
     stubMethodArgumentList.add("ONCE")

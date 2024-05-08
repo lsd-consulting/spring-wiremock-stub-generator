@@ -110,6 +110,22 @@ public class {{model.stubClassName}} {
         {% endif %}
     }
 
+    {% if entry.value.verifyMethodArgumentListWithTimesWithoutBody != entry.value.verifyMethodArgumentListWithTimes %}
+    public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimesWithoutBody | join(', ') | raw}}) {
+        {{ generateUrl(entry) }}
+        {% if entry.value.hasMultiValueRequestParams %}
+            {{ addRequestParamsToUrl(entry) }}
+            verify(times, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlEqualTo(url))
+            );
+        {% else %}
+            RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
+            {{ addQueryParamsToRequestPatternBuilder(entry) }}
+            {{ addRequestHeadersToRequestPatternBuilder(entry) }}
+            verify(times, requestPatternBuilder);
+        {% endif %}
+    }
+    {% endif %}
+
     public void verify{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrl(entry) }}
         {% if entry.value.hasMultiValueRequestParams %}

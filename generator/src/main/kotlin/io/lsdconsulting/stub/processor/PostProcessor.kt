@@ -20,6 +20,7 @@ class PostProcessor {
                 annotatedMethod.stubMethodArgumentListForCustomResponse = stubArgumentListForCustomResponse(annotatedMethod)
                 annotatedMethod.verifyMethodArgumentList = verifyArgumentList(annotatedMethod)
                 annotatedMethod.verifyMethodArgumentListWithTimes = verifyArgumentListWithTimes(annotatedMethod)
+                annotatedMethod.verifyMethodArgumentListWithTimesWithoutBody = verifyArgumentListWithTimesWithoutBody(annotatedMethod)
                 annotatedMethod.verifyMethodArgumentListPathVariablesOnly = pathVariables(annotatedMethod)
                 annotatedMethod.verifyStubCallArgumentList = verifyStubCallArgumentList(annotatedMethod)
             }

@@ -36,6 +36,7 @@ data class ResourceModel(
     var stubMethodArgumentListForCustomResponse: MutableList<String> = mutableListOf(),
     var verifyMethodArgumentList: MutableList<String> = mutableListOf(),
     var verifyMethodArgumentListWithTimes: MutableList<String> = mutableListOf(),
+    var verifyMethodArgumentListWithTimesWithoutBody: MutableList<String> = mutableListOf(),
     var verifyMethodArgumentListPathVariablesOnly: List<String> = mutableListOf(),
     var verifyStubCallArgumentList: List<String> = mutableListOf(),
     val requestHeaders: MutableMap<String, ArgumentModel> = mutableMapOf(),
