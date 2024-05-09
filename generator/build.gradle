@@ -6,7 +6,7 @@ plugins {
     id 'maven-publish'
     id 'jacoco'
     id "org.jetbrains.kotlin.jvm"
-    id "org.jetbrains.kotlin.plugin.spring" version "1.9.23"
+    id "org.jetbrains.kotlin.plugin.spring" version "1.9.24"
 }
 
 description = "This is an annotation processor for Spring MVC @RestController annotation. It generates the Java code of the Wiremock stubs."
@@ -24,11 +24,11 @@ dependencyManagement {
 
 dependencies {
     // kotlin
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.23'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.23"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-common:1.9.23"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.23"
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.24'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.24"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-common:1.9.24"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.24"
 
     implementation "io.pebbletemplates:pebble:3.2.2"
     implementation 'org.apache.commons:commons-text:1.12.0'
