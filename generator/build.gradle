@@ -6,7 +6,7 @@ plugins {
     id 'maven-publish'
     id 'jacoco'
     id "org.jetbrains.kotlin.jvm"
-    id "org.jetbrains.kotlin.plugin.spring" version "1.9.23"
+    id "org.jetbrains.kotlin.plugin.spring" version "2.0.0"
 }
 
 description = "This is an annotation processor for Spring MVC @RestController annotation. It generates the Java code of the Wiremock stubs."
@@ -24,22 +24,22 @@ dependencyManagement {
 
 dependencies {
     // kotlin
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.23'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.23"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-common:1.9.23"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.23"
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:2.0.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-common:2.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.0.0"
 
     implementation "io.pebbletemplates:pebble:3.2.2"
     implementation 'org.apache.commons:commons-text:1.12.0'
 
-    implementation 'org.springframework:spring-web:6.1.6'
-    implementation 'org.springframework:spring-context:6.1.6'
+    implementation 'org.springframework:spring-web:6.1.8'
+    implementation 'org.springframework:spring-context:6.1.8'
 
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
-    testImplementation 'io.mockk:mockk-jvm:1.13.10'
-    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'io.mockk:mockk-jvm:1.13.11'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
     testImplementation 'org.hamcrest:hamcrest:2.2'
 }
 
