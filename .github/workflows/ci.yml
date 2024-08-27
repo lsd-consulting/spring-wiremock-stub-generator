@@ -7,10 +7,10 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 jobs:
   build:
     uses: lsd-consulting/shared-workflows/.github/workflows/build.yml@main
