@@ -4,18 +4,18 @@ import io.lsdconsulting.stub.model.ArgumentModel
 import io.lsdconsulting.stub.model.ControllerModel
 import io.lsdconsulting.stub.model.Model
 import io.lsdconsulting.stub.model.ResourceModel
-import org.apache.commons.lang3.RandomUtils.nextInt
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.hasProperty
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
+import kotlin.random.Random
 
 internal class PostProcessorShould {
     private val underTest = PostProcessor()
 
-    private val responseStatus = nextInt()
+    private val responseStatus = Random.nextInt()
 
     @Test
     fun `set response status on unannotated methods when class annotated`() {
@@ -39,7 +39,7 @@ internal class PostProcessorShould {
     fun `not override response status on annotated methods when class annotated`() {
         val controllerModel = ControllerModel(responseStatus = responseStatus)
         val resourceModelWithResponseStatus = ResourceModel()
-        val resourceResponseStatus = nextInt()
+        val resourceResponseStatus = Random.nextInt()
         resourceModelWithResponseStatus.responseStatus = resourceResponseStatus
         controllerModel.resources["1"] = resourceModelWithResponseStatus
         controllerModel.resources["2"] = ResourceModel()
@@ -62,7 +62,7 @@ internal class PostProcessorShould {
     fun `handle unannotated class`() {
         val controllerModel = ControllerModel()
         val resourceModelWithResponseStatus = ResourceModel()
-        val resourceResponseStatus = nextInt()
+        val resourceResponseStatus = Random.nextInt()
         resourceModelWithResponseStatus.responseStatus = resourceResponseStatus
         controllerModel.resources["1"] = resourceModelWithResponseStatus
         controllerModel.resources["2"] = resourceModelWithResponseStatus

@@ -5,9 +5,6 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import static java.lang.String.format;
 import javax.annotation.processing.Generated;
-import org.springframework.format.AnnotationFormatterFactory;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.Printer;
 import java.util.Locale;
 import java.lang.annotation.Annotation;
 
@@ -25,7 +22,6 @@ public class JavaPostRestControllerStub {
     private static final int NEVER = 0;
 
     private ObjectMapper objectMapper = new ObjectMapper();
-    private AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory;
 
     public JavaPostRestControllerStub(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -34,10 +30,6 @@ public class JavaPostRestControllerStub {
     public JavaPostRestControllerStub() {
     }
 
-    public JavaPostRestControllerStub(ObjectMapper objectMapper, AnnotationFormatterFactory<DateTimeFormat> annotationFormatterFactory) {
-        this.objectMapper = objectMapper;
-        this.annotationFormatterFactory = annotationFormatterFactory;
-    }
 
     public static final String RESOURCEWITHBODYANDANNOTATIONS_URL = "/postController/resourceWithBodyAndAnnotations";
 
@@ -53,10 +45,10 @@ public class JavaPostRestControllerStub {
                                     stub(OK, buildBody(response), mappingBuilder);
             }
     
-    public void resourceWithBodyAndAnnotations(int httpStatus, String errorResponse) {
+    public void resourceWithBodyAndAnnotations(int httpStatus, String response) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
-                        stub(httpStatus, errorResponse, mappingBuilder);
+                        stub(httpStatus, response, mappingBuilder);
             }
 
     public void verifyResourceWithBodyAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
@@ -70,6 +62,12 @@ public class JavaPostRestControllerStub {
                         verify(times, requestPatternBuilder);
             }
 
+        public void verifyResourceWithBodyAndAnnotations(final int times) {
+        String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
+                    RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
+                                            verify(times, requestPatternBuilder);
+            }
+    
     public void verifyResourceWithBodyAndAnnotationsNoInteraction(com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
                     RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
@@ -95,10 +93,10 @@ public class JavaPostRestControllerStub {
                                     stub(OK, buildBody(response), mappingBuilder);
             }
     
-    public void resourceWithBodyAndAnnotationsOnPathVariables(int httpStatus, String errorResponse, java.lang.String param) {
+    public void resourceWithBodyAndAnnotationsOnPathVariables(int httpStatus, String response, java.lang.String param) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
                     MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
-                        stub(httpStatus, errorResponse, mappingBuilder);
+                        stub(httpStatus, response, mappingBuilder);
             }
 
     public void verifyResourceWithBodyAndAnnotationsOnPathVariables(java.lang.String param, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
@@ -112,6 +110,12 @@ public class JavaPostRestControllerStub {
                         verify(times, requestPatternBuilder);
             }
 
+        public void verifyResourceWithBodyAndAnnotationsOnPathVariables(final int times, java.lang.String param) {
+        String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
+                    RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
+                                            verify(times, requestPatternBuilder);
+            }
+    
     public void verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(java.lang.String param, com.lsdconsulting.stub.integration.model.GreetingRequest greetingRequest) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
                     RequestPatternBuilder requestPatternBuilder = postRequestedFor(urlPathEqualTo(format(url)));
@@ -143,49 +147,6 @@ public class JavaPostRestControllerStub {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    String serialise(Object object, String clazz, String iso, String pattern, String style, String...fallbackPatterns) {
-        if (annotationFormatterFactory == null) {
-            throw new IllegalStateException("annotationFormatterFactory not set");
-        }
-
-        DateTimeFormat dateTimeFormat= new DateTimeFormat() {
-
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return null;
-            }
-
-            @Override
-            public String style() {
-                return style;
-            }
-
-            @Override
-            public ISO iso() {
-                return ISO.valueOf(iso);
-            }
-
-            @Override
-            public String pattern() {
-                return pattern;
-            }
-
-            @Override
-            public String[] fallbackPatterns() {
-                return fallbackPatterns;
-            }
-        };
-        try {
-            Printer printer = annotationFormatterFactory.getPrinter(
-                                dateTimeFormat,
-                                Class.forName(clazz)
-                            );
-            return printer.print(object, Locale.getDefault());
-        } catch(ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
 
 

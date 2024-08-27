@@ -1,16 +1,12 @@
 name: Nightly Build
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 2 * * *' # run at 2 AM UTC
 jobs:
   build:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'adopt'
-      - name: Build with Gradle
-        run: ./gradlew build
+    uses: lsd-consulting/shared-workflows/.github/workflows/build.yml@main
+    with:
+      operating-system: ubuntu-22.04
+      java-version: '17'
+      artifact-path: '**/build/reports'

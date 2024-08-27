@@ -15,6 +15,8 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.OK
+import org.springframework.http.MediaType.APPLICATION_JSON
 import java.nio.charset.StandardCharsets.UTF_8
 import java.util.*
 
@@ -39,7 +41,7 @@ class PostRestControllerWithHeaderIT : BaseRestControllerIT() {
             Unit::class.java
         )
 
-        assertThat(response.statusCode, `is`(HttpStatus.OK))
+        assertThat(response.statusCode, `is`(OK))
         underTest.verifyResourceWithNoBodyNoResponseWithMappedHeader(bearerAuthorizationHeaderValue)
         underTest.verifyResourceWithNoBodyNoResponseWithMappedHeader(1, bearerAuthorizationHeaderValue)
         assertThrows<VerificationException> { underTest.verifyResourceWithNoBodyNoResponseWithMappedHeaderNoInteraction() }
@@ -88,7 +90,7 @@ class PostRestControllerWithHeaderIT : BaseRestControllerIT() {
         )
 
         val headers = HttpHeaders()
-        headers.setBearerAuth(token)
+        headers.contentType = APPLICATION_JSON
         headers.add(customHeaderName, customHeaderValue)
         val response = restTemplate.postForEntity(
             "$POST_CONTROLLER_URL/resourceWithBodyAndMultiplePathVariablesWithMultipleHeaders/$param1/$param2",
@@ -99,17 +101,17 @@ class PostRestControllerWithHeaderIT : BaseRestControllerIT() {
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBodyAndMultiplePathVariablesWithMultipleHeaders(
-            param1, param2, bearerAuthorizationHeaderValue, customHeaderValue, greetingRequest
+            param1, param2, APPLICATION_JSON.toString(), customHeaderValue, greetingRequest
         )
         underTest.verifyResourceWithBodyAndMultiplePathVariablesWithMultipleHeaders(
-            1, param1, param2, bearerAuthorizationHeaderValue, customHeaderValue, greetingRequest
+            1, param1, param2, APPLICATION_JSON.toString(), customHeaderValue, greetingRequest
         )
         assertThrows<VerificationException> {
             underTest.verifyResourceWithBodyAndMultiplePathVariablesWithMultipleHeadersNoInteraction(param1, param2)
         }
         assertThrows<VerificationException> {
             underTest.verifyResourceWithBodyAndMultiplePathVariablesWithMultipleHeadersNoInteraction(
-                param1, param2, bearerAuthorizationHeaderValue, customHeaderValue, greetingRequest
+                param1, param2, APPLICATION_JSON.toString(), customHeaderValue, greetingRequest
             )
         }
     }

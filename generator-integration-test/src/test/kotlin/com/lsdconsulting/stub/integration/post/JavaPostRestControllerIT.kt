@@ -18,9 +18,7 @@ import org.springframework.http.HttpEntity
 import java.io.File
 import kotlin.text.Charsets.UTF_8
 
-internal class CustomApprovalsExtension private constructor() : ApprovalsExtension("src/test/resources/approval")
-
-@ExtendWith(CustomApprovalsExtension::class)
+@ExtendWith(ApprovalsExtension::class)
 class JavaPostRestControllerIT : BaseRestControllerIT() {
     private val underTest = JavaPostRestControllerStub(ObjectMapper())
 
@@ -45,6 +43,7 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBodyAndAnnotations(1, greetingRequest)
+        underTest.verifyResourceWithBodyAndAnnotations(1)
         underTest.verifyResourceWithBodyAndAnnotations(greetingRequest)
         assertThrows<VerificationException> {
             underTest.verifyResourceWithBodyAndAnnotationsNoInteraction(greetingRequest)
@@ -68,6 +67,7 @@ class JavaPostRestControllerIT : BaseRestControllerIT() {
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithBodyAndAnnotationsOnPathVariables(1, param, greetingRequest)
+        underTest.verifyResourceWithBodyAndAnnotationsOnPathVariables(1, param)
         underTest.verifyResourceWithBodyAndAnnotationsOnPathVariables(param, greetingRequest)
         assertThrows<VerificationException> {
             underTest.verifyResourceWithBodyAndAnnotationsOnPathVariablesNoInteraction(param, greetingRequest)

@@ -24,14 +24,14 @@ Add the following dependencies to a Java project:
 ```groovy
     annotationProcessor 'io.github.lsd-consulting:spring-wiremock-stub-generator:x.x.x'
     compileOnly 'io.github.lsd-consulting:spring-wiremock-stub-generator:x.x.x'
-    compileOnly 'com.github.tomakehurst:wiremock:2.27.2'
+    compileOnly 'org.wiremock:wiremock:3.5.2'
 ```
 
 or these for a Kotlin project:
 ```groovy
     kapt 'io.github.lsd-consulting:spring-wiremock-stub-generator:x.x.x'
     compileOnly 'io.github.lsd-consulting:spring-wiremock-stub-generator:x.x.x'
-    compileOnly 'com.github.tomakehurst:wiremock:2.27.2'
+    compileOnly 'org.wiremock:wiremock:3.5.2'
 ```
 
 The above will set up the annotation processor which will analyse the source code and generate the Java WireMock stubs.

@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "fix"
+    groups:
+      lsd-dependencies:
+        patterns:
+          - "io.github.lsd-consulting:*"
+      springframework-dependencies:
+        patterns:
+          - "org.springframework.*"
+      other-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "io.github.lsd-consulting:*"
+          - "org.springframework.*"

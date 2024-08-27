@@ -1,18 +1,19 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id 'org.springframework.boot' version '2.7.10' apply false
+    id 'org.springframework.boot' version '3.2.5' apply false
     id 'signing'
     id 'maven-publish'
     id 'jacoco'
     id "org.jetbrains.kotlin.jvm"
-    id "org.jetbrains.kotlin.plugin.spring" version "1.7.10"
+    id "org.jetbrains.kotlin.plugin.spring" version "1.9.23"
 }
 
 description = "This is an annotation processor for Spring MVC @RestController annotation. It generates the Java code of the Wiremock stubs."
 
-compileKotlin.kotlinOptions.jvmTarget = "17"
-compileTestKotlin.kotlinOptions.jvmTarget = "17"
+kotlin {
+    jvmToolchain(17)
+}
 
 apply plugin: 'io.spring.dependency-management'
 dependencyManagement {
@@ -23,33 +24,32 @@ dependencyManagement {
 
 dependencies {
     // kotlin
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.7.10'
-    apiElements 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.10"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-common:1.7.10"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.23'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.23"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-common:1.9.23"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.23"
 
-    implementation "io.pebbletemplates:pebble:3.2.0"
-    implementation 'org.apache.commons:commons-text:1.10.0'
+    implementation "io.pebbletemplates:pebble:3.2.2"
+    implementation 'org.apache.commons:commons-text:1.12.0'
 
-    implementation 'org.springframework:spring-web:5.3.26'
-    implementation 'org.springframework:spring-context:5.3.26'
+    implementation 'org.springframework:spring-web:6.1.6'
+    implementation 'org.springframework:spring-context:6.1.6'
 
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
-    testImplementation 'org.junit.platform:junit-platform-commons:1.9.2'
-    testImplementation 'io.mockk:mockk-jvm:1.13.3'
-    testImplementation 'org.mockito:mockito-core:4.3.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'io.mockk:mockk-jvm:1.13.10'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
     testImplementation 'org.hamcrest:hamcrest:2.2'
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
     archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
-task javadocJar(type: Jar) {
+tasks.register('javadocJar', Jar) {
     archiveClassifier = 'javadoc'
     from javadoc
 }
@@ -83,9 +83,9 @@ jacoco {
 
 jacocoTestReport {
     reports {
-        xml.enabled(true)
-        html.enabled(true)
-        html.destination(project.provider(() -> new File("${project.buildDir}/reports/coverage")))
+        xml.required = true
+        html.required = true
+        html.outputLocation = layout.buildDirectory.dir("reports/coverage")
     }
     dependsOn test
 }

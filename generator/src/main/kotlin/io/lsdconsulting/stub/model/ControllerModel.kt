@@ -3,7 +3,7 @@ package io.lsdconsulting.stub.model
 import org.springframework.http.HttpMethod
 
 data class Model(
-    val controllers: MutableMap<String, ControllerModel> = mutableMapOf()
+    val controllers: MutableMap<String, ControllerModel> = mutableMapOf(),
 ) {
     fun getControllerModel(name: String): ControllerModel = controllers.getOrPut(name) {ControllerModel()}
 }
@@ -14,7 +14,8 @@ data class ControllerModel(
     var stubClassName: String? = null,
     var rootResource: String? = null,
     var responseStatus: Int? = null,
-    val resources: MutableMap<String, ResourceModel> = mutableMapOf()
+    val resources: MutableMap<String, ResourceModel> = mutableMapOf(),
+    var containsDateTimeFormat: Boolean = false
 ) {
     fun getResourceModel(name: String): ResourceModel = resources.getOrPut(name) {ResourceModel()}
 }
@@ -35,6 +36,7 @@ data class ResourceModel(
     var stubMethodArgumentListForCustomResponse: MutableList<String> = mutableListOf(),
     var verifyMethodArgumentList: MutableList<String> = mutableListOf(),
     var verifyMethodArgumentListWithTimes: MutableList<String> = mutableListOf(),
+    var verifyMethodArgumentListWithTimesWithoutBody: MutableList<String> = mutableListOf(),
     var verifyMethodArgumentListPathVariablesOnly: List<String> = mutableListOf(),
     var verifyStubCallArgumentList: List<String> = mutableListOf(),
     val requestHeaders: MutableMap<String, ArgumentModel> = mutableMapOf(),
@@ -46,10 +48,11 @@ data class ResourceModel(
 
 data class ArgumentModel(
     var name: String? = null,
+    var headerName: String? = null,
     var type: String? = null,
     var iterable: Boolean = false,
     var optional: Boolean = false,
-    var dateTimeFormatAnnotation: DateTimeFormatAnnotation? = null
+    var dateTimeFormatAnnotation: DateTimeFormatAnnotation? = null,
 ) {
 }
 
@@ -58,7 +61,7 @@ data class DateTimeFormatAnnotation(
     val fallbackPatterns: Array<String>?,
     val pattern: String?,
     val style: String?,
-    val clazz: String?
+    val clazz: String?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

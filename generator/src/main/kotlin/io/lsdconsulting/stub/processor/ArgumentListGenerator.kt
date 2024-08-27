@@ -24,7 +24,7 @@ fun stubArgumentListWithRequest(annotatedMethod: ResourceModel): MutableList<Str
 fun stubArgumentListForCustomResponse(annotatedMethod: ResourceModel): MutableList<String> {
     val stubMethodArgumentList = mutableListOf<String>()
     stubMethodArgumentList.add("int httpStatus")
-    stubMethodArgumentList.add("String errorResponse")
+    stubMethodArgumentList.add("String response")
     stubMethodArgumentList.addAll(pathVariables(annotatedMethod))
     stubMethodArgumentList.addAll(requestParameters(annotatedMethod))
     return stubMethodArgumentList
@@ -61,6 +61,15 @@ fun verifyArgumentListWithTimes(annotatedMethod: ResourceModel): MutableList<Str
     val stubMethodArgumentList = mutableListOf<String>()
     stubMethodArgumentList.add("final int times")
     stubMethodArgumentList.addAll(verifyArgumentList(annotatedMethod))
+    return stubMethodArgumentList
+}
+
+fun verifyArgumentListWithTimesWithoutBody(annotatedMethod: ResourceModel): MutableList<String> {
+    val stubMethodArgumentList = mutableListOf<String>()
+    stubMethodArgumentList.add("final int times")
+    stubMethodArgumentList.addAll(pathVariables(annotatedMethod))
+    stubMethodArgumentList.addAll(requestParameters(annotatedMethod))
+    stubMethodArgumentList.addAll(requestHeaders(annotatedMethod))
     return stubMethodArgumentList
 }
 

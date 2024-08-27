@@ -2,6 +2,9 @@ package com.lsdconsulting.stub.integration.controller.get;
 
 import com.lsdconsulting.stub.integration.model.GreetingResponse;
 import io.lsdconsulting.stub.annotation.GenerateWireMockStub;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
