@@ -254,15 +254,17 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
 {% macro addQueryParamsToMappingBuilder(entry) %}
     {% for entry2 in entry.value.requestParameters %}
         {% if entry2.value.optional %}
-            if ({{entry2.value.name}} != null) {
-        {% endif %}
-        {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-            mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")));
+            {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).or(absent()));
+            {% else %}
+                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})).or(absent()));
+            {% endif %}
         {% else %}
-            mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
-        {% endif %}
-        {% if entry2.value.optional %}
-            }
+            {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")));
+            {% else %}
+                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% endmacro %}

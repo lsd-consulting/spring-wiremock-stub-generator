@@ -372,7 +372,9 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
-    fun `should handle get mapping with optional empty boolean request param`() {
+    fun `should handle get mapping with optional empty boolean request param - stubbed null and requested without param`() {
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(false)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(true)
         underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(null)
         underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction()
         underTest.resourceWithOptionalBooleanRequestParam(greetingResponse, null)
@@ -386,13 +388,40 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithOptionalBooleanRequestParam(1, null)
         underTest.verifyResourceWithOptionalBooleanRequestParam(null)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(false)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(true)
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(null) }
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction() }
     }
 
     @Test
-    fun `should handle get mapping with optional boolean request param`() {
+    fun `should handle get mapping with optional boolean request param - stubbed false and requested without param`() {
         underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(false)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(true)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(null)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction()
+        underTest.resourceWithOptionalBooleanRequestParam(greetingResponse, false)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOptionalBooleanRequestParam",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyResourceWithOptionalBooleanRequestParam(1, null)
+        underTest.verifyResourceWithOptionalBooleanRequestParam(null)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(false)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(true)
+        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(null) }
+        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction() }
+    }
+
+    @Test
+    fun `should handle get mapping with optional boolean request param - stubbed false and requested false`() {
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(false)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(true)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(null)
         underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction()
         underTest.resourceWithOptionalBooleanRequestParam(greetingResponse, false)
 
@@ -405,6 +434,8 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         assertThat(response.body?.name, `is`(name))
         underTest.verifyResourceWithOptionalBooleanRequestParam(1, false)
         underTest.verifyResourceWithOptionalBooleanRequestParam(false)
+        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(true)
+//        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(null) // Doesn't pass as this effectively verifies the resource was called with no parameter which is not true
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(false) }
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction() }
     }
