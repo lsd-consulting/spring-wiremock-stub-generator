@@ -95,16 +95,16 @@ public class JavaGetRestControllerStub {
     public void resourceWithParamAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingResponse response, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
         MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
-                                                    mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                stub(OK, buildBody(response), mappingBuilder);
+                                                            mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                    stub(OK, buildBody(response), mappingBuilder);
             }
 
     
     public void resourceWithParamAndAnnotations(int httpStatus, String response, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
-                                        mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                stub(httpStatus, response, mappingBuilder);
+                                                mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                    stub(httpStatus, response, mappingBuilder);
             }
 
     public void verifyResourceWithParamAndAnnotations(java.lang.String param) {
