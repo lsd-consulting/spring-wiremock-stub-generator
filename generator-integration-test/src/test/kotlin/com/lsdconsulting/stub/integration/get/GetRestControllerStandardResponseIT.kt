@@ -435,7 +435,10 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         underTest.verifyResourceWithOptionalBooleanRequestParam(1, false)
         underTest.verifyResourceWithOptionalBooleanRequestParam(false)
         underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(true)
-//        underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(null) // Doesn't pass as this effectively verifies the resource was called with no parameter which is not true
+        assertThrows<VerificationException> {
+            // Doesn't pass as this effectively verifies the resource was called with no parameter which is not true
+            underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(null)
+        }
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction(false) }
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalBooleanRequestParamNoInteraction() }
     }

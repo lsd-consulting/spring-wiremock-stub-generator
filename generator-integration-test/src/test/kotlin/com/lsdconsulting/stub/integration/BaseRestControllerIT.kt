@@ -12,10 +12,10 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.client.RestTemplate
 import kotlin.random.Random
 
-const val GET_CONTROLLER_URL = "http://localhost:8080/getController"
-const val POST_CONTROLLER_URL = "http://localhost:8080/postController"
-const val PUT_CONTROLLER_URL = "http://localhost:8080/putController"
-const val DELETE_CONTROLLER_URL = "http://localhost:8080/deleteController"
+const val GET_CONTROLLER_URL = "http://localhost:8099/getController"
+const val POST_CONTROLLER_URL = "http://localhost:8099/postController"
+const val PUT_CONTROLLER_URL = "http://localhost:8099/putController"
+const val DELETE_CONTROLLER_URL = "http://localhost:8099/deleteController"
 
 open class BaseRestControllerIT {
     val restTemplate = RestTemplate()
@@ -40,7 +40,7 @@ open class BaseRestControllerIT {
     fun setup() = WireMock.reset()
 
     companion object {
-        private var wireMockServer: WireMockServer = WireMockServer(WireMockConfiguration.options().port(8080))
+        private var wireMockServer: WireMockServer = WireMockServer(WireMockConfiguration.options().port(8099))
 
         @JvmStatic
         @BeforeAll
@@ -48,6 +48,7 @@ open class BaseRestControllerIT {
             if (!wireMockServer.isRunning) {
                 wireMockServer.start()
             }
+            WireMock.configureFor(wireMockServer.port())
         }
     }
 }
