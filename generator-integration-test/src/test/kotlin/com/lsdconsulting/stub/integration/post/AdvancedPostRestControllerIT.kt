@@ -7,7 +7,7 @@ import com.lsdconsulting.stub.integration.POST_CONTROLLER_URL
 import com.lsdconsulting.stub.integration.controller.post.AdvancedPostRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingRequest
 import com.lsdconsulting.stub.integration.model.GreetingResponse
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
@@ -44,7 +44,7 @@ class AdvancedPostRestControllerIT : BaseRestControllerIT() {
 
     @Test
     fun `should stub a post method with a mapping matching the request body`() {
-        val additionalGreetingRequest = GreetingRequest(name = randomAlphabetic(10))
+        val additionalGreetingRequest = GreetingRequest(name = secure().nextAlphabetic(10))
         underTest.verifyResourceWithBodyNoInteraction(greetingRequest)
         underTest.verifyResourceWithBodyNoInteraction(additionalGreetingRequest)
         underTest.verifyResourceWithBodyNoInteraction()

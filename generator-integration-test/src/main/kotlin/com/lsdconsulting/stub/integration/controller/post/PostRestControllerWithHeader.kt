@@ -3,7 +3,7 @@ package com.lsdconsulting.stub.integration.controller.post
 import com.lsdconsulting.stub.integration.model.GreetingRequest
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import io.lsdconsulting.stub.annotation.GenerateWireMockStub
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.HttpStatus
@@ -24,7 +24,7 @@ class PostRestControllerWithHeader {
     @PostMapping("/resourceWithNoBodyButWithResponseStatusWithHeader")
     fun resourceWithNoBodyButWithResponseStatusWithHeader(
         @RequestHeader custom_header: String,
-    ) = GreetingResponse(name = randomAlphabetic(10))
+    ) = GreetingResponse(name = secure().nextAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @PostMapping("/resourceWithBodyAndMultiplePathVariablesWithMultipleHeaders/{param1}/{param2}")
@@ -34,5 +34,5 @@ class PostRestControllerWithHeader {
         @PathVariable param2: String,
         @RequestHeader(CONTENT_TYPE) token: String,
         @RequestHeader custom_header: String,
-    ) = GreetingResponse(name = randomAlphabetic(10))
+    ) = GreetingResponse(name = secure().nextAlphabetic(10))
 }

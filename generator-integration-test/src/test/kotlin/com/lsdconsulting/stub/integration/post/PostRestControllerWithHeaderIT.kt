@@ -6,7 +6,7 @@ import com.lsdconsulting.stub.integration.BaseRestControllerIT
 import com.lsdconsulting.stub.integration.POST_CONTROLLER_URL
 import com.lsdconsulting.stub.integration.controller.post.PostRestControllerWithHeaderStub
 import com.lsdconsulting.stub.integration.model.GreetingResponse
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
@@ -22,7 +22,7 @@ import java.util.*
 
 class PostRestControllerWithHeaderIT : BaseRestControllerIT() {
     private val underTest = PostRestControllerWithHeaderStub(ObjectMapper())
-    private val token = Base64.getEncoder().encodeToString(randomAlphabetic(10).toByteArray(UTF_8))
+    private val token = Base64.getEncoder().encodeToString(secure().nextAlphabetic(10).toByteArray(UTF_8))
     private val bearerAuthorizationHeaderValue = "Bearer $token"
     private val customHeaderName = "custom_header"
     private val customHeaderValue = "custom_header_value"

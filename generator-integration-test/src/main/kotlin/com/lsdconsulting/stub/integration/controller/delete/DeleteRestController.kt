@@ -3,7 +3,7 @@ package com.lsdconsulting.stub.integration.controller.delete
 import com.lsdconsulting.stub.integration.model.GreetingRequest
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import io.lsdconsulting.stub.annotation.GenerateWireMockStub
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.web.bind.annotation.*
 
@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/deleteController")
 class DeleteRestController {
 
-    @Suppress("UNUSED_PARAMETER")
     @DeleteMapping("/resourceWithNoBody")
-    fun resourceWithNoBody() = GreetingResponse(name = randomAlphabetic(10))
+    fun resourceWithNoBody() = GreetingResponse(name = secure().nextAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @DeleteMapping("/resourceWithRequestBody")

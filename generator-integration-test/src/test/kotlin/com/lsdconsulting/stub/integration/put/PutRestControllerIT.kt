@@ -6,7 +6,7 @@ import com.lsdconsulting.stub.integration.BaseRestControllerIT
 import com.lsdconsulting.stub.integration.PUT_CONTROLLER_URL
 import com.lsdconsulting.stub.integration.controller.put.PutRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingRequest
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.nullValue
@@ -61,7 +61,7 @@ class PutRestControllerIT : BaseRestControllerIT() {
 
     @Test
     fun `should stub a put method with a mapping matching the request body`() {
-        val additionalGreetingRequest = GreetingRequest(name = randomAlphabetic(10))
+        val additionalGreetingRequest = GreetingRequest(name = secure().nextAlphabetic(10))
         underTest.verifyResourceWithRequestBodyNoInteraction(greetingRequest)
         underTest.resourceWithRequestBody(greetingRequest)
 
