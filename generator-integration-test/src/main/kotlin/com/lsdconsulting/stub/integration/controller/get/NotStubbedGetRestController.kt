@@ -1,7 +1,7 @@
 package com.lsdconsulting.stub.integration.controller.get
 
 import com.lsdconsulting.stub.integration.model.GreetingResponse
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.apache.commons.lang3.RandomStringUtils.secure
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -15,5 +15,5 @@ class NotStubbedGetRestController {
         @PathVariable param2: String,
         @RequestParam param3: String,
         @RequestParam param4: String,
-    ) = GreetingResponse(name = randomAlphabetic(10))
+    ) = GreetingResponse(name = secure().nextAlphabetic(10))
 }
