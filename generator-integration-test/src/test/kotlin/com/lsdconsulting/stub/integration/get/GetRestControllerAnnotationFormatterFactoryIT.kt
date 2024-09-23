@@ -11,7 +11,6 @@ import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.format.datetime.standard.Jsr310DateTimeFormatAnnotationFormatterFactory
@@ -46,12 +45,11 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
     }
 
     @Test
-    @Disabled
     fun `should handle get mapping with OffsetDateTime request param for different timezone`() {
         val param = OffsetDateTime.now(ZoneId.of("CET"))
-        underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteraction(param)
-        underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteraction()
-        underTest.resourceWithOffsetDateTimeAndMultiValue(greetingResponse, param)
+        underTest.verifyResourceWithOffsetDateTimeNoInteraction(param)
+        underTest.verifyResourceWithOffsetDateTimeNoInteraction()
+        underTest.resourceWithOffsetDateTime(greetingResponse, param)
 
         val response = restTemplate.exchange(
             "$GET_CONTROLLER_URL/resourceWithOffsetDateTime?param=${param.format(ISO_DATE_TIME)}",
@@ -60,9 +58,9 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyResourceWithOffsetDateTimeAndMultiValue(param)
-        assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteraction(param) }
-        assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeAndMultiValueNoInteraction() }
+        underTest.verifyResourceWithOffsetDateTime(param)
+        assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeNoInteraction(param) }
+        assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeNoInteraction() }
     }
 
     @Test
