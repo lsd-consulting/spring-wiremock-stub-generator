@@ -276,7 +276,6 @@ if ({{entry2.value.name}} != null) {
 if ({{entry2.value.name}} != null) {
         {% endif %}
         {% if entry2.value.iterable %}
-            url = url + "{{entry2.value.name}}=";
             {% if entry2.value.dateTimeFormatAnnotation is not empty %}
             requestPatternBuilder.withQueryParam("{{entry2.value.name}}", havingExactly({{entry2.value.name}}.stream().map(x -> serialise(x, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).toArray(String[]::new)));
             {% else %}

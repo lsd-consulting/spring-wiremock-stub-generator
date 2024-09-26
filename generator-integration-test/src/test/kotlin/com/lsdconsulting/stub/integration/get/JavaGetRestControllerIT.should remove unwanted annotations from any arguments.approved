@@ -79,8 +79,7 @@ public class JavaGetRestControllerStub {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
         RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
                                                                 requestPatternBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
-                                                            url = url + "multiValue=";
-                        requestPatternBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
+                                                                        requestPatternBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
                                             verify(times, requestPatternBuilder
                             );
             }
@@ -90,8 +89,7 @@ public class JavaGetRestControllerStub {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
         RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
                                                                 requestPatternBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
-                                                            url = url + "multiValue=";
-                        requestPatternBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
+                                                                        requestPatternBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
                                             verify(NEVER, requestPatternBuilder
                             );
             }
