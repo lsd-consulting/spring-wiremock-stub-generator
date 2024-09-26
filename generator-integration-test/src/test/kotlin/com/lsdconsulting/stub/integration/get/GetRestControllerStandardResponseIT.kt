@@ -8,7 +8,6 @@ import com.lsdconsulting.stub.integration.controller.get.GetRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.core.ParameterizedTypeReference
@@ -513,7 +512,7 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyResourceWithOptionalMultiValueRequestParams(1,  setOf(11, 22), 5, true, setOf(33, 44),)
+        underTest.verifyResourceWithOptionalMultiValueRequestParams(1,  setOf(11, 22), 5, true, setOf(33, 44))
         underTest.verifyResourceWithOptionalMultiValueRequestParams(setOf(11, 22), 5, true, setOf(33, 44))
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalMultiValueRequestParamsNoInteraction(setOf(11, 22), 5, true, setOf(33, 44)) }
     }
@@ -532,13 +531,12 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
         }
 
         // But the verification still passes
-        underTest.verifyResourceWithOptionalMultiValueRequestParams(1,  setOf(11, 22), 5, true, setOf(33, 44),)
+        underTest.verifyResourceWithOptionalMultiValueRequestParams(1,  setOf(11, 22), 5, true, setOf(33, 44))
         underTest.verifyResourceWithOptionalMultiValueRequestParams(setOf(11, 22), 5, true, setOf(33, 44))
         assertThrows<VerificationException> { underTest.verifyResourceWithOptionalMultiValueRequestParamsNoInteraction(setOf(11, 22), 5, true, setOf(33, 44)) }
     }
 
     @Test
-    @Disabled
     fun `should handle get mapping with missing optional multi-value request params`() {
         underTest.verifyResourceWithOptionalMultiValueRequestParamsNoInteraction(null, null, true, setOf(33, 44))
         underTest.resourceWithOptionalMultiValueRequestParams(greetingResponse, null, null, true, setOf(33, 44))

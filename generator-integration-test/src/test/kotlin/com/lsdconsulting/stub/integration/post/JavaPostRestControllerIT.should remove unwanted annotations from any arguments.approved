@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import static java.lang.String.format;
 import javax.annotation.processing.Generated;
+import java.util.List;
 import java.util.Locale;
 import java.lang.annotation.Annotation;
 

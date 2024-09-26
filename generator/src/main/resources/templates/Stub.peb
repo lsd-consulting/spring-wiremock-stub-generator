@@ -10,6 +10,7 @@ import org.springframework.format.AnnotationFormatterFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.Printer;
 {% endif %}
+import java.util.List;
 import java.util.Locale;
 import java.lang.annotation.Annotation;
 
@@ -195,6 +196,15 @@ public class {{model.stubClassName}} {
             throw new RuntimeException(e);
         }
     }
+
+    public String joinWithFirstSeparator(String firstSep, String sep, List<String> strings) {
+        if (strings.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder(strings.get(0));
+        for (int i = 1; i < strings.size(); i++) {
+            sb.append(i == 1 ? firstSep : sep).append(strings.get(i));
+        }
+        return sb.toString();
+    }
 {% endif %}
 }
 {% macro generateUrlWithPathVariables(entry) %}
@@ -208,17 +218,21 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
 {% macro addRequestParamsToUrl(entry) %}
     {% for entry2 in entry.value.requestParameters %}
 if ({{entry2.value.name}} != null) {
-        {% if loop.first %}
-            url = url + "?";
-        {% else %}
-            url = url + "&";
-        {% endif %}
+        if (!url.contains("?")) { url = url + "?"; } else { url = url + "&"; }
         {% if entry2.value.iterable %}
             url = url + "{{entry2.value.name}}=";
             {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-                url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> serialise(x, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).collect(toList()));
+                if (!url.contains("?")) {
+                    url = url + joinWithFirstSeparator("?{{entry2.value.name}}=", "&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> serialise(x, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).collect(toList()));
+                } else {
+                    url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> serialise(x, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).collect(toList()));
+                }
             {% else %}
-                url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
+                if (!url.contains("?")) {
+                    url = url + joinWithFirstSeparator("?{{entry2.value.name}}=", "&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
+                } else {
+                    url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));
+                }
             {% endif %}
         {% else %}
             {% if entry2.value.dateTimeFormatAnnotation is not empty %}
