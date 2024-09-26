@@ -77,30 +77,22 @@ public class JavaGetRestControllerStub {
 
     public void verifyResourceWithZonedDatetimeAndMultiValue(final int times, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
-        RequestPatternBuilder requestedFor = getRequestedFor(urlPathEqualTo(url));
-                        if (param != null) {
-                                requestedFor.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
-                    }
-    if (multiValue != null) {
-                    url = url + "multiValue=";
-                        requestedFor.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
-                    }
-                verify(times, requestedFor
+        RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
+                                                                requestPatternBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
+                                                            url = url + "multiValue=";
+                        requestPatternBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
+                                            verify(times, requestPatternBuilder
                             );
             }
 
     
     public void verifyResourceWithZonedDatetimeAndMultiValueNoInteraction(java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
-        RequestPatternBuilder requestedFor = getRequestedFor(urlPathEqualTo(url));
-                        if (param != null) {
-                                requestedFor.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
-                    }
-    if (multiValue != null) {
-                    url = url + "multiValue=";
-                        requestedFor.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
-                    }
-                verify(NEVER, requestedFor
+        RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
+                                                                requestPatternBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
+                                                            url = url + "multiValue=";
+                        requestPatternBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
+                                            verify(NEVER, requestPatternBuilder
                             );
             }
 
@@ -127,19 +119,17 @@ public class JavaGetRestControllerStub {
 
     public void verifyResourceWithParamAndAnnotations(final int times, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
-        RequestPatternBuilder requestedFor = getRequestedFor(urlPathEqualTo(url));
-                    RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
-                                            requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                                            verify(times, requestPatternBuilder);
+        RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
+                                                                requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                                                        verify(times, requestPatternBuilder);
             }
 
     
     public void verifyResourceWithParamAndAnnotationsNoInteraction(java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
-        RequestPatternBuilder requestedFor = getRequestedFor(urlPathEqualTo(url));
-                    RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
-                                            requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                                            verify(NEVER, requestPatternBuilder);
+        RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
+                                                                requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                                                        verify(NEVER, requestPatternBuilder);
             }
 
         public void verifyResourceWithParamAndAnnotationsNoInteraction() {
@@ -210,7 +200,6 @@ public class JavaGetRestControllerStub {
         }
     }
 }
-
 
 
 

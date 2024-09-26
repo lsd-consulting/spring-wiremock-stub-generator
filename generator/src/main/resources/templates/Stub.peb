@@ -101,8 +101,7 @@ public class {{model.stubClassName}} {
                 {% endif %}
             );
         {% else %}
-            RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
-            {{ addQueryParamsToRequestPatternBuilder(entry) }}
+            {{ addRequestParamsToPatternBuilder(entry) }}
             {{ addRequestHeadersToRequestPatternBuilder(entry) }}
             {% if entry.value.requestBody is not empty%}
                 requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
@@ -119,8 +118,7 @@ public class {{model.stubClassName}} {
             {{ addRequestParamsToPatternBuilder(entry) }}
             verify(times, requestPatternBuilder);
         {% else %}
-            RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
-            {{ addQueryParamsToRequestPatternBuilder(entry) }}
+            {{ addRequestParamsToPatternBuilder(entry) }}
             {{ addRequestHeadersToRequestPatternBuilder(entry) }}
             verify(times, requestPatternBuilder);
         {% endif %}
@@ -138,8 +136,7 @@ public class {{model.stubClassName}} {
                 {% endif %}
             );
         {% else %}
-            RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
-            {{ addQueryParamsToRequestPatternBuilder(entry) }}
+            {{ addRequestParamsToPatternBuilder(entry) }}
             {{ addRequestHeadersToRequestPatternBuilder(entry) }}
             {% if entry.value.requestBody is not empty%}
                 requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
@@ -273,25 +270,11 @@ if ({{entry2.value.name}} != null) {
     {% endfor %}
 {% endmacro %}
 
-{% macro addQueryParamsToRequestPatternBuilder(entry) %}
-    {% for entry2 in entry.value.requestParameters %}
-        {% if entry2.value.optional %}
-            if ({{entry2.value.name}} != null) {
-        {% endif %}
-        {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-            requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")));
-        {% else %}
-            requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
-        {% endif %}
-        {% if entry2.value.optional %}
-            }
-        {% endif %}
-    {% endfor %}
-{% endmacro %}
-
 {% macro addRequestParamsToPatternBuilder(entry) %}
     {% for entry2 in entry.value.requestParameters %}
+        {% if entry2.value.optional %}
 if ({{entry2.value.name}} != null) {
+        {% endif %}
         {% if entry2.value.iterable %}
             url = url + "{{entry2.value.name}}=";
             {% if entry2.value.dateTimeFormatAnnotation is not empty %}
@@ -299,14 +282,16 @@ if ({{entry2.value.name}} != null) {
             {% else %}
             requestPatternBuilder.withQueryParam("{{entry2.value.name}}", havingExactly({{entry2.value.name}}.stream().map(x -> x.toString()).toArray(String[]::new)));
             {% endif %}
-            {% else %}
+        {% else %}
             {% if entry2.value.dateTimeFormatAnnotation is not empty %}
             requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")));
             {% else %}
             requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
             {% endif %}
         {% endif %}
+        {% if entry2.value.optional %}
 }
+        {% endif %}
     {% endfor %}
 {% endmacro %}
 
