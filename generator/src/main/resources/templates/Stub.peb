@@ -95,56 +95,33 @@ public class {{model.stubClassName}} {
     public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimes | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
-        {% if entry.value.hasOptionalMultiValueRequestParams %}
-            {{ addQueryParamsToRequestPatternBuilder(entry) }}
-            verify(times, requestPatternBuilder
-                {% if entry.value.requestBody is not empty%}
-                .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
-                {% endif %}
-            );
-        {% else %}
-            {{ addQueryParamsToRequestPatternBuilder(entry) }}
-            {{ addRequestHeadersToRequestPatternBuilder(entry) }}
-            {% if entry.value.requestBody is not empty%}
-                requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
-            {% endif %}
-            verify(times, requestPatternBuilder);
+        {{ addQueryParamsToRequestPatternBuilder(entry) }}
+        {{ addRequestHeadersToRequestPatternBuilder(entry) }}
+        {% if entry.value.requestBody is not empty%}
+            requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
         {% endif %}
+        verify(times, requestPatternBuilder);
     }
 
     {% if entry.value.verifyMethodArgumentListWithTimesWithoutBody != entry.value.verifyMethodArgumentListWithTimes %}
     public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimesWithoutBody | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
-        {% if entry.value.hasOptionalMultiValueRequestParams %}
-            {{ addQueryParamsToRequestPatternBuilder(entry) }}
-            verify(times, requestPatternBuilder);
-        {% else %}
-            {{ addQueryParamsToRequestPatternBuilder(entry) }}
-            {{ addRequestHeadersToRequestPatternBuilder(entry) }}
-            verify(times, requestPatternBuilder);
-        {% endif %}
+        {{ addQueryParamsToRequestPatternBuilder(entry) }}
+        {{ addRequestHeadersToRequestPatternBuilder(entry) }}
+        verify(times, requestPatternBuilder);
     }
     {% endif %}
 
     public void verify{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
-        {% if entry.value.hasOptionalMultiValueRequestParams %}
-            {{ addQueryParamsToRequestPatternBuilder(entry) }}
-            verify(NEVER, requestPatternBuilder
-                {% if entry.value.requestBody is not empty%}
-                .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
-                {% endif %}
-            );
-        {% else %}
-            {{ addQueryParamsToRequestPatternBuilder(entry) }}
-            {{ addRequestHeadersToRequestPatternBuilder(entry) }}
-            {% if entry.value.requestBody is not empty%}
-                requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
-            {% endif %}
-            verify(NEVER, requestPatternBuilder);
+        {{ addQueryParamsToRequestPatternBuilder(entry) }}
+        {{ addRequestHeadersToRequestPatternBuilder(entry) }}
+        {% if entry.value.requestBody is not empty%}
+            requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
         {% endif %}
+        verify(NEVER, requestPatternBuilder);
     }
 
     {% if not entry.value.hasOptionalMultiValueRequestParams and entry.value.verifyMethodArgumentList != entry.value.verifyMethodArgumentListPathVariablesOnly %}

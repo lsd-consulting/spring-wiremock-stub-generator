@@ -47,7 +47,7 @@ public class JavaGetRestControllerStub {
                         
                                                 mappingBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
                             
-                                                mappingBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
+                                                            mappingBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
             
                         stub(OK, buildBody(response), mappingBuilder);
             }
@@ -59,7 +59,7 @@ public class JavaGetRestControllerStub {
                     
                                                 mappingBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
                             
-                                                mappingBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
+                                                            mappingBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
             
                         stub(httpStatus, response, mappingBuilder);
             }
@@ -71,19 +71,19 @@ public class JavaGetRestControllerStub {
     public void verifyResourceWithZonedDatetimeAndMultiValue(final int times, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
         RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
-                                                                requestPatternBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
+                                                    requestPatternBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
                                                                         requestPatternBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
-                                                                        verify(times, requestPatternBuilder);
-            }
+                                                            verify(times, requestPatternBuilder);
+    }
 
     
     public void verifyResourceWithZonedDatetimeAndMultiValueNoInteraction(java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
         RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
-                                                                requestPatternBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
+                                                    requestPatternBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
                                                                         requestPatternBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
-                                                                        verify(NEVER, requestPatternBuilder);
-            }
+                                                            verify(NEVER, requestPatternBuilder);
+    }
 
         public void verifyResourceWithZonedDatetimeAndMultiValueNoInteraction() {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
@@ -117,17 +117,17 @@ public class JavaGetRestControllerStub {
     public void verifyResourceWithParamAndAnnotations(final int times, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
         RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
-                                                                requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                                                        verify(times, requestPatternBuilder);
-            }
+                                                    requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                                            verify(times, requestPatternBuilder);
+    }
 
     
     public void verifyResourceWithParamAndAnnotationsNoInteraction(java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
         RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
-                                                                requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                                                        verify(NEVER, requestPatternBuilder);
-            }
+                                                    requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                                                            verify(NEVER, requestPatternBuilder);
+    }
 
         public void verifyResourceWithParamAndAnnotationsNoInteraction() {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
