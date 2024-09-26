@@ -77,32 +77,30 @@ public class JavaGetRestControllerStub {
 
     public void verifyResourceWithZonedDatetimeAndMultiValue(final int times, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
+        RequestPatternBuilder requestedFor = getRequestedFor(urlPathEqualTo(url));
                         if (param != null) {
-                    url = url + "?";
-                                            url = url + "param=" + serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "");
+                                requestedFor.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
                     }
     if (multiValue != null) {
-                    url = url + "&";
-                            url = url + "multiValue=";
-                            url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
+                    url = url + "multiValue=";
+                        requestedFor.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
                     }
-                verify(times, getRequestedFor(urlEqualTo(url))
+                verify(times, requestedFor
                             );
             }
 
     
     public void verifyResourceWithZonedDatetimeAndMultiValueNoInteraction(java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
+        RequestPatternBuilder requestedFor = getRequestedFor(urlPathEqualTo(url));
                         if (param != null) {
-                    url = url + "?";
-                                            url = url + "param=" + serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "");
+                                requestedFor.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
                     }
     if (multiValue != null) {
-                    url = url + "&";
-                            url = url + "multiValue=";
-                            url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
+                    url = url + "multiValue=";
+                        requestedFor.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
                     }
-                verify(NEVER, getRequestedFor(urlEqualTo(url))
+                verify(NEVER, requestedFor
                             );
             }
 
@@ -129,6 +127,7 @@ public class JavaGetRestControllerStub {
 
     public void verifyResourceWithParamAndAnnotations(final int times, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
+        RequestPatternBuilder requestedFor = getRequestedFor(urlPathEqualTo(url));
                     RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
                                             requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
                                                             verify(times, requestPatternBuilder);
@@ -137,6 +136,7 @@ public class JavaGetRestControllerStub {
     
     public void verifyResourceWithParamAndAnnotationsNoInteraction(java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
+        RequestPatternBuilder requestedFor = getRequestedFor(urlPathEqualTo(url));
                     RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(format(url)));
                                             requestPatternBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
                                                             verify(NEVER, requestPatternBuilder);
@@ -210,6 +210,7 @@ public class JavaGetRestControllerStub {
         }
     }
 }
+
 
 
 

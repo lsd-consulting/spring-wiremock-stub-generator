@@ -57,8 +57,7 @@ class JavaGetRestControllerIT : BaseRestControllerIT() {
         underTest.resourceWithZonedDatetimeAndMultiValue(greetingResponse, param, setOf(33, 44))
 
         val request = HttpGet(
-            "$GET_CONTROLLER_URL/resourceWithZonedDatetimeAndMultiValue?param=${param.format(DateTimeFormatter.ISO_DATE_TIME)
-            }&multiValue=33&multiValue=44"
+            "$GET_CONTROLLER_URL/resourceWithZonedDatetimeAndMultiValue?param=${param.format(DateTimeFormatter.ISO_DATE_TIME).replace("+", "%2B")}&multiValue=33&multiValue=44"
         )
         HttpClients.createDefault().use { client -> client.execute(request) { } }
 
