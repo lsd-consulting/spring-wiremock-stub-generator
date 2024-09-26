@@ -462,6 +462,25 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
+    fun `should handle get mapping with empty optional int request params - different order`() {
+        underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction(true, null, null, 11L)
+        underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction()
+        underTest.resourceWithOptionalIntRequestParams(greetingResponse, true, null, null, 11L)
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOptionalIntRequestParams?parameter4=11&param1=true",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyResourceWithOptionalIntRequestParams(1, true, null, null, 11L)
+        underTest.verifyResourceWithOptionalIntRequestParams(true, null, null, 11L)
+        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction(true, null, null, 11L) }
+        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction() }
+    }
+
+    @Test
     fun `should handle get mapping with optional int request params`() {
         underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction(true, 5, 7, 11L)
         underTest.verifyResourceWithOptionalIntRequestParamsNoInteraction()
@@ -498,12 +517,46 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
+    fun `should handle get mapping with optional and multi-value request params - different order`() {
+        underTest.verifyResourceWithOptionalMultiValueRequestParamsNoInteraction(setOf(11, 22), 5, true, setOf(33, 44))
+        underTest.resourceWithOptionalMultiValueRequestParams(greetingResponse, setOf(11, 22), 5, true, setOf(33, 44))
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOptionalMultiValueRequestParams?optional=5&multiValue=33&multiValue=44&parameter4=11&parameter4=22&required=true",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyResourceWithOptionalMultiValueRequestParams(1,  setOf(11, 22), 5, true, setOf(33, 44),)
+        underTest.verifyResourceWithOptionalMultiValueRequestParams(setOf(11, 22), 5, true, setOf(33, 44))
+        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalMultiValueRequestParamsNoInteraction(setOf(11, 22), 5, true, setOf(33, 44)) }
+    }
+
+    @Test
     fun `should handle get mapping with missing optional multi-value request params`() {
         underTest.verifyResourceWithOptionalMultiValueRequestParamsNoInteraction(null, null, true, setOf(33, 44))
         underTest.resourceWithOptionalMultiValueRequestParams(greetingResponse, null, null, true, setOf(33, 44))
 
         val response = restTemplate.exchange(
             "$GET_CONTROLLER_URL/resourceWithOptionalMultiValueRequestParams?required=true&multiValue=33&multiValue=44",
+            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyResourceWithOptionalMultiValueRequestParams(1, null, null, true, setOf(33, 44))
+        underTest.verifyResourceWithOptionalMultiValueRequestParams(null, null, true, setOf(33, 44))
+        assertThrows<VerificationException> { underTest.verifyResourceWithOptionalMultiValueRequestParamsNoInteraction(null, null, true, setOf(33, 44)) }
+    }
+
+    @Test
+    fun `should handle get mapping with missing optional multi-value request params - different order`() {
+        underTest.verifyResourceWithOptionalMultiValueRequestParamsNoInteraction(null, null, true, setOf(33, 44))
+        underTest.resourceWithOptionalMultiValueRequestParams(greetingResponse, null, null, true, setOf(33, 44))
+
+        val response = restTemplate.exchange(
+            "$GET_CONTROLLER_URL/resourceWithOptionalMultiValueRequestParams?multiValue=33&multiValue=44&required=true",
             GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
         )
 
