@@ -229,6 +229,7 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
 
 {% macro addRequestParamsToUrl(entry) %}
     {% for entry2 in entry.value.requestParameters %}
+if ({{entry2.value.name}} != null) {
         {% if loop.first %}
             url = url + "?";
         {% else %}
@@ -248,6 +249,7 @@ String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for en
                 url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};
             {% endif %}
         {% endif %}
+}
     {% endfor %}
 {% endmacro %}
 

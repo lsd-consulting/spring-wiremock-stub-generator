@@ -8,7 +8,6 @@ import com.lsdconsulting.stub.integration.controller.get.GetRestControllerStub
 import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.core.ParameterizedTypeReference
@@ -499,7 +498,6 @@ class GetRestControllerStandardResponseIT : BaseRestControllerIT() {
     }
 
     @Test
-    @Disabled
     fun `should handle get mapping with missing optional multi-value request params`() {
         underTest.verifyResourceWithOptionalMultiValueRequestParamsNoInteraction(true, null, setOf(33, 44), null)
         underTest.resourceWithOptionalMultiValueRequestParams(greetingResponse, true, null, setOf(33, 44), null)
