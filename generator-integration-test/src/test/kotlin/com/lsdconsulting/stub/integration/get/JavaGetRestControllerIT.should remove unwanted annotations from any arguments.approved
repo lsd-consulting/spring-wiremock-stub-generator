@@ -43,32 +43,25 @@ public class JavaGetRestControllerStub {
 
     public void resourceWithZonedDatetimeAndMultiValue(com.lsdconsulting.stub.integration.model.GreetingResponse response, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
-        MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
-                        if (param != null) {
-                    url = url + "?";
-                                            url = url + "param=" + serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "");
-                    }
-    if (multiValue != null) {
-                    url = url + "&";
-                            url = url + "multiValue=";
-                            url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
-                    }
-                stub(OK, buildBody(response), mappingBuilder);
+                    MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
+                        
+                                                mappingBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
+                            
+                                                mappingBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
+            
+                        stub(OK, buildBody(response), mappingBuilder);
             }
 
     
     public void resourceWithZonedDatetimeAndMultiValue(int httpStatus, String response, java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
         String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
-                        if (param != null) {
-                    url = url + "?";
-                                            url = url + "param=" + serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "");
-                    }
-    if (multiValue != null) {
-                    url = url + "&";
-                            url = url + "multiValue=";
-                            url = url + String.join("&multiValue=", multiValue.stream().map(x -> x.toString()).collect(toList()));
-                    }
-                stub(httpStatus, response, get(urlEqualTo(url)));
+                    MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
+                    
+                                                mappingBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
+                            
+                                                mappingBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
+            
+                        stub(httpStatus, response, mappingBuilder);
             }
 
     public void verifyResourceWithZonedDatetimeAndMultiValue(java.time.ZonedDateTime param, java.util.Set<java.lang.Integer> multiValue) {
@@ -80,8 +73,7 @@ public class JavaGetRestControllerStub {
         RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
                                                                 requestPatternBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
                                                                         requestPatternBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
-                                            verify(times, requestPatternBuilder
-                            );
+                                                                        verify(times, requestPatternBuilder);
             }
 
     
@@ -90,25 +82,32 @@ public class JavaGetRestControllerStub {
         RequestPatternBuilder requestPatternBuilder = getRequestedFor(urlPathEqualTo(url));
                                                                 requestPatternBuilder.withQueryParam("param", equalTo(serialise(param, "java.time.ZonedDateTime", "DATE_TIME", "", "SS", "")));
                                                                         requestPatternBuilder.withQueryParam("multiValue", havingExactly(multiValue.stream().map(x -> x.toString()).toArray(String[]::new)));
-                                            verify(NEVER, requestPatternBuilder
-                            );
+                                                                        verify(NEVER, requestPatternBuilder);
             }
 
+        public void verifyResourceWithZonedDatetimeAndMultiValueNoInteraction() {
+        String url = String.format(RESOURCEWITHZONEDDATETIMEANDMULTIVALUE_URL);
+        verify(NEVER, getRequestedFor(urlPathEqualTo(url)));
+    }
         public static final String RESOURCEWITHPARAMANDANNOTATIONS_URL = "/getController/resourceWithParamAndAnnotations";
 
     public void resourceWithParamAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingResponse response, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
-        MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
-                                                            mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                    stub(OK, buildBody(response), mappingBuilder);
+                    MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
+                        
+                                                mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
+                            
+                        stub(OK, buildBody(response), mappingBuilder);
             }
 
     
     public void resourceWithParamAndAnnotations(int httpStatus, String response, java.lang.String param) {
         String url = String.format(RESOURCEWITHPARAMANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = get(urlPathEqualTo(url));
+                    
                                                 mappingBuilder.withQueryParam("param", equalTo(String.valueOf(param)));
-                                    stub(httpStatus, response, mappingBuilder);
+                            
+                        stub(httpStatus, response, mappingBuilder);
             }
 
     public void verifyResourceWithParamAndAnnotations(java.lang.String param) {

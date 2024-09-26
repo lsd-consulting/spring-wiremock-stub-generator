@@ -149,7 +149,9 @@ class ControllerProcessor : AbstractProcessor() {
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).optional = !requestParam.required
 
                         if ("java.util.Set<(.*)>|java.util.List<(.*)>|java.lang.String\\[]".toRegex().containsMatchIn(argumentType)) {
-                            controllerModel.getResourceModel(methodName).hasMultiValueRequestParams = true
+                            if (!controllerModel.getResourceModel(methodName).hasOptionalMultiValueRequestParams) { // So that other non-optional multi value query parameters don't overwrite this value
+                                controllerModel.getResourceModel(methodName).hasOptionalMultiValueRequestParams = !requestParam.required
+                            }
                             controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).iterable = true
                         }
                     }

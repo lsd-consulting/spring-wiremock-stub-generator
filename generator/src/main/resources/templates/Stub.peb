@@ -50,11 +50,12 @@ public class {{model.stubClassName}} {
 
     public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}({{ entry.value.stubMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
-        MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
-        {% if entry.value.hasMultiValueRequestParams %}
+        {% if entry.value.hasOptionalMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
+            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url));
             stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% else %}
+            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
             {{ addQueryParamsToMappingBuilder(entry) }}
             stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% endif %}
@@ -63,11 +64,12 @@ public class {{model.stubClassName}} {
     {% if entry.value.requestBody != null and ["POST", "PUT"] contains entry.value.httpMethod.name() %}
     public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}({{ entry.value.stubMethodArgumentListWithRequest | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
-        MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url)).withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
-        {% if entry.value.hasMultiValueRequestParams %}
+        {% if entry.value.hasOptionalMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
+            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)).withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
             stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% else %}
+            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url)).withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
             {{ addQueryParamsToMappingBuilder(entry) }}
             stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% endif %}
@@ -76,7 +78,7 @@ public class {{model.stubClassName}} {
 
     public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}({{ entry.value.stubMethodArgumentListForCustomResponse | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
-        {% if entry.value.hasMultiValueRequestParams %}
+        {% if entry.value.hasOptionalMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
             stub(httpStatus, response, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
         {% else %}
@@ -93,7 +95,7 @@ public class {{model.stubClassName}} {
     public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimes | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
-        {% if entry.value.hasMultiValueRequestParams %}
+        {% if entry.value.hasOptionalMultiValueRequestParams %}
             {{ addQueryParamsToRequestPatternBuilder(entry) }}
             verify(times, requestPatternBuilder
                 {% if entry.value.requestBody is not empty%}
@@ -114,7 +116,7 @@ public class {{model.stubClassName}} {
     public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimesWithoutBody | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
-        {% if entry.value.hasMultiValueRequestParams %}
+        {% if entry.value.hasOptionalMultiValueRequestParams %}
             {{ addQueryParamsToRequestPatternBuilder(entry) }}
             verify(times, requestPatternBuilder);
         {% else %}
@@ -128,7 +130,7 @@ public class {{model.stubClassName}} {
     public void verify{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
-        {% if entry.value.hasMultiValueRequestParams %}
+        {% if entry.value.hasOptionalMultiValueRequestParams %}
             {{ addQueryParamsToRequestPatternBuilder(entry) }}
             verify(NEVER, requestPatternBuilder
                 {% if entry.value.requestBody is not empty%}
@@ -145,7 +147,7 @@ public class {{model.stubClassName}} {
         {% endif %}
     }
 
-    {% if not entry.value.hasMultiValueRequestParams and entry.value.verifyMethodArgumentList != entry.value.verifyMethodArgumentListPathVariablesOnly %}
+    {% if not entry.value.hasOptionalMultiValueRequestParams and entry.value.verifyMethodArgumentList != entry.value.verifyMethodArgumentListPathVariablesOnly %}
     public void verify{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentListPathVariablesOnly | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url)));
@@ -254,18 +256,30 @@ if ({{entry2.value.name}} != null) {
 
 {% macro addQueryParamsToMappingBuilder(entry) %}
     {% for entry2 in entry.value.requestParameters %}
-        {% if entry2.value.optional %}
+        {% if entry2.value.iterable %}
+            {#Optional iterable cannot be handled with mapping builder.  #}
             {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).or(absent()));
+                mappingBuilder.withQueryParam("{{entry2.value.name}}", havingExactly({{entry2.value.name}}.stream().map(x -> serialise(x, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).toArray(String[]::new)));
             {% else %}
-                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})).or(absent()));
+                mappingBuilder.withQueryParam("{{entry2.value.name}}", havingExactly({{entry2.value.name}}.stream().map(x -> x.toString()).toArray(String[]::new)));
             {% endif %}
+
         {% else %}
-            {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")));
+
+            {% if entry2.value.optional %}
+                {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+                    mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).or(absent()));
+                {% else %}
+                    mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})).or(absent()));
+                {% endif %}
             {% else %}
-                mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+                {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+                    mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")));
+                {% else %}
+                    mappingBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+                {% endif %}
             {% endif %}
+
         {% endif %}
     {% endfor %}
 {% endmacro %}
