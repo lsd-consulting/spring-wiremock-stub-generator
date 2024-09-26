@@ -94,14 +94,14 @@ public class {{model.stubClassName}} {
         {{ generateUrlWithPathVariables(entry) }}
         RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
         {% if entry.value.hasMultiValueRequestParams %}
-            {{ addRequestParamsToPatternBuilder(entry) }}
+            {{ addQueryParamsToRequestPatternBuilder(entry) }}
             verify(times, requestPatternBuilder
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
             );
         {% else %}
-            {{ addRequestParamsToPatternBuilder(entry) }}
+            {{ addQueryParamsToRequestPatternBuilder(entry) }}
             {{ addRequestHeadersToRequestPatternBuilder(entry) }}
             {% if entry.value.requestBody is not empty%}
                 requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
@@ -115,10 +115,10 @@ public class {{model.stubClassName}} {
         {{ generateUrlWithPathVariables(entry) }}
         RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
         {% if entry.value.hasMultiValueRequestParams %}
-            {{ addRequestParamsToPatternBuilder(entry) }}
+            {{ addQueryParamsToRequestPatternBuilder(entry) }}
             verify(times, requestPatternBuilder);
         {% else %}
-            {{ addRequestParamsToPatternBuilder(entry) }}
+            {{ addQueryParamsToRequestPatternBuilder(entry) }}
             {{ addRequestHeadersToRequestPatternBuilder(entry) }}
             verify(times, requestPatternBuilder);
         {% endif %}
@@ -129,14 +129,14 @@ public class {{model.stubClassName}} {
         {{ generateUrlWithPathVariables(entry) }}
         RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
         {% if entry.value.hasMultiValueRequestParams %}
-            {{ addRequestParamsToPatternBuilder(entry) }}
+            {{ addQueryParamsToRequestPatternBuilder(entry) }}
             verify(NEVER, requestPatternBuilder
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
             );
         {% else %}
-            {{ addRequestParamsToPatternBuilder(entry) }}
+            {{ addQueryParamsToRequestPatternBuilder(entry) }}
             {{ addRequestHeadersToRequestPatternBuilder(entry) }}
             {% if entry.value.requestBody is not empty%}
                 requestPatternBuilder.withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
@@ -270,7 +270,7 @@ if ({{entry2.value.name}} != null) {
     {% endfor %}
 {% endmacro %}
 
-{% macro addRequestParamsToPatternBuilder(entry) %}
+{% macro addQueryParamsToRequestPatternBuilder(entry) %}
     {% for entry2 in entry.value.requestParameters %}
         {% if entry2.value.optional %}
 if ({{entry2.value.name}} != null) {
