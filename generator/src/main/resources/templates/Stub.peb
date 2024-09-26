@@ -92,10 +92,10 @@ public class {{model.stubClassName}} {
 
     public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimes | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
-        RequestPatternBuilder requestedFor = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
+        RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToPatternBuilder(entry) }}
-            verify(times, requestedFor
+            verify(times, requestPatternBuilder
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
@@ -114,10 +114,10 @@ public class {{model.stubClassName}} {
     {% if entry.value.verifyMethodArgumentListWithTimesWithoutBody != entry.value.verifyMethodArgumentListWithTimes %}
     public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimesWithoutBody | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
-        RequestPatternBuilder requestedFor = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
+        RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToPatternBuilder(entry) }}
-            verify(times, requestedFor);
+            verify(times, requestPatternBuilder);
         {% else %}
             RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(format(url)));
             {{ addQueryParamsToRequestPatternBuilder(entry) }}
@@ -129,10 +129,10 @@ public class {{model.stubClassName}} {
 
     public void verify{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
-        RequestPatternBuilder requestedFor = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
+        RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
         {% if entry.value.hasMultiValueRequestParams %}
             {{ addRequestParamsToPatternBuilder(entry) }}
-            verify(NEVER, requestedFor
+            verify(NEVER, requestPatternBuilder
                 {% if entry.value.requestBody is not empty%}
                 .withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})))
                 {% endif %}
@@ -255,31 +255,6 @@ if ({{entry2.value.name}} != null) {
     {% endfor %}
 {% endmacro %}
 
-{% macro addRequestParamsToPatternBuilder(entry) %}
-    {% for entry2 in entry.value.requestParameters %}
-if ({{entry2.value.name}} != null) {
-        {% if entry2.value.iterable %}
-            url = url + "{{entry2.value.name}}=";
-            {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-            requestedFor.withQueryParam("{{entry2.value.name}}", havingExactly({{entry2.value.name}}.stream().map(x -> serialise(x, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).toArray(String[]::new)));
-{#                url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> serialise(x, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).collect(toList()));#}
-            {% else %}
-            requestedFor.withQueryParam("{{entry2.value.name}}", havingExactly({{entry2.value.name}}.stream().map(x -> x.toString()).toArray(String[]::new)));
-{#                url = url + String.join("&{{entry2.value.name}}=", {{entry2.value.name}}.stream().map(x -> x.toString()).collect(toList()));#}
-            {% endif %}
-        {% else %}
-            {% if entry2.value.dateTimeFormatAnnotation is not empty %}
-            requestedFor.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")));
-{#                url = url + "{{entry2.value.name}}=" + serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}");#}
-            {% else %}
-            requestedFor.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
-{#                url = url + "{{entry2.value.name}}=" + {{entry2.value.name}};#}
-            {% endif %}
-        {% endif %}
-}
-    {% endfor %}
-{% endmacro %}
-
 {% macro addQueryParamsToMappingBuilder(entry) %}
     {% for entry2 in entry.value.requestParameters %}
         {% if entry2.value.optional %}
@@ -311,6 +286,27 @@ if ({{entry2.value.name}} != null) {
         {% if entry2.value.optional %}
             }
         {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro addRequestParamsToPatternBuilder(entry) %}
+    {% for entry2 in entry.value.requestParameters %}
+if ({{entry2.value.name}} != null) {
+        {% if entry2.value.iterable %}
+            url = url + "{{entry2.value.name}}=";
+            {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+            requestPatternBuilder.withQueryParam("{{entry2.value.name}}", havingExactly({{entry2.value.name}}.stream().map(x -> serialise(x, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")).toArray(String[]::new)));
+            {% else %}
+            requestPatternBuilder.withQueryParam("{{entry2.value.name}}", havingExactly({{entry2.value.name}}.stream().map(x -> x.toString()).toArray(String[]::new)));
+            {% endif %}
+            {% else %}
+            {% if entry2.value.dateTimeFormatAnnotation is not empty %}
+            requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(serialise({{entry2.value.name}}, "{{entry2.value.dateTimeFormatAnnotation.clazz}}", "{{entry2.value.dateTimeFormatAnnotation.iso}}", "{{entry2.value.dateTimeFormatAnnotation.pattern | raw}}", "{{entry2.value.dateTimeFormatAnnotation.style}}", "{{entry2.value.dateTimeFormatAnnotation.fallbackPatterns | join('","') | raw}}")));
+            {% else %}
+            requestPatternBuilder.withQueryParam("{{entry2.value.name}}", equalTo(String.valueOf({{entry2.value.name}})));
+            {% endif %}
+        {% endif %}
+}
     {% endfor %}
 {% endmacro %}
 
