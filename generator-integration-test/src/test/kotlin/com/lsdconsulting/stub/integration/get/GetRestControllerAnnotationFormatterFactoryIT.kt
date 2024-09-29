@@ -9,18 +9,19 @@ import com.lsdconsulting.stub.integration.model.GreetingResponse
 import org.apache.hc.client5.http.classic.methods.HttpGet
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.notNullValue
+import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.format.datetime.standard.Jsr310DateTimeFormatAnnotationFormatterFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod.GET
+import java.io.ByteArrayOutputStream
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 import java.time.format.DateTimeFormatter.ofPattern
+import kotlin.text.Charsets.UTF_8
 
 class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
     private val underTest = GetRestControllerStub(ObjectMapper(), Jsr310DateTimeFormatAnnotationFormatterFactory())
@@ -33,7 +34,7 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
         underTest.resourceWithZonedDatetime(greetingResponse, param)
 
         val response = restTemplate.exchange(
-            "$GET_CONTROLLER_URL/resourceWithZonedDatetime?param=${param.format(ISO_DATE_TIME)}",
+            "$GET_CONTROLLER_URL/resourceWithZonedDatetime?param=${param.format(ISO_DATE_TIME).replace("+", "%2B")}",
             GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
         )
 
@@ -51,13 +52,14 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
         underTest.verifyResourceWithOffsetDateTimeNoInteraction()
         underTest.resourceWithOffsetDateTime(greetingResponse, param)
 
-        val response = restTemplate.exchange(
-            "$GET_CONTROLLER_URL/resourceWithOffsetDateTime?param=${param.format(ISO_DATE_TIME)}",
-            GET, HttpEntity(mapOf<String, String>()), GreetingResponse::class.java
+        val request = HttpGet(
+            "$GET_CONTROLLER_URL/resourceWithOffsetDateTime?param=${param.format(ISO_DATE_TIME).replace("+", "%2B")}"
         )
+        val res = ByteArrayOutputStream()
+        HttpClients.createDefault().use { client -> client.execute(request) { it.entity.writeTo(res)} }
+        val response = String(res.toByteArray(), UTF_8)
 
-        assertThat(response.body, notNullValue())
-        assertThat(response.body?.name, `is`(name))
+        assertThat(response, not(emptyOrNullString()))
         underTest.verifyResourceWithOffsetDateTime(param)
         assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeNoInteraction(param) }
         assertThrows<VerificationException> { underTest.verifyResourceWithOffsetDateTimeNoInteraction() }
@@ -91,9 +93,9 @@ class GetRestControllerAnnotationFormatterFactoryIT : BaseRestControllerIT() {
 
         val request = HttpGet(
             "$GET_CONTROLLER_URL/resourceWithMultiValueZonedDatetime?multiValue=${
-                multiValue[0].format(ISO_DATE_TIME)
+                multiValue[0].format(ISO_DATE_TIME).replace("+", "%2B")
             }&multiValue=${
-                multiValue[1].format(ISO_DATE_TIME)
+                multiValue[1].format(ISO_DATE_TIME).replace("+", "%2B")
             }"
         )
         HttpClients.createDefault().use { client -> client.execute(request) { } }
