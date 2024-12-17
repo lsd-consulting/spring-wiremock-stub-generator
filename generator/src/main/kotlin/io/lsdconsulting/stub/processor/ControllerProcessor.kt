@@ -80,8 +80,8 @@ class ControllerProcessor : AbstractProcessor() {
                         methodMappingAnnotationHandler.handle(
                             element = element,
                             model = model,
-                            path = element.getAnnotation(GetMapping::class.java).path,
-                            value = element.getAnnotation(GetMapping::class.java).value,
+                            path = it.path,
+                            value = it.value,
                             httpMethod = GET,
                             responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
                         )
@@ -90,8 +90,8 @@ class ControllerProcessor : AbstractProcessor() {
                         methodMappingAnnotationHandler.handle(
                             element = element,
                             model = model,
-                            path = element.getAnnotation(PostMapping::class.java).path,
-                            value = element.getAnnotation(PostMapping::class.java).value,
+                            path = it.path,
+                            value = it.value,
                             httpMethod = POST,
                             responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
                         )
@@ -100,8 +100,8 @@ class ControllerProcessor : AbstractProcessor() {
                         methodMappingAnnotationHandler.handle(
                             element = element,
                             model = model,
-                            path = element.getAnnotation(PutMapping::class.java).path,
-                            value = element.getAnnotation(PutMapping::class.java).value,
+                            path = it.path,
+                            value = it.value,
                             httpMethod = PUT
                         )
                     }
@@ -109,26 +109,36 @@ class ControllerProcessor : AbstractProcessor() {
                         methodMappingAnnotationHandler.handle(
                             element = element,
                             model = model,
-                            path = element.getAnnotation(DeleteMapping::class.java).path,
-                            value = element.getAnnotation(DeleteMapping::class.java).value,
+                            path = it.path,
+                            value = it.value,
                             httpMethod = DELETE
                         )
                     }
                     element.getAnnotation(RequestMapping::class.java)?.let {
-                        val path: Array<String> = element.getAnnotation(RequestMapping::class.java).path
-                        val value: Array<String> = element.getAnnotation(RequestMapping::class.java).value
-                        val controllerModel = model.getControllerModel(element.toString())
-                        if (path.isNotEmpty()) {
-                            controllerModel.rootResource = path[0]
-                        } else if (value.isNotEmpty()) {
-                            controllerModel.rootResource = value[0]
+                        val path: Array<String> = it.path
+                        val value: Array<String> = it.value
+                        if (element.kind == CLASS) {
+                            val controllerModel = model.getControllerModel(element.toString())
+                            if (path.isNotEmpty()) {
+                                controllerModel.rootResource = path[0]
+                            } else if (value.isNotEmpty()) {
+                                controllerModel.rootResource = value[0]
+                            }
+                        } else {
+                            val methods: Array<RequestMethod> = it.method
+                            methodMappingAnnotationHandler.handle(
+                                element = element,
+                                model = model,
+                                path = path,
+                                value = value,
+                                httpMethod = methods[0].asHttpMethod()
+                            )
                         }
                     }
                     element.getAnnotation(ResponseStatus::class.java)?.let {
-                        val responseStatusAnnotation = element.getAnnotation(ResponseStatus::class.java)
                         val value: HttpStatus =
-                            if (responseStatusAnnotation.code != INTERNAL_SERVER_ERROR) responseStatusAnnotation.code
-                            else responseStatusAnnotation.value
+                            if (it.code != INTERNAL_SERVER_ERROR) it.code
+                            else it.value
                         if (element.kind == CLASS) {
                             val controllerModel = model.getControllerModel(element.toString())
                             controllerModel.responseStatus = value.value()
@@ -139,25 +149,23 @@ class ControllerProcessor : AbstractProcessor() {
                         }
                     }
                     element.getAnnotation(RequestParam::class.java)?.let {
-                        val requestParam = element.getAnnotation(RequestParam::class.java)
-                        val argumentName = firstNotNull(requestParam.name, requestParam.value, element.simpleName.toString())
+                        val argumentName = firstNotNull(it.name, it.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
                         val argumentType = element.retrieveArgumentType().replacePrimitive()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).type = argumentType
                         controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).name = argumentName
-                        controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).optional = !requestParam.required
+                        controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).optional = !it.required
 
                         if ("java.util.Set<(.*)>|java.util.List<(.*)>|java.lang.String\\[]".toRegex().containsMatchIn(argumentType)) {
                             if (!controllerModel.getResourceModel(methodName).hasOptionalMultiValueRequestParams) { // So that other non-optional multi value query parameters don't overwrite this value
-                                controllerModel.getResourceModel(methodName).hasOptionalMultiValueRequestParams = !requestParam.required
+                                controllerModel.getResourceModel(methodName).hasOptionalMultiValueRequestParams = !it.required
                             }
                             controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).iterable = true
                         }
                     }
                     element.getAnnotation(PathVariable::class.java)?.let {
-                        val pathVariable = element.getAnnotation(PathVariable::class.java)
-                        val argumentName = firstNotNull(pathVariable.name, pathVariable.value, element.simpleName.toString())
+                        val argumentName = firstNotNull(it.name, it.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
                         val argumentType = element.retrieveArgumentType()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
@@ -174,7 +182,6 @@ class ControllerProcessor : AbstractProcessor() {
                         controllerModel.getResourceModel(methodName).requestBody = requestBody
                     }
                     element.getAnnotation(DateTimeFormat::class.java)?.let {
-                        val dateTimeFormatAnnotation = element.getAnnotation(DateTimeFormat::class.java)
                         val methodName = element.enclosingElement.toString()
                         val argumentName = element.simpleName.toString()
                         val controllerModel = model
@@ -183,24 +190,23 @@ class ControllerProcessor : AbstractProcessor() {
                             .getRequestParamModel(argumentName)
                         controllerModel.dateTimeFormatAnnotation =
                             DateTimeFormatAnnotation(
-                                iso = dateTimeFormatAnnotation.iso.name,
-                                fallbackPatterns = dateTimeFormatAnnotation.fallbackPatterns,
-                                pattern = dateTimeFormatAnnotation.pattern,
-                                style = dateTimeFormatAnnotation.style,
+                                iso = it.iso.name,
+                                fallbackPatterns = it.fallbackPatterns,
+                                pattern = it.pattern,
+                                style = it.style,
                                 clazz = element.retrieveArgumentType().retrieveGeneric()
                             )
                     }
                     element.getAnnotation(RequestHeader::class.java)?.let {
-                        val requestHeader = element.getAnnotation(RequestHeader::class.java)
                         val argumentName = firstNotNull(element.simpleName.toString())
-                        val headerName = firstNotNull(requestHeader.name, requestHeader.value, element.simpleName.toString())
+                        val headerName = firstNotNull(it.name, it.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
                         val argumentType = element.retrieveArgumentType()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).type = argumentType
                         controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).name = argumentName
                         controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).headerName = headerName
-                        controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).optional = !requestHeader.required
+                        controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).optional = !it.required
                     }
                 }
         }

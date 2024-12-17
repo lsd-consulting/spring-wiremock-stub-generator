@@ -34,6 +34,23 @@ class GetRestControllerCustomResponseIT : BaseRestControllerIT() {
     }
 
     @Test
+    fun `should handle method-level get requestMapping with no param and custom response`() {
+        underTest.resourceRequestMappingWithNoParams(httpStatus.value(), customResponseBody)
+
+        val ex = assertThrows<HttpServerErrorException> {
+            restTemplate.getForEntity(
+                "$GET_CONTROLLER_URL/resourceRequestMappingWithNoParams",
+                GreetingResponse::class.java
+            )
+        }
+        assertThat(ex.statusCode, `is`(httpStatus))
+        assertThat(ex.responseBodyAsString, notNullValue())
+        assertThat(ex.responseBodyAsString, `is`(customResponseBody))
+        underTest.verifyResourceRequestMappingWithNoParams(1)
+        underTest.verifyResourceRequestMappingWithNoParams()
+    }
+
+    @Test
     fun `should handle get mapping with request param and custom response`() {
         underTest.resourceWithParam(httpStatus.value(), customResponseBody, param)
 
