@@ -115,13 +115,25 @@ class ControllerProcessor : AbstractProcessor() {
                         )
                     }
                     element.getAnnotation(RequestMapping::class.java)?.let {
-                        val path: Array<String> = element.getAnnotation(RequestMapping::class.java).path
-                        val value: Array<String> = element.getAnnotation(RequestMapping::class.java).value
-                        val controllerModel = model.getControllerModel(element.toString())
-                        if (path.isNotEmpty()) {
-                            controllerModel.rootResource = path[0]
-                        } else if (value.isNotEmpty()) {
-                            controllerModel.rootResource = value[0]
+                        val requestMappingAnnotation = element.getAnnotation(RequestMapping::class.java)
+                        val path: Array<String> = requestMappingAnnotation.path
+                        val value: Array<String> = requestMappingAnnotation.value
+                        val methods: Array<RequestMethod> = requestMappingAnnotation.method
+                        if (element.kind == CLASS) {
+                            val controllerModel = model.getControllerModel(element.toString())
+                            if (path.isNotEmpty()) {
+                                controllerModel.rootResource = path[0]
+                            } else if (value.isNotEmpty()) {
+                                controllerModel.rootResource = value[0]
+                            }
+                        } else {
+                            methodMappingAnnotationHandler.handle(
+                                element = element,
+                                model = model,
+                                path = path,
+                                value = value,
+                                httpMethod = methods[0].asHttpMethod()
+                            )
                         }
                     }
                     element.getAnnotation(ResponseStatus::class.java)?.let {

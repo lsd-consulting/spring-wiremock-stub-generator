@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.format.annotation.DateTimeFormat.ISO.DATE
 import org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestMethod.GET
 import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 
@@ -19,6 +20,9 @@ class GetRestController {
 
     @GetMapping("/resourceWithNoParams")
     fun resourceWithNoParams() = GreetingResponse(name = secure().nextAlphabetic(10))
+
+    @RequestMapping(path = ["/resourceRequestMappingWithNoParams"], method = [GET])
+    fun resourceRequestMappingWithNoParams() = GreetingResponse(name = secure().nextAlphabetic(10))
 
     @Suppress("UNUSED_PARAMETER")
     @GetMapping("/resourceWithParam")
