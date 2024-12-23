@@ -38,7 +38,7 @@ dependencies {
 
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
-    testImplementation 'io.mockk:mockk-jvm:1.13.13'
+    testImplementation 'io.mockk:mockk-jvm:1.13.14'
     testImplementation 'org.mockito:mockito-core:5.14.2'
     testImplementation 'org.hamcrest:hamcrest:3.0'
 }
