@@ -16,6 +16,7 @@ const val GET_CONTROLLER_URL = "http://localhost:8099/getController"
 const val POST_CONTROLLER_URL = "http://localhost:8099/postController"
 const val PUT_CONTROLLER_URL = "http://localhost:8099/putController"
 const val DELETE_CONTROLLER_URL = "http://localhost:8099/deleteController"
+const val MULTIPLE_METHOD_CONTROLLER_URL = "http://localhost:8099/multipleController"
 
 open class BaseRestControllerIT {
     val restTemplate = RestTemplate()

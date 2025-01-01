@@ -131,7 +131,8 @@ class ControllerProcessor : AbstractProcessor() {
                                 model = model,
                                 path = path,
                                 value = value,
-                                httpMethod = methods[0].asHttpMethod()
+                                httpMethod = methods[0].asHttpMethod(),
+                                responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
                             )
                         }
                     }
