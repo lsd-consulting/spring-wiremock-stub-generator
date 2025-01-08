@@ -126,14 +126,16 @@ class ControllerProcessor : AbstractProcessor() {
                             }
                         } else {
                             val methods: Array<RequestMethod> = it.method
-                            methodMappingAnnotationHandler.handle(
-                                element = element,
-                                model = model,
-                                path = path,
-                                value = value,
-                                httpMethod = methods[0].asHttpMethod(),
-                                responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
-                            )
+                            methods.forEach { method ->
+                                methodMappingAnnotationHandler.handle(
+                                    element = element,
+                                    model = model,
+                                    path = path,
+                                    value = value,
+                                    httpMethod = method.asHttpMethod(),
+                                    responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
+                                )
+                            }
                         }
                     }
                     element.getAnnotation(ResponseStatus::class.java)?.let {
@@ -146,7 +148,8 @@ class ControllerProcessor : AbstractProcessor() {
                         } else {
                             val methodModelKey = element.toString()
                             val controllerModel = model.getControllerModel(element.enclosingElement.toString())
-                            controllerModel.getResourceModel(methodModelKey).responseStatus = value.value()
+                            controllerModel.getResourceModel(methodModelKey).values
+                                .forEach {resourceModel ->  resourceModel.responseStatus = value.value()}
                         }
                     }
                     element.getAnnotation(RequestParam::class.java)?.let {
@@ -154,15 +157,16 @@ class ControllerProcessor : AbstractProcessor() {
                         val methodName = element.enclosingElement.toString()
                         val argumentType = element.retrieveArgumentType().replacePrimitive()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
-                        controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).type = argumentType
-                        controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).name = argumentName
-                        controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).optional = !it.required
-
-                        if ("java.util.Set<(.*)>|java.util.List<(.*)>|java.lang.String\\[]".toRegex().containsMatchIn(argumentType)) {
-                            if (!controllerModel.getResourceModel(methodName).hasOptionalMultiValueRequestParams) { // So that other non-optional multi value query parameters don't overwrite this value
-                                controllerModel.getResourceModel(methodName).hasOptionalMultiValueRequestParams = !it.required
+                        controllerModel.getResourceModel(methodName).values.forEach {resourceModel ->
+                            resourceModel.getRequestParamModel(argumentName).type = argumentType
+                            resourceModel.getRequestParamModel(argumentName).name = argumentName
+                            resourceModel.getRequestParamModel(argumentName).optional = !it.required
+                            if ("java.util.Set<(.*)>|java.util.List<(.*)>|java.lang.String\\[]".toRegex().containsMatchIn(argumentType)) {
+                                if (!resourceModel.hasOptionalMultiValueRequestParams) { // So that other non-optional multi value query parameters don't overwrite this value
+                                    resourceModel.hasOptionalMultiValueRequestParams = !it.required
+                                }
+                                resourceModel.getRequestParamModel(argumentName).iterable = true
                             }
-                            controllerModel.getResourceModel(methodName).getRequestParamModel(argumentName).iterable = true
                         }
                     }
                     element.getAnnotation(PathVariable::class.java)?.let {
@@ -170,9 +174,11 @@ class ControllerProcessor : AbstractProcessor() {
                         val methodName = element.enclosingElement.toString()
                         val argumentType = element.retrieveArgumentType()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
-                        controllerModel.getResourceModel(methodName).urlHasPathVariable = true
-                        controllerModel.getResourceModel(methodName).getPathVariableModel(argumentName).type = argumentType
-                        controllerModel.getResourceModel(methodName).getPathVariableModel(argumentName).name = argumentName
+                        controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
+                            resourceModel.urlHasPathVariable = true
+                            resourceModel.getPathVariableModel(argumentName).type = argumentType
+                            resourceModel.getPathVariableModel(argumentName).name = argumentName
+                        }
                     }
                     element.getAnnotation(RequestBody::class.java)?.let {
                         val methodName = element.enclosingElement.toString()
@@ -180,23 +186,26 @@ class ControllerProcessor : AbstractProcessor() {
                         val argumentType = element.retrieveArgumentType()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         val requestBody = ArgumentModel(type = argumentType, name = argumentName)
-                        controllerModel.getResourceModel(methodName).requestBody = requestBody
+                        controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
+                            resourceModel.requestBody = requestBody
+                        }
                     }
                     element.getAnnotation(DateTimeFormat::class.java)?.let {
                         val methodName = element.enclosingElement.toString()
                         val argumentName = element.simpleName.toString()
-                        val controllerModel = model
+                        model
                             .getControllerModel(element.enclosingElement.enclosingElement.toString())
                             .getResourceModel(methodName)
-                            .getRequestParamModel(argumentName)
-                        controllerModel.dateTimeFormatAnnotation =
-                            DateTimeFormatAnnotation(
-                                iso = it.iso.name,
-                                fallbackPatterns = it.fallbackPatterns,
-                                pattern = it.pattern,
-                                style = it.style,
-                                clazz = element.retrieveArgumentType().retrieveGeneric()
-                            )
+                            .values.forEach { resourceModel ->
+                                resourceModel.getRequestParamModel(argumentName).dateTimeFormatAnnotation =
+                                    DateTimeFormatAnnotation(
+                                        iso = it.iso.name,
+                                        fallbackPatterns = it.fallbackPatterns,
+                                        pattern = it.pattern,
+                                        style = it.style,
+                                        clazz = element.retrieveArgumentType().retrieveGeneric()
+                                    )
+                            }
                     }
                     element.getAnnotation(RequestHeader::class.java)?.let {
                         val argumentName = firstNotNull(element.simpleName.toString())
@@ -204,10 +213,12 @@ class ControllerProcessor : AbstractProcessor() {
                         val methodName = element.enclosingElement.toString()
                         val argumentType = element.retrieveArgumentType()
                         val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
-                        controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).type = argumentType
-                        controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).name = argumentName
-                        controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).headerName = headerName
-                        controllerModel.getResourceModel(methodName).getRequestHeaderModel(argumentName).optional = !it.required
+                        controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
+                            resourceModel.getRequestHeaderModel(argumentName).type = argumentType
+                            resourceModel.getRequestHeaderModel(argumentName).name = argumentName
+                            resourceModel.getRequestHeaderModel(argumentName).headerName = headerName
+                            resourceModel.getRequestHeaderModel(argumentName).optional = !it.required
+                        }
                     }
                 }
         }

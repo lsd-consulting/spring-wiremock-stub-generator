@@ -11,8 +11,10 @@ import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.http.HttpEntity
+import org.springframework.http.*
+import org.springframework.http.HttpMethod.PUT
 import org.springframework.http.HttpStatus.OK
+
 
 class SimplePostPutRestControllerIT : BaseRestControllerIT() {
     private val underTest = SimplePostPutRestControllerStub(ObjectMapper())
@@ -24,6 +26,25 @@ class SimplePostPutRestControllerIT : BaseRestControllerIT() {
 
         val response = restTemplate.postForEntity(
             "$MULTIPLE_METHOD_CONTROLLER_URL/postPutResource",
+            HttpEntity(""),
+            GreetingResponse::class.java
+        )
+
+        assertThat(response.body, notNullValue())
+        assertThat(response.body?.name, `is`(name))
+        underTest.verifyPostPutResourceWitNoRequestBody(1)
+        underTest.verifyPostPutResourceWitNoRequestBody()
+        assertThat(response.statusCode, `is`(OK))
+        assertThrows<VerificationException> { underTest.verifyPostPutResourceWitNoRequestBodyNoInteraction() }
+    }
+
+    @Test
+    fun `should handle put mapping with no request body`() {
+        underTest.verifyPostPutResourceWitNoRequestBodyNoInteraction()
+        underTest.postPutResourceWitNoRequestBody(GreetingResponse(name = name))
+
+        val response = restTemplate.exchange(
+            "$MULTIPLE_METHOD_CONTROLLER_URL/postPutResource", PUT,
             HttpEntity(""),
             GreetingResponse::class.java
         )
