@@ -56,7 +56,7 @@ internal class PostProcessorShould {
             hasItem(hasProperty<ResourceModel>("responseStatus", equalTo(resourceResponseStatus)))
         )
         assertThat(
-            model.controllers.values.first().resources.values.first().values,
+            model.controllers.values.first().resources.values.stream().toList()[1].values,
             hasItem(hasProperty<ResourceModel>("responseStatus", equalTo(responseStatus)))
         )
     }
@@ -75,11 +75,7 @@ internal class PostProcessorShould {
         underTest.update(model)
 
         assertThat(
-            model.controllers.values.first().resources.values,
-            hasItem(hasProperty<ResourceModel>("responseStatus", equalTo(resourceResponseStatus)))
-        )
-        assertThat(
-            model.controllers.values.first().resources.values,
+            model.controllers.values.first().resources.values.first().values,
             hasItem(hasProperty<ResourceModel>("responseStatus", equalTo(resourceResponseStatus)))
         )
     }

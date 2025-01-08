@@ -8,6 +8,7 @@ class PostProcessor {
         model.controllers.values.forEach { controllerModel ->
             updateResponseStatusOnResources(controllerModel)
             setContainsDateTimeFormat(controllerModel)
+            setHasMultipleHttpMethods(controllerModel)
             controllerModel.resources.values.forEach { resource ->
                 resource.values.forEach { annotatedMethod ->
                     if (annotatedMethod.urlHasPathVariable) {
@@ -37,6 +38,17 @@ class PostProcessor {
                 resource.values.forEach {
                     it.responseStatus = it.responseStatus ?: controllerModel.responseStatus
                 }
+            }
+        }
+
+    private fun setHasMultipleHttpMethods(controllerModel: ControllerModel) =
+        controllerModel.resources.values.forEach { resource ->
+            println("resource.value=" + resource.values)
+            println("resource.value.size=" + resource.values.size)
+            if (resource.values.isNotEmpty() && resource.values.size > 1) {
+                println("Setting hasMultipleHttpMethods = true for controllerModel.stubClassName=" + controllerModel.stubClassName)
+                controllerModel.hasMultipleHttpMethods = true
+                return
             }
         }
 

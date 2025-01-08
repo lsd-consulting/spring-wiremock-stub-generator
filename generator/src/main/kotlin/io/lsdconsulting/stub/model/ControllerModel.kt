@@ -17,7 +17,8 @@ data class ControllerModel(
     var responseStatus: Int? = null,
     // Class method name to map of HttpMethod to ResourceModel
     val resources: MutableMap<String, MutableMap<HttpMethod, ResourceModel>> = mutableMapOf(),
-    var containsDateTimeFormat: Boolean = false
+    var containsDateTimeFormat: Boolean = false,
+    var hasMultipleHttpMethods: Boolean = false
 ) {
     fun getResourceModel(name: String): MutableMap<HttpMethod, ResourceModel> = resources.getOrPut(name) {mutableMapOf()}
 }

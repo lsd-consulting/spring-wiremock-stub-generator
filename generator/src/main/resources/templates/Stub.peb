@@ -46,56 +46,58 @@ public class {{model.stubClassName}} {
     }
 {% endif %}
 
-{% for entry in model.getResources %}
+{% for map in model.getResources %}
+{% for entry in map.value %}
+    {%if model.hasMultipleHttpMethods == false or model.hasMultipleHttpMethods and loop.index == 0%}
     public static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
-
-    public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}({{ entry.value.stubMethodArgumentList | join(', ') | raw}}) {
+    {% endif %}
+    public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}{{ addOptionalHttpMethodName(model, entry) }}({{ entry.value.stubMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         {% if entry.value.hasOptionalMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url));
+            MappingBuilder mappingBuilder = {{entry.key.name() | lower}}(urlEqualTo(url));
             stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% else %}
-            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
+            MappingBuilder mappingBuilder = {{entry.key.name() | lower}}(urlPathEqualTo(url));
             {{ addQueryParamsToMappingBuilder(entry) }}
             stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% endif %}
     }
 
-    {% if entry.value.requestBody != null and ["POST", "PUT"] contains entry.value.httpMethod.name() %}
-    public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}({{ entry.value.stubMethodArgumentListWithRequest | join(', ') | raw}}) {
+    {% if entry.value.requestBody != null and ["POST", "PUT"] contains entry.key.name() %}
+    public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}{{ addOptionalHttpMethodName(model, entry) }}({{ entry.value.stubMethodArgumentListWithRequest | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         {% if entry.value.hasOptionalMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)).withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
+            MappingBuilder mappingBuilder = {{entry.key.name() | lower}}(urlEqualTo(url)).withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
             stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% else %}
-            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url)).withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
+            MappingBuilder mappingBuilder = {{entry.key.name() | lower}}(urlPathEqualTo(url)).withRequestBody(equalToJson(buildBody({{ entry.value.requestBody.name }})));
             {{ addQueryParamsToMappingBuilder(entry) }}
             stub({% if entry.value.responseStatus is empty%}OK{% else %}{{ entry.value.responseStatus }}{% endif %}, {% if entry.value.responseType is not empty%}buildBody(response){% else %}null{% endif %}, mappingBuilder);
         {% endif %}
     }
     {% endif %}
 
-    public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}({{ entry.value.stubMethodArgumentListForCustomResponse | join(', ') | raw}}) {
+    public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}{{ addOptionalHttpMethodName(model, entry) }}({{ entry.value.stubMethodArgumentListForCustomResponse | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         {% if entry.value.hasOptionalMultiValueRequestParams %}
             {{ addRequestParamsToUrl(entry) }}
-            stub(httpStatus, response, {{entry.value.httpMethod.name() | lower}}(urlEqualTo(url)));
+            stub(httpStatus, response, {{entry.key.name() | lower}}(urlEqualTo(url)));
         {% else %}
-            MappingBuilder mappingBuilder = {{entry.value.httpMethod.name() | lower}}(urlPathEqualTo(url));
+            MappingBuilder mappingBuilder = {{entry.key.name() | lower}}(urlPathEqualTo(url));
         {{ addQueryParamsToMappingBuilder(entry) }}
             stub(httpStatus, response, mappingBuilder);
         {% endif %}
     }
 
-    public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
-        verify{{entry.value.methodName}}({{ entry.value.verifyStubCallArgumentList | join(', ') | raw}});
+    public void verify{{entry.value.methodName}}{{ addOptionalHttpMethodName(model, entry) }}({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
+        verify{{entry.value.methodName}}{{ addOptionalHttpMethodName(model, entry) }}({{ entry.value.verifyStubCallArgumentList | join(', ') | raw}});
     }
 
-    public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimes | join(', ') | raw}}) {
+    public void verify{{entry.value.methodName}}{{ addOptionalHttpMethodName(model, entry) }}({{ entry.value.verifyMethodArgumentListWithTimes | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
-        RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
+        RequestPatternBuilder requestPatternBuilder = {{entry.key.name() | lower}}RequestedFor(urlPathEqualTo(url));
         {{ addQueryParamsToRequestPatternBuilder(entry) }}
         {{ addRequestHeadersToRequestPatternBuilder(entry) }}
         {% if entry.value.requestBody is not empty%}
@@ -105,18 +107,18 @@ public class {{model.stubClassName}} {
     }
 
     {% if entry.value.verifyMethodArgumentListWithTimesWithoutBody != entry.value.verifyMethodArgumentListWithTimes %}
-    public void verify{{entry.value.methodName}}({{ entry.value.verifyMethodArgumentListWithTimesWithoutBody | join(', ') | raw}}) {
+    public void verify{{entry.value.methodName}}{{ addOptionalHttpMethodName(model, entry) }}({{ entry.value.verifyMethodArgumentListWithTimesWithoutBody | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
-        RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
+        RequestPatternBuilder requestPatternBuilder = {{entry.key.name() | lower}}RequestedFor(urlPathEqualTo(url));
         {{ addQueryParamsToRequestPatternBuilder(entry) }}
         {{ addRequestHeadersToRequestPatternBuilder(entry) }}
         verify(times, requestPatternBuilder);
     }
     {% endif %}
 
-    public void verify{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
+    public void verify{{entry.value.methodName}}NoInteraction{{ addOptionalHttpMethodName(model, entry) }}({{ entry.value.verifyMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
-        RequestPatternBuilder requestPatternBuilder = {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url));
+        RequestPatternBuilder requestPatternBuilder = {{entry.key.name() | lower}}RequestedFor(urlPathEqualTo(url));
         {{ addQueryParamsToRequestPatternBuilder(entry) }}
         {{ addRequestHeadersToRequestPatternBuilder(entry) }}
         {% if entry.value.requestBody is not empty%}
@@ -126,11 +128,12 @@ public class {{model.stubClassName}} {
     }
 
     {% if not entry.value.hasOptionalMultiValueRequestParams and entry.value.verifyMethodArgumentList != entry.value.verifyMethodArgumentListPathVariablesOnly %}
-    public void verify{{entry.value.methodName}}NoInteraction({{ entry.value.verifyMethodArgumentListPathVariablesOnly | join(', ') | raw}}) {
+    public void verify{{entry.value.methodName}}NoInteraction{{ addOptionalHttpMethodName(model, entry) }}({{ entry.value.verifyMethodArgumentListPathVariablesOnly | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
-        verify(NEVER, {{entry.value.httpMethod.name() | lower}}RequestedFor(urlPathEqualTo(url)));
+        verify(NEVER, {{entry.key.name() | lower}}RequestedFor(urlPathEqualTo(url)));
     }
     {% endif %}
+{% endfor %}
 {% endfor %}
 
     void stub(final int status, final String response, final MappingBuilder mappingBuilder) {
@@ -309,4 +312,8 @@ if ({{entry2.value.name}} != null) {
             }
         {% endif %}
     {% endfor %}
+{% endmacro %}
+
+{% macro addOptionalHttpMethodName(model, entry) %}
+{%if model.hasMultipleHttpMethods %}_{{ entry.key }}{% endif %}
 {% endmacro %}
