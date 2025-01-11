@@ -17,8 +17,6 @@ class MethodMappingAnnotationHandler {
     ) {
         val methodModelKey = element.toString()
         val methodName = element.simpleName.toString()
-        println("element.enclosingElement.toString()=${element.enclosingElement}")
-        println("methodModelKey=${methodModelKey}")
         val controllerModel = model.getControllerModel(element.enclosingElement.toString())
         val resourceModel = controllerModel.getResourceModel(methodModelKey).getOrPut(httpMethod) { ResourceModel() }
         resourceModel.subResource = subResource(path, value)

@@ -13,13 +13,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.web.bind.annotation.*
 import javax.annotation.processing.*
-import javax.lang.model.SourceVersion
+import javax.lang.model.SourceVersion.RELEASE_17
 import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind.CLASS
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ElementKind.*
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic.Kind.NOTE
 
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(RELEASE_17)
 class ControllerProcessor : AbstractProcessor() {
     private lateinit var restControllerAnnotationHandler: RestControllerAnnotationHandler
     private lateinit var messager: Messager
@@ -53,9 +54,7 @@ class ControllerProcessor : AbstractProcessor() {
         RequestHeader::class.java.canonicalName,
     )
 
-    override fun getSupportedSourceVersion(): SourceVersion {
-        return SourceVersion.RELEASE_17
-    }
+    override fun getSupportedSourceVersion() = RELEASE_17
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
 
@@ -67,11 +66,16 @@ class ControllerProcessor : AbstractProcessor() {
         }
         val annotatedClasses = stubAnnotations.flatMap { roundEnv.getElementsAnnotatedWith(it) }
 
-        for (annotation in annotations) {
-            val annotatedElements = roundEnv.getElementsAnnotatedWith(annotation)
-            annotatedElements
+        // Collect all elements first
+        val allElements = annotations.flatMap { annotation ->
+            roundEnv.getElementsAnnotatedWith(annotation)
                 .filter(elementsBelongingToAnnotatedClasses(annotatedClasses))
-                .forEach { element: Element ->
+        }
+
+        // Sort once
+        val sortedElements = allElements.sortedBy { getElementOrder(it.kind) }
+
+            sortedElements.forEach { element: Element ->
                     element.getAnnotation(RestController::class.java)?.let {
                         val controllerModel = model.getControllerModel(element.toString())
                         restControllerAnnotationHandler.handle(element, controllerModel)
@@ -133,35 +137,39 @@ class ControllerProcessor : AbstractProcessor() {
                                     path = path,
                                     value = value,
                                     httpMethod = method.asHttpMethod(),
-                                    responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
+                                    responseType = element.asType().toString().retrieveResponseType()
+                                        ?.removeResponseEntity()
                                 )
                             }
                         }
                     }
                     element.getAnnotation(ResponseStatus::class.java)?.let {
-                        val value: HttpStatus =
+                        val httpStatus: HttpStatus =
                             if (it.code != INTERNAL_SERVER_ERROR) it.code
                             else it.value
                         if (element.kind == CLASS) {
                             val controllerModel = model.getControllerModel(element.toString())
-                            controllerModel.responseStatus = value.value()
+                            controllerModel.responseStatus = httpStatus.value()
                         } else {
                             val methodModelKey = element.toString()
                             val controllerModel = model.getControllerModel(element.enclosingElement.toString())
                             controllerModel.getResourceModel(methodModelKey).values
-                                .forEach {resourceModel ->  resourceModel.responseStatus = value.value()}
+                                .forEach { resourceModel -> resourceModel.responseStatus = httpStatus.value() }
                         }
                     }
                     element.getAnnotation(RequestParam::class.java)?.let {
                         val argumentName = firstNotNull(it.name, it.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
                         val argumentType = element.retrieveArgumentType().replacePrimitive()
-                        val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
-                        controllerModel.getResourceModel(methodName).values.forEach {resourceModel ->
+                        val controllerModel =
+                            model.getControllerModel(element.enclosingElement.enclosingElement.toString())
+                        controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
                             resourceModel.getRequestParamModel(argumentName).type = argumentType
                             resourceModel.getRequestParamModel(argumentName).name = argumentName
                             resourceModel.getRequestParamModel(argumentName).optional = !it.required
-                            if ("java.util.Set<(.*)>|java.util.List<(.*)>|java.lang.String\\[]".toRegex().containsMatchIn(argumentType)) {
+                            if ("java.util.Set<(.*)>|java.util.List<(.*)>|java.lang.String\\[]".toRegex()
+                                    .containsMatchIn(argumentType)
+                            ) {
                                 if (!resourceModel.hasOptionalMultiValueRequestParams) { // So that other non-optional multi value query parameters don't overwrite this value
                                     resourceModel.hasOptionalMultiValueRequestParams = !it.required
                                 }
@@ -173,7 +181,8 @@ class ControllerProcessor : AbstractProcessor() {
                         val argumentName = firstNotNull(it.name, it.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
                         val argumentType = element.retrieveArgumentType()
-                        val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
+                        val controllerModel =
+                            model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
                             resourceModel.urlHasPathVariable = true
                             resourceModel.getPathVariableModel(argumentName).type = argumentType
@@ -184,7 +193,8 @@ class ControllerProcessor : AbstractProcessor() {
                         val methodName = element.enclosingElement.toString()
                         val argumentName = element.simpleName.toString()
                         val argumentType = element.retrieveArgumentType()
-                        val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
+                        val controllerModel =
+                            model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         val requestBody = ArgumentModel(type = argumentType, name = argumentName)
                         controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
                             resourceModel.requestBody = requestBody
@@ -212,7 +222,8 @@ class ControllerProcessor : AbstractProcessor() {
                         val headerName = firstNotNull(it.name, it.value, element.simpleName.toString())
                         val methodName = element.enclosingElement.toString()
                         val argumentType = element.retrieveArgumentType()
-                        val controllerModel = model.getControllerModel(element.enclosingElement.enclosingElement.toString())
+                        val controllerModel =
+                            model.getControllerModel(element.enclosingElement.enclosingElement.toString())
                         controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
                             resourceModel.getRequestHeaderModel(argumentName).type = argumentType
                             resourceModel.getRequestHeaderModel(argumentName).name = argumentName
@@ -221,7 +232,6 @@ class ControllerProcessor : AbstractProcessor() {
                         }
                     }
                 }
-        }
 
         postProcessor.update(model)
 
@@ -244,5 +254,13 @@ class ControllerProcessor : AbstractProcessor() {
                     annotatedClasses.contains(it.enclosingElement) or
                     annotatedClasses.contains(it.enclosingElement.enclosingElement) or
                     annotatedClasses.contains(it.enclosingElement.enclosingElement.enclosingElement)
+        }
+
+    private fun getElementOrder(kind: ElementKind) =
+        when (kind) {
+            CLASS -> 1
+            METHOD -> 2
+            PARAMETER -> 3
+            else -> 4
         }
 }

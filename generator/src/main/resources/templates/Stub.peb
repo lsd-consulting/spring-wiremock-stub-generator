@@ -49,8 +49,9 @@ public class {{model.stubClassName}} {
 {% for map in model.getResources %}
 {% for entry in map.value %}
     {%if model.hasMultipleHttpMethods == false or model.hasMultipleHttpMethods and loop.index == 0%}
-    public static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
+public static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{model.rootResource}}{{entry.value.subResource}}";
     {% endif %}
+
     public void {{decapitaliseFirstLetterOf(entry.value.methodName)}}{{ addOptionalHttpMethodName(model, entry) }}({{ entry.value.stubMethodArgumentList | join(', ') | raw}}) {
         {{ generateUrlWithPathVariables(entry) }}
         {% if entry.value.hasOptionalMultiValueRequestParams %}

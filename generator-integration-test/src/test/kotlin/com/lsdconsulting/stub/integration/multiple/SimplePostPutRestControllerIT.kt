@@ -11,7 +11,7 @@ import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.http.*
+import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod.PUT
 import org.springframework.http.HttpStatus.OK
 
@@ -21,8 +21,8 @@ class SimplePostPutRestControllerIT : BaseRestControllerIT() {
 
     @Test
     fun `should handle post mapping with no request body`() {
-        underTest.verifyPostPutResourceWitNoRequestBodyNoInteraction()
-        underTest.postPutResourceWitNoRequestBody(GreetingResponse(name = name))
+        underTest.verifyPostPutResourceWitNoRequestBodyNoInteraction_POST()
+        underTest.postPutResourceWitNoRequestBody_POST(GreetingResponse(name = name))
 
         val response = restTemplate.postForEntity(
             "$MULTIPLE_METHOD_CONTROLLER_URL/postPutResource",
@@ -32,16 +32,16 @@ class SimplePostPutRestControllerIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyPostPutResourceWitNoRequestBody(1)
-        underTest.verifyPostPutResourceWitNoRequestBody()
+        underTest.verifyPostPutResourceWitNoRequestBody_POST(1)
+        underTest.verifyPostPutResourceWitNoRequestBody_POST()
         assertThat(response.statusCode, `is`(OK))
-        assertThrows<VerificationException> { underTest.verifyPostPutResourceWitNoRequestBodyNoInteraction() }
+        assertThrows<VerificationException> { underTest.verifyPostPutResourceWitNoRequestBodyNoInteraction_POST() }
     }
 
     @Test
     fun `should handle put mapping with no request body`() {
-        underTest.verifyPostPutResourceWitNoRequestBodyNoInteraction()
-        underTest.postPutResourceWitNoRequestBody(GreetingResponse(name = name))
+        underTest.verifyPostPutResourceWitNoRequestBodyNoInteraction_PUT()
+        underTest.postPutResourceWitNoRequestBody_PUT(GreetingResponse(name = name))
 
         val response = restTemplate.exchange(
             "$MULTIPLE_METHOD_CONTROLLER_URL/postPutResource", PUT,
@@ -51,9 +51,9 @@ class SimplePostPutRestControllerIT : BaseRestControllerIT() {
 
         assertThat(response.body, notNullValue())
         assertThat(response.body?.name, `is`(name))
-        underTest.verifyPostPutResourceWitNoRequestBody(1)
-        underTest.verifyPostPutResourceWitNoRequestBody()
+        underTest.verifyPostPutResourceWitNoRequestBody_PUT(1)
+        underTest.verifyPostPutResourceWitNoRequestBody_PUT()
         assertThat(response.statusCode, `is`(OK))
-        assertThrows<VerificationException> { underTest.verifyPostPutResourceWitNoRequestBodyNoInteraction() }
+        assertThrows<VerificationException> { underTest.verifyPostPutResourceWitNoRequestBodyNoInteraction_PUT() }
     }
 }
