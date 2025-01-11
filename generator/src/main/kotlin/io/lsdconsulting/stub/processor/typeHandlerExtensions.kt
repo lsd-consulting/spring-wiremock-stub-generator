@@ -1,6 +1,8 @@
 package io.lsdconsulting.stub.processor
 
 import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ElementKind.*
 
 fun Element.retrieveArgumentType(): String {
     var argumentType = this.asType().toString()
@@ -45,3 +47,11 @@ fun String.retrieveResponseType(): String? {
     val responseType = this.replace(Regex("\\(.*\\)"), "")
     return if (responseType.equals("void", true)) null else responseType
 }
+
+fun ElementKind.order() =
+    when (this) {
+        CLASS -> 1
+        METHOD -> 2
+        PARAMETER -> 3
+        else -> 4
+    }

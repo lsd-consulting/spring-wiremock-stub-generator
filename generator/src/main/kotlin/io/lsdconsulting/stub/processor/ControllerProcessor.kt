@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion.RELEASE_17
 import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ElementKind.*
+import javax.lang.model.element.ElementKind.CLASS
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic.Kind.NOTE
 
@@ -64,174 +63,168 @@ class ControllerProcessor : AbstractProcessor() {
         if (stubAnnotations.isNotEmpty()) {
             messager.printMessage(NOTE, "Analysing source code for WireMock stubs")
         }
-        val annotatedClasses = stubAnnotations.flatMap { roundEnv.getElementsAnnotatedWith(it) }
+        val generateWireMockStubAnnotatedClasses = stubAnnotations.flatMap { roundEnv.getElementsAnnotatedWith(it) }
 
-        // Collect all elements first
-        val allElements = annotations.flatMap { annotation ->
-            roundEnv.getElementsAnnotatedWith(annotation)
-                .filter(elementsBelongingToAnnotatedClasses(annotatedClasses))
-        }
+        val allSortedElements =
+            collectAllElements(annotations, roundEnv, generateWireMockStubAnnotatedClasses).sortedBy { it.kind.order() }
 
-        // Sort once
-        val sortedElements = allElements.sortedBy { getElementOrder(it.kind) }
-
-            sortedElements.forEach { element: Element ->
-                    element.getAnnotation(RestController::class.java)?.let {
-                        val controllerModel = model.getControllerModel(element.toString())
-                        restControllerAnnotationHandler.handle(element, controllerModel)
+        allSortedElements.forEach { element: Element ->
+            element.getAnnotation(RestController::class.java)?.let {
+                val controllerModel = model.getControllerModel(element.toString())
+                restControllerAnnotationHandler.handle(element, controllerModel)
+            }
+            element.getAnnotation(GetMapping::class.java)?.let {
+                methodMappingAnnotationHandler.handle(
+                    element = element,
+                    model = model,
+                    path = it.path,
+                    value = it.value,
+                    httpMethod = GET,
+                    responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
+                )
+            }
+            element.getAnnotation(PostMapping::class.java)?.let {
+                methodMappingAnnotationHandler.handle(
+                    element = element,
+                    model = model,
+                    path = it.path,
+                    value = it.value,
+                    httpMethod = POST,
+                    responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
+                )
+            }
+            element.getAnnotation(PutMapping::class.java)?.let {
+                methodMappingAnnotationHandler.handle(
+                    element = element,
+                    model = model,
+                    path = it.path,
+                    value = it.value,
+                    httpMethod = PUT
+                )
+            }
+            element.getAnnotation(DeleteMapping::class.java)?.let {
+                methodMappingAnnotationHandler.handle(
+                    element = element,
+                    model = model,
+                    path = it.path,
+                    value = it.value,
+                    httpMethod = DELETE
+                )
+            }
+            element.getAnnotation(RequestMapping::class.java)?.let {
+                val path: Array<String> = it.path
+                val value: Array<String> = it.value
+                if (element.kind == CLASS) {
+                    val controllerModel = model.getControllerModel(element.toString())
+                    if (path.isNotEmpty()) {
+                        controllerModel.rootResource = path[0]
+                    } else if (value.isNotEmpty()) {
+                        controllerModel.rootResource = value[0]
                     }
-                    element.getAnnotation(GetMapping::class.java)?.let {
+                } else {
+                    val methods: Array<RequestMethod> = it.method
+                    methods.forEach { method ->
                         methodMappingAnnotationHandler.handle(
                             element = element,
                             model = model,
-                            path = it.path,
-                            value = it.value,
-                            httpMethod = GET,
-                            responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
+                            path = path,
+                            value = value,
+                            httpMethod = method.asHttpMethod(),
+                            responseType = element.asType().toString().retrieveResponseType()
+                                ?.removeResponseEntity()
                         )
-                    }
-                    element.getAnnotation(PostMapping::class.java)?.let {
-                        methodMappingAnnotationHandler.handle(
-                            element = element,
-                            model = model,
-                            path = it.path,
-                            value = it.value,
-                            httpMethod = POST,
-                            responseType = element.asType().toString().retrieveResponseType()?.removeResponseEntity()
-                        )
-                    }
-                    element.getAnnotation(PutMapping::class.java)?.let {
-                        methodMappingAnnotationHandler.handle(
-                            element = element,
-                            model = model,
-                            path = it.path,
-                            value = it.value,
-                            httpMethod = PUT
-                        )
-                    }
-                    element.getAnnotation(DeleteMapping::class.java)?.let {
-                        methodMappingAnnotationHandler.handle(
-                            element = element,
-                            model = model,
-                            path = it.path,
-                            value = it.value,
-                            httpMethod = DELETE
-                        )
-                    }
-                    element.getAnnotation(RequestMapping::class.java)?.let {
-                        val path: Array<String> = it.path
-                        val value: Array<String> = it.value
-                        if (element.kind == CLASS) {
-                            val controllerModel = model.getControllerModel(element.toString())
-                            if (path.isNotEmpty()) {
-                                controllerModel.rootResource = path[0]
-                            } else if (value.isNotEmpty()) {
-                                controllerModel.rootResource = value[0]
-                            }
-                        } else {
-                            val methods: Array<RequestMethod> = it.method
-                            methods.forEach { method ->
-                                methodMappingAnnotationHandler.handle(
-                                    element = element,
-                                    model = model,
-                                    path = path,
-                                    value = value,
-                                    httpMethod = method.asHttpMethod(),
-                                    responseType = element.asType().toString().retrieveResponseType()
-                                        ?.removeResponseEntity()
-                                )
-                            }
-                        }
-                    }
-                    element.getAnnotation(ResponseStatus::class.java)?.let {
-                        val httpStatus: HttpStatus =
-                            if (it.code != INTERNAL_SERVER_ERROR) it.code
-                            else it.value
-                        if (element.kind == CLASS) {
-                            val controllerModel = model.getControllerModel(element.toString())
-                            controllerModel.responseStatus = httpStatus.value()
-                        } else {
-                            val methodModelKey = element.toString()
-                            val controllerModel = model.getControllerModel(element.enclosingElement.toString())
-                            controllerModel.getResourceModel(methodModelKey).values
-                                .forEach { resourceModel -> resourceModel.responseStatus = httpStatus.value() }
-                        }
-                    }
-                    element.getAnnotation(RequestParam::class.java)?.let {
-                        val argumentName = firstNotNull(it.name, it.value, element.simpleName.toString())
-                        val methodName = element.enclosingElement.toString()
-                        val argumentType = element.retrieveArgumentType().replacePrimitive()
-                        val controllerModel =
-                            model.getControllerModel(element.enclosingElement.enclosingElement.toString())
-                        controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
-                            resourceModel.getRequestParamModel(argumentName).type = argumentType
-                            resourceModel.getRequestParamModel(argumentName).name = argumentName
-                            resourceModel.getRequestParamModel(argumentName).optional = !it.required
-                            if ("java.util.Set<(.*)>|java.util.List<(.*)>|java.lang.String\\[]".toRegex()
-                                    .containsMatchIn(argumentType)
-                            ) {
-                                if (!resourceModel.hasOptionalMultiValueRequestParams) { // So that other non-optional multi value query parameters don't overwrite this value
-                                    resourceModel.hasOptionalMultiValueRequestParams = !it.required
-                                }
-                                resourceModel.getRequestParamModel(argumentName).iterable = true
-                            }
-                        }
-                    }
-                    element.getAnnotation(PathVariable::class.java)?.let {
-                        val argumentName = firstNotNull(it.name, it.value, element.simpleName.toString())
-                        val methodName = element.enclosingElement.toString()
-                        val argumentType = element.retrieveArgumentType()
-                        val controllerModel =
-                            model.getControllerModel(element.enclosingElement.enclosingElement.toString())
-                        controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
-                            resourceModel.urlHasPathVariable = true
-                            resourceModel.getPathVariableModel(argumentName).type = argumentType
-                            resourceModel.getPathVariableModel(argumentName).name = argumentName
-                        }
-                    }
-                    element.getAnnotation(RequestBody::class.java)?.let {
-                        val methodName = element.enclosingElement.toString()
-                        val argumentName = element.simpleName.toString()
-                        val argumentType = element.retrieveArgumentType()
-                        val controllerModel =
-                            model.getControllerModel(element.enclosingElement.enclosingElement.toString())
-                        val requestBody = ArgumentModel(type = argumentType, name = argumentName)
-                        controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
-                            resourceModel.requestBody = requestBody
-                        }
-                    }
-                    element.getAnnotation(DateTimeFormat::class.java)?.let {
-                        val methodName = element.enclosingElement.toString()
-                        val argumentName = element.simpleName.toString()
-                        model
-                            .getControllerModel(element.enclosingElement.enclosingElement.toString())
-                            .getResourceModel(methodName)
-                            .values.forEach { resourceModel ->
-                                resourceModel.getRequestParamModel(argumentName).dateTimeFormatAnnotation =
-                                    DateTimeFormatAnnotation(
-                                        iso = it.iso.name,
-                                        fallbackPatterns = it.fallbackPatterns,
-                                        pattern = it.pattern,
-                                        style = it.style,
-                                        clazz = element.retrieveArgumentType().retrieveGeneric()
-                                    )
-                            }
-                    }
-                    element.getAnnotation(RequestHeader::class.java)?.let {
-                        val argumentName = firstNotNull(element.simpleName.toString())
-                        val headerName = firstNotNull(it.name, it.value, element.simpleName.toString())
-                        val methodName = element.enclosingElement.toString()
-                        val argumentType = element.retrieveArgumentType()
-                        val controllerModel =
-                            model.getControllerModel(element.enclosingElement.enclosingElement.toString())
-                        controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
-                            resourceModel.getRequestHeaderModel(argumentName).type = argumentType
-                            resourceModel.getRequestHeaderModel(argumentName).name = argumentName
-                            resourceModel.getRequestHeaderModel(argumentName).headerName = headerName
-                            resourceModel.getRequestHeaderModel(argumentName).optional = !it.required
-                        }
                     }
                 }
+            }
+            element.getAnnotation(ResponseStatus::class.java)?.let {
+                val httpStatus: HttpStatus =
+                    if (it.code != INTERNAL_SERVER_ERROR) it.code
+                    else it.value
+                if (element.kind == CLASS) {
+                    val controllerModel = model.getControllerModel(element.toString())
+                    controllerModel.responseStatus = httpStatus.value()
+                } else {
+                    val methodModelKey = element.toString()
+                    val controllerModel = model.getControllerModel(element.enclosingElement.toString())
+                    controllerModel.getResourceModel(methodModelKey).values
+                        .forEach { resourceModel -> resourceModel.responseStatus = httpStatus.value() }
+                }
+            }
+            element.getAnnotation(RequestParam::class.java)?.let {
+                val argumentName = firstNotNull(it.name, it.value, element.simpleName.toString())
+                val methodName = element.enclosingElement.toString()
+                val argumentType = element.retrieveArgumentType().replacePrimitive()
+                val controllerModel =
+                    model.getControllerModel(element.enclosingElement.enclosingElement.toString())
+                controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
+                    resourceModel.getRequestParamModel(argumentName).type = argumentType
+                    resourceModel.getRequestParamModel(argumentName).name = argumentName
+                    resourceModel.getRequestParamModel(argumentName).optional = !it.required
+                    if ("java.util.Set<(.*)>|java.util.List<(.*)>|java.lang.String\\[]".toRegex()
+                            .containsMatchIn(argumentType)
+                    ) {
+                        if (!resourceModel.hasOptionalMultiValueRequestParams) { // So that other non-optional multi value query parameters don't overwrite this value
+                            resourceModel.hasOptionalMultiValueRequestParams = !it.required
+                        }
+                        resourceModel.getRequestParamModel(argumentName).iterable = true
+                    }
+                }
+            }
+            element.getAnnotation(PathVariable::class.java)?.let {
+                val argumentName = firstNotNull(it.name, it.value, element.simpleName.toString())
+                val methodName = element.enclosingElement.toString()
+                val argumentType = element.retrieveArgumentType()
+                val controllerModel =
+                    model.getControllerModel(element.enclosingElement.enclosingElement.toString())
+                controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
+                    resourceModel.urlHasPathVariable = true
+                    resourceModel.getPathVariableModel(argumentName).type = argumentType
+                    resourceModel.getPathVariableModel(argumentName).name = argumentName
+                }
+            }
+            element.getAnnotation(RequestBody::class.java)?.let {
+                val methodName = element.enclosingElement.toString()
+                val argumentName = element.simpleName.toString()
+                val argumentType = element.retrieveArgumentType()
+                val controllerModel =
+                    model.getControllerModel(element.enclosingElement.enclosingElement.toString())
+                val requestBody = ArgumentModel(type = argumentType, name = argumentName)
+                controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
+                    resourceModel.requestBody = requestBody
+                }
+            }
+            element.getAnnotation(DateTimeFormat::class.java)?.let {
+                val methodName = element.enclosingElement.toString()
+                val argumentName = element.simpleName.toString()
+                model
+                    .getControllerModel(element.enclosingElement.enclosingElement.toString())
+                    .getResourceModel(methodName)
+                    .values.forEach { resourceModel ->
+                        resourceModel.getRequestParamModel(argumentName).dateTimeFormatAnnotation =
+                            DateTimeFormatAnnotation(
+                                iso = it.iso.name,
+                                fallbackPatterns = it.fallbackPatterns,
+                                pattern = it.pattern,
+                                style = it.style,
+                                clazz = element.retrieveArgumentType().retrieveGeneric()
+                            )
+                    }
+            }
+            element.getAnnotation(RequestHeader::class.java)?.let {
+                val argumentName = firstNotNull(element.simpleName.toString())
+                val headerName = firstNotNull(it.name, it.value, element.simpleName.toString())
+                val methodName = element.enclosingElement.toString()
+                val argumentType = element.retrieveArgumentType()
+                val controllerModel =
+                    model.getControllerModel(element.enclosingElement.enclosingElement.toString())
+                controllerModel.getResourceModel(methodName).values.forEach { resourceModel ->
+                    resourceModel.getRequestHeaderModel(argumentName).type = argumentType
+                    resourceModel.getRequestHeaderModel(argumentName).name = argumentName
+                    resourceModel.getRequestHeaderModel(argumentName).headerName = headerName
+                    resourceModel.getRequestHeaderModel(argumentName).optional = !it.required
+                }
+            }
+        }
 
         postProcessor.update(model)
 
@@ -246,6 +239,15 @@ class ControllerProcessor : AbstractProcessor() {
         return true
     }
 
+    private fun collectAllElements(
+        annotations: MutableSet<out TypeElement>,
+        roundEnv: RoundEnvironment,
+        generateWireMockStubAnnotatedClasses: List<Element>
+    ) = annotations.flatMap { annotation ->
+        roundEnv.getElementsAnnotatedWith(annotation)
+            .filter(elementsBelongingToAnnotatedClasses(generateWireMockStubAnnotatedClasses))
+    }
+
     private fun firstNotNull(vararg elements: String) = elements.first { it.isNotEmpty() }
 
     private fun elementsBelongingToAnnotatedClasses(annotatedClasses: List<Element>): (Element) -> Boolean =
@@ -254,13 +256,5 @@ class ControllerProcessor : AbstractProcessor() {
                     annotatedClasses.contains(it.enclosingElement) or
                     annotatedClasses.contains(it.enclosingElement.enclosingElement) or
                     annotatedClasses.contains(it.enclosingElement.enclosingElement.enclosingElement)
-        }
-
-    private fun getElementOrder(kind: ElementKind) =
-        when (kind) {
-            CLASS -> 1
-            METHOD -> 2
-            PARAMETER -> 3
-            else -> 4
         }
 }
