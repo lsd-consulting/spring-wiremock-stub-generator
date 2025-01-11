@@ -3,7 +3,7 @@ package io.lsdconsulting.stub.model
 import org.springframework.http.HttpMethod
 
 data class Model(
-    // Class name to ControllerModel
+    // Controller class name to ControllerModel
     val controllers: MutableMap<String, ControllerModel> = mutableMapOf(),
 ) {
     fun getControllerModel(name: String): ControllerModel = controllers.getOrPut(name) {ControllerModel()}
@@ -15,7 +15,7 @@ data class ControllerModel(
     var stubClassName: String? = null,
     var rootResource: String? = null,
     var responseStatus: Int? = null,
-    // Class method name to map of HttpMethod to ResourceModel
+    // Annotated method name to map of HttpMethod to ResourceModel
     val resources: MutableMap<String, MutableMap<HttpMethod, ResourceModel>> = mutableMapOf(),
     var containsDateTimeFormat: Boolean = false,
     var hasMultipleHttpMethods: Boolean = false
@@ -23,8 +23,9 @@ data class ControllerModel(
     fun getResourceModel(name: String): MutableMap<HttpMethod, ResourceModel> = resources.getOrPut(name) {mutableMapOf()}
 }
 
+// TODO Rename to AnnotatedMethodModel
 data class ResourceModel(
-    var methodName: String? = null, // TODO Rename to `resourceMethodName`
+    var methodName: String? = null, // TODO Rename to `annotatedMethodName`
     var responseType: String? = null,
     var responseStatus: Int? = null,
     var subResource: String? = null,
@@ -48,6 +49,7 @@ data class ResourceModel(
     fun getRequestHeaderModel(name: String): ArgumentModel = requestHeaders.getOrPut(name) {ArgumentModel()}
 }
 
+// TODO Rename to MethodArgumentModel
 data class ArgumentModel(
     var name: String? = null,
     var headerName: String? = null,
