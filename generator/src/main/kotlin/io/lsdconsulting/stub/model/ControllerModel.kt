@@ -24,7 +24,6 @@ data class ControllerModel(
 }
 
 data class ResourceModel(
-//    var httpMethod: HttpMethod? = null,
     var methodName: String? = null, // TODO Rename to `resourceMethodName`
     var responseType: String? = null,
     var responseStatus: Int? = null,
