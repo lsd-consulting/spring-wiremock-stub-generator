@@ -3,6 +3,7 @@ package io.lsdconsulting.stub.model
 import org.springframework.http.HttpMethod
 
 data class Model(
+    // Controller class name to ControllerModel
     val controllers: MutableMap<String, ControllerModel> = mutableMapOf(),
 ) {
     fun getControllerModel(name: String): ControllerModel = controllers.getOrPut(name) {ControllerModel()}
@@ -14,15 +15,17 @@ data class ControllerModel(
     var stubClassName: String? = null,
     var rootResource: String? = null,
     var responseStatus: Int? = null,
-    val resources: MutableMap<String, ResourceModel> = mutableMapOf(),
-    var containsDateTimeFormat: Boolean = false
+    // Annotated method name to map of HttpMethod to ResourceModel
+    val resources: MutableMap<String, MutableMap<HttpMethod, ResourceModel>> = mutableMapOf(),
+    var containsDateTimeFormat: Boolean = false,
+    var hasMultipleHttpMethods: Boolean = false
 ) {
-    fun getResourceModel(name: String): ResourceModel = resources.getOrPut(name) {ResourceModel()}
+    fun getResourceModel(name: String): MutableMap<HttpMethod, ResourceModel> = resources.getOrPut(name) {mutableMapOf()}
 }
 
+// TODO Rename to AnnotatedMethodModel
 data class ResourceModel(
-    var httpMethod: HttpMethod? = null,
-    var methodName: String? = null,
+    var methodName: String? = null, // TODO Rename to `annotatedMethodName`
     var responseType: String? = null,
     var responseStatus: Int? = null,
     var subResource: String? = null,
@@ -46,6 +49,7 @@ data class ResourceModel(
     fun getRequestHeaderModel(name: String): ArgumentModel = requestHeaders.getOrPut(name) {ArgumentModel()}
 }
 
+// TODO Rename to MethodArgumentModel
 data class ArgumentModel(
     var name: String? = null,
     var headerName: String? = null,
@@ -53,8 +57,7 @@ data class ArgumentModel(
     var iterable: Boolean = false,
     var optional: Boolean = false,
     var dateTimeFormatAnnotation: DateTimeFormatAnnotation? = null,
-) {
-}
+)
 
 data class DateTimeFormatAnnotation(
     val iso: String?,

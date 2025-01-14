@@ -1,7 +1,6 @@
 package io.lsdconsulting.stub.handler;
 
 import io.lsdconsulting.stub.model.ControllerModel;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +11,7 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.util.Elements;
 import java.lang.annotation.Annotation;
 
+import static org.apache.commons.lang3.RandomStringUtils.secure;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -27,11 +27,11 @@ class RestControllerAnnotationHandlerShould {
 
     private final RestControllerAnnotationHandler underTest = new RestControllerAnnotationHandler(elementUtils);
 
-    private final String controllerBeanName = RandomStringUtils.randomAlphabetic(10);
-    private final String annotatedClassName = RandomStringUtils.randomAlphabetic(10);
-    private final String packageNameString = RandomStringUtils.randomAlphabetic(10);
-    private final String stubPackageName = RandomStringUtils.randomAlphabetic(10);
-    private final String stubClassName = RandomStringUtils.randomAlphabetic(10);
+    private final String controllerBeanName = secure().nextAlphanumeric(10);
+    private final String annotatedClassName = secure().nextAlphanumeric(10);
+    private final String packageNameString = secure().nextAlphanumeric(10);
+    private final String stubPackageName = secure().nextAlphanumeric(10);
+    private final String stubClassName = secure().nextAlphanumeric(10);
 
     private final ControllerModel model = new ControllerModel();
 

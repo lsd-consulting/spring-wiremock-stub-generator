@@ -33,7 +33,7 @@ public class JavaPostRestControllerStub {
 
 
     public static final String RESOURCEWITHBODYANDANNOTATIONS_URL = "/postController/resourceWithBodyAndAnnotations";
-
+    
     public void resourceWithBodyAndAnnotations(com.lsdconsulting.stub.integration.model.GreetingResponse response) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONS_URL);
                     MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
@@ -81,7 +81,7 @@ public class JavaPostRestControllerStub {
         verify(NEVER, postRequestedFor(urlPathEqualTo(url)));
     }
         public static final String RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL = "/postController/resourceWithBodyAndAnnotationsOnPathVariables/%s";
-
+    
     public void resourceWithBodyAndAnnotationsOnPathVariables(com.lsdconsulting.stub.integration.model.GreetingResponse response, java.lang.String param) {
         String url = String.format(RESOURCEWITHBODYANDANNOTATIONSONPATHVARIABLES_URL, param );
                     MappingBuilder mappingBuilder = post(urlPathEqualTo(url));
@@ -149,6 +149,7 @@ public class JavaPostRestControllerStub {
     }
 
 }
+
 
 
 

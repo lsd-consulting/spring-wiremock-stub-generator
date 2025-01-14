@@ -10,6 +10,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.hasProperty
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpMethod.POST
 import kotlin.random.Random
 
 internal class PostProcessorShould {
@@ -20,17 +21,19 @@ internal class PostProcessorShould {
     @Test
     fun `set response status on unannotated methods when class annotated`() {
         val controllerModel = ControllerModel(responseStatus = responseStatus)
-        controllerModel.resources["1"] = ResourceModel()
-        controllerModel.resources["2"] = ResourceModel()
-        controllerModel.resources["3"] = ResourceModel()
+        controllerModel.resources["1"] = mutableMapOf(POST to ResourceModel())
+        controllerModel.resources["2"] = mutableMapOf(POST to ResourceModel())
+        controllerModel.resources["3"] = mutableMapOf(POST to ResourceModel())
         val model = Model()
         model.controllers["someClass"] = controllerModel
 
         underTest.update(model)
 
         model.controllers.values.forEach { controller ->
-            controller.resources.values.forEach {
-                assertThat(it.responseStatus, `is`(responseStatus))
+            controller.resources.values.forEach { resource ->
+                resource.values.forEach {
+                    assertThat(it.responseStatus, `is`(responseStatus))
+                }
             }
         }
     }
@@ -41,19 +44,19 @@ internal class PostProcessorShould {
         val resourceModelWithResponseStatus = ResourceModel()
         val resourceResponseStatus = Random.nextInt()
         resourceModelWithResponseStatus.responseStatus = resourceResponseStatus
-        controllerModel.resources["1"] = resourceModelWithResponseStatus
-        controllerModel.resources["2"] = ResourceModel()
+        controllerModel.resources["1"] = mutableMapOf(POST to resourceModelWithResponseStatus)
+        controllerModel.resources["2"] = mutableMapOf(POST to ResourceModel())
         val model = Model()
         model.controllers["someClass"] = controllerModel
 
         underTest.update(model)
 
         assertThat(
-            model.controllers.values.first().resources.values,
+            model.controllers.values.first().resources.values.first().values,
             hasItem(hasProperty<ResourceModel>("responseStatus", equalTo(resourceResponseStatus)))
         )
         assertThat(
-            model.controllers.values.first().resources.values,
+            model.controllers.values.first().resources.values.stream().toList()[1].values,
             hasItem(hasProperty<ResourceModel>("responseStatus", equalTo(responseStatus)))
         )
     }
@@ -64,19 +67,15 @@ internal class PostProcessorShould {
         val resourceModelWithResponseStatus = ResourceModel()
         val resourceResponseStatus = Random.nextInt()
         resourceModelWithResponseStatus.responseStatus = resourceResponseStatus
-        controllerModel.resources["1"] = resourceModelWithResponseStatus
-        controllerModel.resources["2"] = resourceModelWithResponseStatus
+        controllerModel.resources["1"] = mutableMapOf(POST to resourceModelWithResponseStatus)
+        controllerModel.resources["2"] = mutableMapOf(POST to resourceModelWithResponseStatus)
         val model = Model()
         model.controllers["someClass"] = controllerModel
 
         underTest.update(model)
 
         assertThat(
-            model.controllers.values.first().resources.values,
-            hasItem(hasProperty<ResourceModel>("responseStatus", equalTo(resourceResponseStatus)))
-        )
-        assertThat(
-            model.controllers.values.first().resources.values,
+            model.controllers.values.first().resources.values.first().values,
             hasItem(hasProperty<ResourceModel>("responseStatus", equalTo(resourceResponseStatus)))
         )
     }
@@ -90,13 +89,13 @@ internal class PostProcessorShould {
                 subResource = "/subResource/{param1}/{param2}",
                 pathVariables = mutableMapOf("1" to ArgumentModel("param1"), "2" to ArgumentModel("param2"))
             )
-        controllerModel.resources["1"] = resourceModel
+        controllerModel.resources["1"] = mutableMapOf(POST to resourceModel)
         val model = Model()
         model.controllers["someClass"] = controllerModel
 
         underTest.update(model)
 
-        assertThat(model.controllers.values.first().resources.values.first().subResource, `is`("/subResource/%s/%s"))
+        assertThat(model.controllers.values.first().resources.values.first()[POST]?.subResource, `is`("/subResource/%s/%s"))
     }
 
     @Test
@@ -107,12 +106,12 @@ internal class PostProcessorShould {
                 urlHasPathVariable = false,
                 subResource = "/subResource/{param1}/{param2}"
             )
-        controllerModel.resources["1"] = resourceModel
+        controllerModel.resources["1"] = mutableMapOf(POST to resourceModel)
         val model = Model()
         model.controllers["someClass"] = controllerModel
 
         underTest.update(model)
 
-        assertThat(model.controllers.values.first().resources.values.first().subResource, `is`("/subResource/{param1}/{param2}"))
+        assertThat(model.controllers.values.first().resources.values.first()[POST]?.subResource, `is`("/subResource/{param1}/{param2}"))
     }
 }

@@ -1,6 +1,7 @@
 package io.lsdconsulting.stub.handler
 
 import io.lsdconsulting.stub.model.Model
+import io.lsdconsulting.stub.model.ResourceModel
 import org.apache.commons.lang3.StringUtils.capitalize
 import org.springframework.http.HttpMethod
 import javax.lang.model.element.Element
@@ -17,10 +18,10 @@ class MethodMappingAnnotationHandler {
         val methodModelKey = element.toString()
         val methodName = element.simpleName.toString()
         val controllerModel = model.getControllerModel(element.enclosingElement.toString())
-        controllerModel.getResourceModel(methodModelKey).subResource = subResource(path, value)
-        controllerModel.getResourceModel(methodModelKey).httpMethod = httpMethod
-        controllerModel.getResourceModel(methodModelKey).methodName = capitalize(methodName)
-        controllerModel.getResourceModel(methodModelKey).responseType = responseType
+        val resourceModel = controllerModel.getResourceModel(methodModelKey).getOrPut(httpMethod) { ResourceModel() }
+        resourceModel.subResource = subResource(path, value)
+        resourceModel.methodName = capitalize(methodName)
+        resourceModel.responseType = responseType
     }
 
     private fun subResource(path: Array<String>, value: Array<String>) =
