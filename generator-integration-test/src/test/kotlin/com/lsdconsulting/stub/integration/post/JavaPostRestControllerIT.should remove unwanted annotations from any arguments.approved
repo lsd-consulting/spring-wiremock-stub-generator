@@ -148,6 +148,15 @@ public class JavaPostRestControllerStub {
         }
     }
 
+
+    public String joinWithFirstSeparator(String firstSep, String sep, List<String> strings) {
+        if (strings.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder(strings.get(0));
+        for (int i = 1; i < strings.size(); i++) {
+            sb.append(i == 1 ? firstSep : sep).append(strings.get(i));
+        }
+        return sb.toString();
+    }
 }
 
 

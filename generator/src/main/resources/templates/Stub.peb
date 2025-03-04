@@ -200,6 +200,7 @@ public static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{mod
             throw new RuntimeException(e);
         }
     }
+{% endif %}
 
     public String joinWithFirstSeparator(String firstSep, String sep, List<String> strings) {
         if (strings.isEmpty()) return "";
@@ -209,7 +210,6 @@ public static final String {{entry.value.methodName.toUpperCase()}}_URL = "{{mod
         }
         return sb.toString();
     }
-{% endif %}
 }
 {% macro generateUrlWithPathVariables(entry) %}
 String url = String.format({{entry.value.methodName.toUpperCase()}}_URL{% for entry2 in entry.value.pathVariables %}, {{entry2.value.name}} {% endfor %});
