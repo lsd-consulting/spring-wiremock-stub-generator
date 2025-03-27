@@ -43,5 +43,5 @@ dependencies {
     }
     testImplementation 'org.wiremock:wiremock:3.12.1'
     testImplementation 'com.oneeyedmen:okeydoke:2.0.3'
-    testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.4.2'
+    testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.4.3'
 }
