@@ -6,7 +6,7 @@ plugins {
     id 'maven-publish'
     id 'jacoco'
     id "org.jetbrains.kotlin.jvm"
-    id "org.jetbrains.kotlin.plugin.spring" version "2.1.20"
+    id "org.jetbrains.kotlin.plugin.spring" version "2.3.0"
 }
 
 description = "This is an annotation processor for Spring MVC @RestController annotation. It generates the Java code of the Wiremock stubs."
