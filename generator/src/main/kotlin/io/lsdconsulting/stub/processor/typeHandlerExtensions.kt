@@ -9,7 +9,13 @@ fun Element.retrieveArgumentType(): String {
     this.asType().annotationMirrors.forEach {
         argumentType = argumentType.replace(it.toString(), "")
     }
-    return argumentType.replace(",", "").trim()
+    // Spring Framework 7 / Boot 4 can emit type-use annotations mid-name
+    // (e.g. "java.lang.@NotNull String"); stripping them leaves "java.lang. String".
+    return argumentType
+        .replace(",", "")
+        .replace(Regex("\\s*\\.\\s*"), ".")
+        .replace(Regex("\\s+"), " ")
+        .trim()
 }
 
 fun String.retrieveGeneric() =

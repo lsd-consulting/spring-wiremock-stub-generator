@@ -16,7 +16,7 @@ jobs:
     uses: lsd-consulting/shared-workflows/.github/workflows/build.yml@main
     with:
       operating-system: ubuntu-22.04
-      java-version: '17'
+      java-version: '21'
       codecov: true
       codecov-path: 'generator/build/reports/jacoco/test/jacocoTestReport.xml'
       artifact-path: 'generator/build/reports'
@@ -25,5 +25,5 @@ jobs:
     needs: build
     uses: lsd-consulting/shared-workflows/.github/workflows/release.yml@main
     with:
-      java-version: '17'
+      java-version: '21'
     secrets: inherit
