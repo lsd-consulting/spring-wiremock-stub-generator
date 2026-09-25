@@ -8,5 +8,5 @@ jobs:
     uses: lsd-consulting/shared-workflows/.github/workflows/build.yml@main
     with:
       operating-system: ubuntu-22.04
-      java-version: '17'
+      java-version: '21'
       artifact-path: '**/build/reports'

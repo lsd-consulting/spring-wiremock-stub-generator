@@ -13,13 +13,13 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.web.bind.annotation.*
 import javax.annotation.processing.*
-import javax.lang.model.SourceVersion.RELEASE_17
+import javax.lang.model.SourceVersion.RELEASE_21
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind.CLASS
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic.Kind.NOTE
 
-@SupportedSourceVersion(RELEASE_17)
+@SupportedSourceVersion(RELEASE_21)
 class ControllerProcessor : AbstractProcessor() {
     private lateinit var restControllerAnnotationHandler: RestControllerAnnotationHandler
     private lateinit var messager: Messager
@@ -53,7 +53,7 @@ class ControllerProcessor : AbstractProcessor() {
         RequestHeader::class.java.canonicalName,
     )
 
-    override fun getSupportedSourceVersion() = RELEASE_17
+    override fun getSupportedSourceVersion() = RELEASE_21
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
 

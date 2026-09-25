@@ -1,18 +1,18 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id 'org.springframework.boot' version '3.4.5' apply false
+    id 'org.springframework.boot' version '4.1.1' apply false
     id 'signing'
     id 'maven-publish'
     id 'jacoco'
     id "org.jetbrains.kotlin.jvm"
-    id "org.jetbrains.kotlin.plugin.spring" version "2.1.20"
+    id "org.jetbrains.kotlin.plugin.spring" version "2.4.20"
 }
 
 description = "This is an annotation processor for Spring MVC @RestController annotation. It generates the Java code of the Wiremock stubs."
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -24,22 +24,23 @@ dependencyManagement {
 
 dependencies {
     // kotlin
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:2.1.20'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.20'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.1.20"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-common:2.1.20"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.1.20"
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:2.4.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.4.20'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.4.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-common:2.4.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.4.20"
 
     implementation "io.pebbletemplates:pebble:3.2.4"
-    implementation 'org.apache.commons:commons-text:1.13.1'
+    implementation 'org.apache.commons:commons-text:1.15.0'
 
-    implementation 'org.springframework:spring-web:6.2.6'
-    implementation 'org.springframework:spring-context:6.2.6'
+    implementation 'org.springframework:spring-web:7.0.9'
+    implementation 'org.springframework:spring-context:7.0.9'
 
 
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.2'
-    testImplementation 'io.mockk:mockk-jvm:1.14.2'
-    testImplementation 'org.mockito:mockito-core:5.17.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:6.1.3'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'io.mockk:mockk-jvm:1.14.11'
+    testImplementation 'org.mockito:mockito-core:5.23.0'
     testImplementation 'org.hamcrest:hamcrest:3.0'
 }
 
@@ -78,7 +79,7 @@ test {
 }
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.13"
 }
 
 jacocoTestReport {

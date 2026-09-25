@@ -59,3 +59,19 @@ internal class ElementTypeRetrieverShould {
         assertThat(result, `is`("some.Class"))
     }
 }
+
+    @Test
+    fun `remove type-use annotation embedded in qualified name`() {
+        val element = mockk<Element>()
+        val type = mockk<TypeMirror>()
+        val annotationMirror = mockk<AnnotationMirror>()
+
+        every { element.asType() } returns type
+        every { type.toString() } returns "java.lang.@jakarta.validation.constraints.NotNull String"
+        every { type.annotationMirrors } returns listOf(annotationMirror)
+        every { annotationMirror.toString() } returns "@jakarta.validation.constraints.NotNull"
+
+        val result = element.retrieveArgumentType()
+
+        assertThat(result, `is`("java.lang.String"))
+    }
