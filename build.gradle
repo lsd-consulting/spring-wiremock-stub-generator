@@ -10,6 +10,15 @@ group = 'io.github.lsd-consulting'
 version = gitVersion().replaceAll("^v", "") ?: "SNAPSHOT"
 logger.lifecycle("Build Version = ${version}")
 
+// Never release a build of a modified working tree: git-version marks it ".dirty".
+// Publishing to Maven Local is still allowed.
+gradle.taskGraph.whenReady { graph ->
+    def publishing = graph.allTasks.any { it.name.contains('Sonatype') || it.name.endsWith('StagingRepositories') }
+    if (publishing && version.toString().contains('dirty')) {
+        throw new GradleException("Refusing to publish ${version}: the working tree has uncommitted changes. Run `git status` in CI to see which files.")
+    }
+}
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
