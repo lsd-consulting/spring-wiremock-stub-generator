@@ -3,17 +3,26 @@ updates:
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/London"
+    cooldown:
+      default-days: 3
     commit-message:
-      prefix: "fix"
+      prefix: "build"  # build(deps): releases nothing by itself (Maven Central publishing limits)
+      include: "scope"
     groups:
       lsd-dependencies:
+        update-types: ["minor", "patch"]
         patterns:
           - "io.github.lsd-consulting:*"
       springframework-dependencies:
+        update-types: ["minor", "patch"]
         patterns:
           - "org.springframework.*"
       other-dependencies:
+        update-types: ["minor", "patch"]
         patterns:
           - "*"
         exclude-patterns:
