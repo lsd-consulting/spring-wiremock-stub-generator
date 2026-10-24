@@ -1,0 +1,74 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "timezone": "Europe/London",
+  "schedule": ["* 0-8 * * 1"],
+  "minimumReleaseAge": "3 days",
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "description": "Security fixes stay fix(deps) so they still release: any time, no waiting, not grouped.",
+    "commitMessagePrefix": "fix(deps): ",
+    "schedule": ["at any time"],
+    "minimumReleaseAge": null,
+    "groupName": null,
+    "addLabels": ["security"]
+  },
+  "labels": ["dependencies"],
+  "addLabels": ["{{updateType}}"],
+  "rebaseWhen": "behind-base-branch",
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "description": "One weekly pull request for minor, patch and digest updates. The groups below keep their own pull requests. Majors stay one pull request each.",
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
+    },
+    {
+      "matchPackagePatterns": ["org.jetbrains.kotlin"],
+      "groupName": "kotlin dependencies"
+    },
+    {
+      "matchPackagePatterns": ["org.springframework"],
+      "groupName": "spring dependencies"
+    },
+    {
+      "matchPackagePatterns": ["io.github.lsd-consulting"],
+      "groupName": "lsd dependencies"
+    },
+    {
+      "description": "Production dependencies: build(deps), which releases nothing by itself. They go out with the next feat/fix release (Maven Central publishing limits). Security fixes stay fix(deps) via vulnerabilityAlerts.",
+      "matchPackagePatterns": [
+        "com.fasterxml.jackson.core:*",
+        "io.github.lsd-consulting*",
+        "io.pebbletemplates:*",
+        "org.apache.*",
+        "org.jetbrains.kotlin*",
+        "org.springframework*",
+        "org.wiremock:*"
+      ],
+      "commitMessagePrefix": "build(deps): "
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "commitMessagePrefix": "ci(deps): "
+    }
+  ],
+  "commitMessagePrefix": "chore(deps): "
+}
