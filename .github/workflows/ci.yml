@@ -1,4 +1,5 @@
-# This workflow will build a Java project with Gradle then perform an automated release
+# This workflow will build a Java project with Gradle on push and pull requests.
+# It does not release: releases are manual or scheduled, see release.yml.
 # For more information see:
 #  https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 #  https://github.com/marketplace/actions/action-for-semantic-release
@@ -20,10 +21,4 @@ jobs:
       codecov: true
       codecov-path: 'generator/build/reports/jacoco/test/jacocoTestReport.xml'
       artifact-path: 'generator/build/reports'
-    secrets: inherit
-  release:
-    needs: build
-    uses: lsd-consulting/shared-workflows/.github/workflows/release.yml@main
-    with:
-      java-version: '21'
     secrets: inherit

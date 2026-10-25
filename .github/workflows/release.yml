@@ -1,0 +1,40 @@
+# Releases to Maven Central by hand, or weekly if the WEEKLY_RELEASE variable is 'true'.
+# Pushes to main build but never release: Maven Central limits the
+# io.github.lsd-consulting namespace to 7 releases a month.
+#
+# Release by hand:
+#   gh workflow run release.yml -R lsd-consulting/spring-wiremock-stub-generator -f reason="why this release is needed"
+# Opt in to the weekly release (off by default):
+#   gh variable set WEEKLY_RELEASE --body true -R lsd-consulting/spring-wiremock-stub-generator
+
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Why release now (e.g. security fix, feature a user needs)'
+        required: true
+        type: string
+  schedule:
+    - cron: '0 7 * * 2' # Tuesday 07:00 UTC, does nothing unless WEEKLY_RELEASE is 'true'
+concurrency:
+  group: release
+  cancel-in-progress: false
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch' || vars.WEEKLY_RELEASE == 'true'
+    uses: lsd-consulting/shared-workflows/.github/workflows/build.yml@main
+    with:
+      operating-system: ubuntu-22.04
+      java-version: '21'
+      codecov: true
+      codecov-path: 'generator/build/reports/jacoco/test/jacocoTestReport.xml'
+      artifact-path: 'generator/build/reports'
+    secrets: inherit
+  release:
+    needs: build
+    uses: lsd-consulting/shared-workflows/.github/workflows/release.yml@main
+    with:
+      java-version: '21'
+      reason: ${{ inputs.reason || 'weekly schedule' }}
+    secrets: inherit
